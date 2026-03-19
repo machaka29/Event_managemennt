@@ -3,7 +3,7 @@
 @section('title', 'My Profile - EventPro')
 
 @section('content')
-<div class="container" style="padding: 2rem 0;">
+    <h1 style="text-align: center; margin-bottom: 2rem;">My Profile</h1>
     <div style="text-align: center; margin-bottom: 3rem;">
         <!-- Circular Profile Section -->
         <div style="position: relative; width: 150px; height: 150px; margin: 0 auto 1rem; border-radius: 50%; overflow: visible; background: var(--border-color);">
@@ -11,7 +11,7 @@
                 <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             @else
                 <!-- Google Style Placeholder -->
-                <div style="width: 100%; height: 100%; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: bold; border: 4px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <div style="width: 100%; height: 100%; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 4rem; font-weight: bold; border: 4px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-family: 'Century Gothic', sans-serif;">
                     {{ strtoupper($user->name[0]) }}
                 </div>
             @endif
@@ -22,7 +22,10 @@
             </button>
         </div>
         <h2 style="margin: 0;">{{ $user->name }}</h2>
-        <p style="color: var(--text-muted);">{{ ucfirst($user->role) }} • {{ $user->email }}</p>
+        <p style="color: var(--text-muted); margin-bottom: 0.5rem;">{{ ucfirst($user->role) }} • {{ $user->email }}</p>
+        <p style="font-size: 0.95rem; color: var(--corporate-red); font-weight: 600;">
+            {{ $user->phone }} @if($user->organization) • {{ $user->organization }} @endif
+        </p>
     </div>
 
     <!-- Edit Forms (Hidden by default) -->
@@ -52,6 +55,18 @@
                         <label for="email">Email Address</label>
                         <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                         @error('email') <p class="text-error">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone', $user->phone) }}" required>
+                        @error('phone') <p class="text-error">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="organization">Organization (Optional)</label>
+                        <input type="text" name="organization" id="organization" class="form-control" value="{{ old('organization', $user->organization) }}">
+                        @error('organization') <p class="text-error">{{ $message }}</p> @enderror
                     </div>
 
                     <div style="margin-top: 2rem; display: flex; gap: 1rem;">
@@ -101,6 +116,13 @@
             @if(session('status') === 'password-updated') Password updated successfully. @endif
         </div>
     @endif
+
+    <div style="margin-top: 3rem;">
+        <a href="javascript:history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back
+        </a>
+    </div>
 </div>
 
 <script>

@@ -65,6 +65,12 @@ class PublicEventController extends Controller
             if ($duplicate) {
                 return back()->with('error', 'You are already registered for this event.');
             }
+            // Update attendee details with the latest registration info
+            $existingAttendee->update([
+                'full_name' => $request->full_name,
+                'phone' => $request->phone,
+                'organization' => $request->organization,
+            ]);
             $attendee = $existingAttendee;
         } else {
             $attendee = Attendee::create($request->all());

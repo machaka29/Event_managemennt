@@ -5,14 +5,14 @@
 
 :root {
     --primary-bg: #FFFFFF;
-    --corporate-red: #940000;
+    --corporate-red: #940000; /* Company Color */
     --header-gradient: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
     --accent-soft-red: #FFF5F5;
     --text-main: #333333;
     --text-muted: #666666;
     --border-color: #E0E0E0;
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    --card-shadow-hover: 0 10px 15px rgba(148, 0, 0, 0.1);
+    --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* Better base shadow */
+    --card-shadow-hover: 0 16px 32px rgba(148, 0, 0, 0.2); /* Stronger company color shadow on hover */
 }
 
 * {
@@ -29,7 +29,12 @@ body {
 }
 
 /* Headers */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--corporate-red);
     font-weight: 600;
 }
@@ -45,11 +50,11 @@ h1, h2, h3, h4, h5, h6 {
 .card {
     background: var(--primary-bg);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1.25rem;
+    border-radius: 12px;
+    padding: 1.5rem;
     box-shadow: var(--card-shadow);
-    transition: all 0.3s ease;
-    max-width: 400px; /* Small cards */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Small cards */
 }
 
 .card:hover {
@@ -115,10 +120,22 @@ h1, h2, h3, h4, h5, h6 {
     gap: 1.5rem;
 }
 
-.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
 
 @media (max-width: 768px) {
-    .grid-cols-2, .grid-cols-3 { grid-template-columns: 1fr; }
+
+    .grid-cols-2,
+    .grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
 }

@@ -5,7 +5,6 @@
 @section('content')
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem;">
-        <a href="{{ route('dashboard') }}" style="color: var(--corporate-red); text-decoration: none;">&larr; Back to Dashboard</a>
         <h1 style="margin-top: 1rem;">Create New Event</h1>
     </div>
 
@@ -75,6 +74,13 @@
                 <a href="{{ route('dashboard') }}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancel</a>
             </div>
         </form>
+    </div>
+
+    <div style="margin-top: 3rem;">
+        <a href="javascript:history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back
+        </a>
     </div>
 </div>
 @endsection

@@ -3,10 +3,12 @@
 @section('title', 'Welcome to EventPro')
 
 @section('content')
-<div class="page-header" style="text-align: center; padding: 4rem 1rem;">
-    <h1 style="font-size: 3rem; margin-bottom: 1rem;">Find Your Next Event</h1>
-    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem;">
-        Discover and register for the best events happening around you.
+<div class="page-header" style="text-align: center; padding: 5rem 1rem;">
+    <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">Find Your Next Event</h1>
+    <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2.5rem; line-height: 1.8; font-family: 'Century Gothic', sans-serif;">
+        Welcome to the modern event registration and management system developed by <strong>EmCa TECHONOLOGY</strong>. 
+        Here you can discover a wide range of upcoming events, choose the ones that interest you, and register 
+        quickly to receive your digital tickets. Start by searching for your desired event below using its title or location.
     </p>
     
     <!-- Search Form -->
@@ -14,7 +16,7 @@
         <form action="{{ route('home') }}" method="GET" style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <input type="text" name="search" class="form-control" placeholder="Search events by title or location..." value="{{ request('search') }}" style="flex: 2; min-width: 250px;">
             <input type="date" name="date" class="form-control" value="{{ request('date') }}" style="flex: 1; min-width: 150px;">
-            <button type="submit" class="btn btn-primary" style="flex: 0.5; min-width: 100px;">Search</button>
+            <button type="submit" class="btn btn-primary" style="flex: 0.5; min-width: 100px; font-family: 'Century Gothic', sans-serif;">Search</button>
         </form>
     </div>
 </div>
@@ -27,9 +29,14 @@
         </div>
     @endif
 
+    <div style="margin-top: 4rem; text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2.25rem;">EVENT AVAILABLE</h2>
+        <div style="width: 80px; height: 4px; background: var(--corporate-red); margin: 1rem auto;"></div>
+    </div>
+
     <div class="grid grid-cols-3">
         @forelse($events as $event)
-            <div class="card">
+            <div class="card animate-fade-in delay-{{ ($loop->index % 9) + 1 }}">
                 <div style="height: 150px; background: var(--accent-soft-red); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; overflow: hidden;">
                     @if($event->image_path)
                         <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -47,7 +54,8 @@
                 
                 @php
                     $isFull = $event->registrations()->count() >= $event->capacity;
-                    $isOpen = now()->between($event->reg_start_date, $event->reg_end_date);
+                    $now = now()->toDateString();
+                    $isOpen = $now >= $event->reg_start_date && $now <= $event->reg_end_date;
                 @endphp
 
                 @if($isFull)
