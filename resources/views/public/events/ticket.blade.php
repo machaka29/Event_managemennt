@@ -84,6 +84,7 @@
         <p>Managed by <strong>EmCa TECHONOLOGY</strong></p>
     </div>
 
+<<<<<<< HEAD
     <div style="margin-top: 3rem; width: 100%; max-width: 650px; display: flex; justify-content: center;">
         @php
             $backUrl = route('home');
@@ -98,9 +99,9 @@
                 }
             }
         @endphp
-        <a href="{{ $backUrl }}" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            {{ $backText }}
+        <a href="{{ $backUrl }}" class="btn-back" style="display: inline-flex; align-items: center; gap: 8px; color: #666; text-decoration: none; font-weight: 600; font-size: 1rem; transition: 0.3s; padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; background: white;"
+           onmouseover="this.style.borderColor='var(--corporate-red)'; this.style.color='var(--corporate-red)';" onmouseout="this.style.borderColor='#ddd'; this.style.color='#666';">
+            <i class="fa-solid fa-arrow-left"></i> {{ $backText }}
         </a>
     </div>
 </div>

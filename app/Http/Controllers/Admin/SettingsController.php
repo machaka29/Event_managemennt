@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\SystemSetting;
 
-
-
 class SettingsController extends Controller
 {
     public function index()

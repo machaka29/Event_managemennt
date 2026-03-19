@@ -24,7 +24,6 @@
             <i class="fa-solid fa-chevron-left"></i> {{ $backText }}
         </a>
     </div>
-
     <div class="grid grid-cols-3" style="align-items: flex-start; gap: 3rem;">
         <!-- Left: Event Details -->
         <div style="grid-column: span 2;">

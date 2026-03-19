@@ -15,9 +15,6 @@
     --border-color: #E0E0E0;
     --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* Better base shadow */
     --card-shadow-hover: 0 16px 32px rgba(148, 0, 0, 0.2); /* Stronger company color shadow on hover */
-    --border-color: #940000;
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    --card-shadow-hover: 0 10px 15px rgba(148, 0, 0, 0.1);
 }
 
 * {
