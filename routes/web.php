@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/reports', [\App\Http\Controllers\AdminController::class, 'reports'])->name('admin.reports.index');
         Route::get('/admin/settings', function() { return view('admin.settings'); })->name('admin.settings.index');
         
+        Route::get('/admin/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
+        Route::post('/admin/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('/admin/settings/logo', [\App\Http\Controllers\SystemSettingController::class, 'updateLogo'])->name('admin.settings.logo');
         Route::post('/admin/settings/general', [\App\Http\Controllers\SystemSettingController::class, 'updateSettings'])->name('admin.settings.general');
     });

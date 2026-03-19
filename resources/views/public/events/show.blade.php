@@ -4,10 +4,6 @@
 
 @section('content')
 <div class="container" style="padding: 2rem 0;">
-    <div style="margin-bottom: 2rem;">
-        <a href="{{ route('home') }}" style="color: var(--corporate-red); text-decoration: none;">&larr; Back to Events</a>
-    </div>
-
     <div class="grid grid-cols-3" style="align-items: flex-start; gap: 3rem;">
         <!-- Left: Event Details -->
         <div style="grid-column: span 2;">
@@ -43,7 +39,8 @@
 
         <!-- Right: Registration Form -->
         <div class="card" style="max-width: 100%; position: sticky; top: 2rem;">
-            <h3 style="margin-bottom: 1.5rem; text-align: center;">Register Now</h3>
+            <h3 style="margin-bottom: 0.5rem; text-align: center;">Enter your credentials to register</h3>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Fill in the details below to secure your spot.</p>
             
             @if(session('error'))
                 <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
@@ -79,13 +76,20 @@
                 </div>
 
                 <div style="margin-top: 2rem;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Confirm Registration</button>
-                    <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-family: 'Century Gothic', sans-serif;">Confirm Registration</button>
+                    <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; font-family: 'Century Gothic', sans-serif;">
                         By registering, you agree to receive event-related notifications.
                     </p>
                 </div>
             </form>
         </div>
+    </div>
+
+    <div style="margin-top: 3rem;">
+        <a href="javascript:history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back
+        </a>
     </div>
 </div>
 @endsection

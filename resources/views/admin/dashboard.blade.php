@@ -3,6 +3,18 @@
 @section('title', 'Admin Dashboard - EventReg')
 
 @section('content')
+    <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1.5rem;">
+        @if(auth()->user()->profile_image)
+            <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Profile" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        @else
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: 'Century Gothic', sans-serif;">
+                {{ strtoupper(auth()->user()->name[0]) }}
+            </div>
+        @endif
+        <div>
+            <h1 style="margin: 0;">System Administration</h1>
+            <p style="color: var(--text-muted); margin: 0;">Overview of all platform activity.</p>
+        </div>
 <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--corporate-red); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
     <div>
         <h1 style="color: var(--corporate-red); font-size: 1.8rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Admin Dashboard</h1>
@@ -21,6 +33,20 @@
         <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">{{ $upcomingEventsCount }} upcoming</div>
     </div>
 
+    <!-- System Settings -->
+    <div class="card" style="margin-bottom: 3rem; border-top: 4px solid var(--corporate-red);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 style="margin: 0;">System Branding & Settings</h3>
+            <a href="{{ route('admin.settings.index') }}" class="btn btn-outline">Text Settings</a>
+        </div>
+        <form action="{{ route('admin.settings.logo') }}" method="POST" enctype="multipart/form-data" style="display: flex; align-items: flex-end; gap: 2rem;">
+            @csrf
+            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                <label for="system_logo">Update Company Logo (Circular)</label>
+                <input type="file" name="system_logo" id="system_logo" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload Logo</button>
+        </form>
     <!-- Total Registrations -->
     <div style="background: #FFF5F5; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(148,0,0,0.05);">
         <div style="color: #333; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px;">Total Registrations</div>
@@ -160,6 +186,13 @@
                 <span style="font-weight: bold; color: var(--corporate-red);">{{ $systemStats['active_organizers'] }}</span>
             </div>
         </div>
+    </div>
+
+    <div style="margin-top: 3rem;">
+        <a href="javascript:history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back
+        </a>
     </div>
 </div>
 

@@ -9,6 +9,21 @@
 @section('title', 'Organizer Dashboard - EmCa Technologies')
 
 @section('content')
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            @if(auth()->user()->profile_image)
+                <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Profile" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            @else
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: 'Century Gothic', sans-serif;">
+                    {{ strtoupper(auth()->user()->name[0]) }}
+                </div>
+            @endif
+            <div>
+                <h1 style="margin: 0;">Dashboard</h1>
+                <p style="color: var(--text-muted); margin: 0;">Welcome back, {{ auth()->user()->name }}!</p>
+            </div>
+        </div>
+        <a href="{{ route('events.create') }}" class="btn btn-primary">+ Create New Event</a>
 <!-- SECTION 2: WELCOME HEADER -->
 <div style="margin-bottom: 40px;">
     <h1 style="font-size: 2rem; color: #333; margin: 0; font-weight: bold; position: relative; display: inline-block;">
@@ -201,6 +216,13 @@
             <div style="color: #666; font-size: 0.95rem;">• Share early bird discounts</div>
             <div style="color: #666; font-size: 0.95rem;">• Send reminders to attendees</div>
         </div>
+    </div>
+    
+    <div style="margin-top: 3rem;">
+        <a href="javascript:history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back
+        </a>
     </div>
 </div>
 

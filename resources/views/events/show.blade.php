@@ -6,7 +6,6 @@
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
         <div>
-            <a href="{{ route('dashboard') }}" style="color: var(--corporate-red); text-decoration: none;">&larr; Back to Dashboard</a>
             <h1 style="margin-top: 1rem;">{{ $event->title }}</h1>
             <p style="color: var(--text-muted);">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} at {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }} • {{ $event->location }}</p>
         </div>
@@ -98,7 +97,7 @@
                 <h4>Capacity</h4>
                 <p style="font-size: 1.5rem; font-weight: bold;">{{ $event->registrations()->count() }} / {{ $event->capacity }}</p>
                 <div style="width: 100%; height: 8px; background: white; border-radius: 4px; margin-top: 0.5rem; overflow: hidden;">
-                    <div style="width: {{ ($event->registrations()->count() / $event->capacity) * 100 }}%; height: 100%; background: var(--corporate-red);"></div>
+                <div style="width: {{ ($event->registrations()->count() / $event->capacity) * 100 }}%; height: 100%; background: var(--corporate-red); font-family: 'Century Gothic', sans-serif;"></div>
                 </div>
             </div>
 
@@ -129,6 +128,13 @@
                 <p style="font-size: 0.75rem; color: var(--text-muted);">Share this link with attendees for registration.</p>
             </div>
         </div>
+    </div>
+
+    <div style="margin-top: 3rem;">
+        <a href="javascript:history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back
+        </a>
     </div>
 </div>
 @endsection

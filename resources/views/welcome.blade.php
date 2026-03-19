@@ -3,6 +3,20 @@
 @section('title', 'Find & Register for Amazing Events - EmCa Technologies')
 
 @section('content')
+<div class="page-header" style="text-align: center; padding: 5rem 1rem;">
+    <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">Find Your Next Event</h1>
+    <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2.5rem; line-height: 1.8; font-family: 'Century Gothic', sans-serif;">
+        Welcome to the modern event registration and management system developed by <strong>EmCa TECHONOLOGY</strong>. 
+        Here you can discover a wide range of upcoming events, choose the ones that interest you, and register 
+        quickly to receive your digital tickets. Start by searching for your desired event below using its title or location.
+    </p>
+    
+    <!-- Search Form -->
+    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 1.5rem;">
+        <form action="{{ route('home') }}" method="GET" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <input type="text" name="search" class="form-control" placeholder="Search events by title or location..." value="{{ request('search') }}" style="flex: 2; min-width: 250px;">
+            <input type="date" name="date" class="form-control" value="{{ request('date') }}" style="flex: 1; min-width: 150px;">
+            <button type="submit" class="btn btn-primary" style="flex: 0.5; min-width: 100px; font-family: 'Century Gothic', sans-serif;">Search</button>
 <!-- HERO SECTION -->
 <div style="background: var(--header-gradient); padding: 100px 20px; text-align: center; border-bottom: none; font-family: 'Century Gothic', sans-serif;">
     <div style="max-width: 900px; margin: 0 auto;">
@@ -126,6 +140,34 @@
             <div style="width: 60px; height: 4px; background: var(--corporate-red); margin: 15px auto 0;"></div>
         </div>
 
+    <div style="margin-top: 4rem; text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2.25rem;">EVENT AVAILABLE</h2>
+        <div style="width: 80px; height: 4px; background: var(--corporate-red); margin: 1rem auto;"></div>
+    </div>
+
+    <div class="grid grid-cols-3">
+        @forelse($events as $event)
+            <div class="card animate-fade-in delay-{{ ($loop->index % 9) + 1 }}">
+                <div style="height: 150px; background: var(--accent-soft-red); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; overflow: hidden;">
+                    @if($event->image_path)
+                        <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        <span style="color: var(--corporate-red); font-weight: bold;">{{ $event->title[0] }}</span>
+                    @endif
+                </div>
+                <h4 class="card-title">{{ $event->title }}</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    {{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} • {{ $event->location }}
+                </p>
+                <p style="margin-bottom: 1.5rem; font-size: 0.9rem; height: 3rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                    {{ $event->description }}
+                </p>
+                
+                @php
+                    $isFull = $event->registrations()->count() >= $event->capacity;
+                    $now = now()->toDateString();
+                    $isOpen = $now >= $event->reg_start_date && $now <= $event->reg_end_date;
+                @endphp
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
             @forelse($events as $event)
                 <div class="card" style="background: #FFFFFF; border: 1px solid var(--corporate-red); border-radius: 12px; padding: 0; overflow: hidden; transition: all 0.3s ease; text-align: left;"
