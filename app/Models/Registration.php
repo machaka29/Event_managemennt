@@ -10,7 +10,8 @@ class Registration extends Model
         'event_id',
         'attendee_id',
         'ticket_id',
-        'status'
+        'status',
+        'attended'
     ];
 
     public function event()

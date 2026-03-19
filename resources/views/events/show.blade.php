@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.organizer')
 
 @section('title', $event->title . ' - EventPro')
 

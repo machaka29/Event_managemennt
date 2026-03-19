@@ -43,6 +43,9 @@
                          alt="QR Code" 
                          style="width: 140px; height: 140px; display: block;">
                     <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; font-weight: bold;">SCAN TO VERIFY</p>
+                <!-- QR Code -->
+                <div style="width: 100px; height: 100px; border: 1px solid var(--border-color); padding: 0.25rem; background: white;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ urlencode(route('events.public.verify', $registration->ticket_id)) }}" alt="QR Code" style="width: 100%; height: 100%;">
                 </div>
             </div>
 

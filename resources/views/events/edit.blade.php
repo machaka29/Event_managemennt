@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.organizer')
 
 @section('title', 'Edit Event - EventPro')
 
@@ -41,7 +41,48 @@
             <div class="grid grid-cols-2">
                 <div class="form-group">
                     <label for="location">Location</label>
-                    <input type="text" name="location" id="location" class="form-control" value="{{ old('location', $event->location) }}" required>
+                    <input type="text" name="location" id="location" class="form-control" value="{{ old('location', $event->location) }}" required placeholder="e.g. Moshi, Kilimanjaro" list="tanzania-locations">
+                    <datalist id="tanzania-locations">
+                        <option value="Arusha">
+                        <option value="Dar es Salaam">
+                        <option value="Dodoma">
+                        <option value="Geita">
+                        <option value="Iringa">
+                        <option value="Kagera">
+                        <option value="Katavi">
+                        <option value="Kigoma">
+                        <option value="Kilimanjaro">
+                        <option value="Lindi">
+                        <option value="Manyara">
+                        <option value="Mara">
+                        <option value="Mbeya">
+                        <option value="Morogoro">
+                        <option value="Mtwara">
+                        <option value="Mwanza">
+                        <option value="Njombe">
+                        <option value="Pemba North">
+                        <option value="Pemba South">
+                        <option value="Pwani">
+                        <option value="Rukwa">
+                        <option value="Ruvuma">
+                        <option value="Shinyanga">
+                        <option value="Simiyu">
+                        <option value="Singida">
+                        <option value="Songwe">
+                        <option value="Tabora">
+                        <option value="Tanga">
+                        <option value="Zanzibar North">
+                        <option value="Zanzibar South and Central">
+                        <option value="Zanzibar West">
+                        <option value="Moshi">
+                        <option value="Kahama">
+                        <option value="Songea">
+                        <option value="Musoma">
+                        <option value="Korogwe">
+                        <option value="Kibaha">
+                        <option value="Bariadi">
+                        <option value="Mpanda">
+                    </datalist>
                     @error('location') <p class="text-error">{{ $message }}</p> @enderror
                 </div>
                 <div class="form-group">

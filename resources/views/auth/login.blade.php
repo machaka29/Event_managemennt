@@ -7,6 +7,7 @@
     <div class="card" style="width: 100%; max-width: 400px;">
         <h3 style="text-align: center; margin-bottom: 0.5rem;">Enter your credentials to register</h3>
         <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Fill in the details below to access your account.</p>
+        <h3 style="text-align: center; margin-bottom: 1.5rem;">Login</h3>
         
         <form action="{{ route('login') }}" method="POST">
             @csrf

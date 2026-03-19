@@ -7,25 +7,52 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Attendee;
 use App\Models\Registration;
+use App\Models\Category;
 use Illuminate\Support\Str;
 
 class PublicEventController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Event::query();
+        $query = Event::where('status', 'approved');
 
         if ($request->search) {
-            $query->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('location', 'like', '%' . $request->search . '%');
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->location) {
+            $query->where('location', 'like', '%' . $request->location . '%');
         }
 
         if ($request->date) {
             $query->whereDate('date', $request->date);
         }
+        
+        if ($request->category) {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
 
-        $events = $query->latest()->get();
-        return view('welcome', compact('events'));
+        if ($request->sort === 'recent') {
+            $query->latest();
+        } elseif ($request->sort === 'date_asc') {
+            $query->orderBy('date', 'asc');
+        } else {
+            $query->latest();
+        }
+
+        // On homepage (no filters), show only 3. If filtering, show more?
+        // Actually, the mockup shows 3 events in "Upcoming Events".
+        $events = $query->paginate(6); 
+        
+        $categories = \App\Models\Category::withCount('events')->get();
+        $locations = Event::distinct()->pluck('location')->filter()->values();
+
+        return view('welcome', compact('events', 'locations', 'categories'));
     }
 
     public function show($id)
@@ -91,5 +118,11 @@ class PublicEventController extends Controller
     {
         $registration = Registration::where('ticket_id', $ticket_id)->firstOrFail();
         return view('public.events.ticket', compact('registration'));
+    }
+
+    public function verifyTicket($ticket_id)
+    {
+        $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
+        return view('public.events.verify', compact('registration'));
     }
 }

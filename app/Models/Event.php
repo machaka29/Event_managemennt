@@ -16,8 +16,15 @@ class Event extends Model
         'image_path',
         'reg_start_date',
         'reg_end_date',
-        'organizer_id'
+        'organizer_id',
+        'status',
+        'category_id'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function organizer()
     {
