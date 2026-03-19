@@ -16,15 +16,18 @@ class CheckRole
     public function handle(Request $request, Closure $next, string $role): Response
     {
         if (!$request->user()) {
-            abort(403);
+            return redirect()->route('login');
         }
 
+        $userRole = strtolower($request->user()->role);
+        $requiredRole = strtolower($role);
+
         // Admins can access everything
-        if ($request->user()->role === 'admin') {
+        if ($userRole === 'admin') {
             return $next($request);
         }
 
-        if ($request->user()->role !== $role) {
+        if ($userRole !== $requiredRole) {
             abort(403, 'Unauthorized action.');
         }
 

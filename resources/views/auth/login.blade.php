@@ -5,7 +5,7 @@
 @section('content')
 <div class="auth-container">
     <div class="card" style="width: 100%; max-width: 400px;">
-        <h3 style="text-align: center; margin-bottom: 1.5rem;">Organizer Login</h3>
+        <h3 style="text-align: center; margin-bottom: 1.5rem;">Login</h3>
         
         <form action="{{ route('login') }}" method="POST">
             @csrf

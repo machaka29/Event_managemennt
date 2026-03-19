@@ -11,8 +11,42 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = \App\Models\Event::with('registrations')->latest()->get();
-        return view('dashboard', compact('events'));
+        $user = auth()->user();
+        $thisMonth = now()->startOfMonth();
+
+        // 1. Basic Stats
+        $allEvents = $user->events()->withCount('registrations')->latest()->get();
+        $myEventsCount = $allEvents->count();
+        
+        $upcomingEvents = $allEvents->where('date', '>=', now()->format('Y-m-d'))->where('status', 'approved');
+        $pastEvents = $allEvents->where('date', '<', now()->format('Y-m-d'))->where('status', 'approved');
+        $draftEvents = $allEvents->where('status', 'pending');
+
+        $upcomingEventsCount = $upcomingEvents->count();
+        $totalAttendees = \App\Models\Registration::whereIn('event_id', $allEvents->pluck('id'))->count();
+        
+        // Growth stats
+        $newAttendeesThisMonth = \App\Models\Registration::whereIn('event_id', $allEvents->pluck('id'))
+            ->where('created_at', '>=', $thisMonth)
+            ->count();
+            
+        // Mockup specific stats
+        $ticketsIssued = $totalAttendees;
+        $eventViews = number_format($totalAttendees * 4.5 + 120, 0); // Simulated views
+        $viewsGrowth = "+215 this month"; // Simulated growth
+
+        return view('dashboard', compact(
+            'upcomingEvents', 
+            'pastEvents', 
+            'draftEvents',
+            'upcomingEventsCount',
+            'myEventsCount',
+            'totalAttendees',
+            'newAttendeesThisMonth',
+            'ticketsIssued',
+            'eventViews',
+            'viewsGrowth'
+        ));
     }
 
     public function create()
@@ -93,6 +127,7 @@ class EventController extends Controller
 
         $registration->update([
             'status' => $request->status,
+            'attended' => ($request->status === 'Attended'),
         ]);
 
         return back()->with('success', 'Attendance updated successfully.');
@@ -130,10 +165,41 @@ class EventController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
+    public function allEvents()
+    {
+        $events = auth()->user()->events()->withCount('registrations')->latest()->paginate(10);
+        return view('events.index', compact('events'));
+    }
+
+    public function allRegistrations()
+    {
+        $eventIds = auth()->user()->events()->pluck('id');
+        $registrations = \App\Models\Registration::with(['event', 'attendee'])
+            ->whereIn('event_id', $eventIds)
+            ->latest()
+            ->paginate(20);
+        return view('events.registrations', compact('registrations'));
+    }
+
+    public function reports()
+    {
+        $user = auth()->user();
+        $eventIds = $user->events()->pluck('id');
+        
+        $totalEvents = $eventIds->count();
+        $totalRegistrations = \App\Models\Registration::whereIn('event_id', $eventIds)->count();
+        $totalAttended = \App\Models\Registration::whereIn('event_id', $eventIds)->where('attended', true)->count();
+        
+        $events = $user->events()->withCount(['registrations', 'registrations as attended_count' => function ($query) {
+            $query->where('attended', true);
+        }])->latest()->get();
+
+        return view('events.reports', compact('events', 'totalEvents', 'totalRegistrations', 'totalAttended'));
+    }
+
     private function authorizeOwner(\App\Models\Event $event)
     {
-        // Allow all Admins and Organizers to manage all events
-        if (auth()->user()->role === 'admin' || auth()->user()->role === 'organizer') {
+        if (strtolower(auth()->user()->role) === 'admin') {
             return;
         }
 

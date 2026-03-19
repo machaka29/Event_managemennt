@@ -19,9 +19,9 @@
                     <p style="color: var(--text-muted);">{{ \Carbon\Carbon::parse($registration->event->date)->format('l, F d, Y') }}</p>
                     <p style="color: var(--text-muted);">{{ \Carbon\Carbon::parse($registration->event->time)->format('h:i A') }}</p>
                 </div>
-                <!-- Optional QR Code Placeholder -->
-                <div style="width: 80px; height: 80px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; text-align: center; padding: 0.5rem;">
-                    QR Code<br>Placeholder
+                <!-- QR Code -->
+                <div style="width: 100px; height: 100px; border: 1px solid var(--border-color); padding: 0.25rem; background: white;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ urlencode(route('events.public.verify', $registration->ticket_id)) }}" alt="QR Code" style="width: 100%; height: 100%;">
                 </div>
             </div>
 

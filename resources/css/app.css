@@ -6,11 +6,12 @@
 :root {
     --primary-bg: #FFFFFF;
     --corporate-red: #940000;
+    --corporate-red-hover: #7a0000;
     --header-gradient: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
     --accent-soft-red: #FFF5F5;
     --text-main: #333333;
     --text-muted: #666666;
-    --border-color: #E0E0E0;
+    --border-color: #940000;
     --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     --card-shadow-hover: 0 10px 15px rgba(148, 0, 0, 0.1);
 }
@@ -19,6 +20,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Century Gothic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
 }
 
 body {

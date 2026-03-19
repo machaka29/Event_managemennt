@@ -27,4 +27,19 @@ class SystemSettingController extends Controller
 
         return back()->with('success', 'System logo updated successfully.');
     }
+
+    public function updateSettings(Request $request)
+    {
+        $data = $request->validate([
+            'system_name' => ['required', 'string', 'max:255'],
+            'system_phone' => ['nullable', 'string', 'max:20'],
+            'system_email' => ['nullable', 'email', 'max:255'],
+        ]);
+
+        foreach ($data as $key => $value) {
+            SystemSetting::set($key, $value);
+        }
+
+        return back()->with('success', 'System settings updated successfully.');
+    }
 }
