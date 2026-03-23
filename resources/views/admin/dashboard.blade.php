@@ -139,26 +139,25 @@
         </div>
     </div>
 
-    <!-- SYSTEM BRANDING -->
-    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 3rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <h3 style="margin: 0; color: #333; font-size: 1.1rem; font-weight: 800; text-transform: uppercase;">System Branding</h3>
-            <a href="{{ route('admin.settings.index') }}" class="btn btn-outline" style="font-size: 0.85rem; border: 1px solid #ddd; padding: 8px 15px;">Advanced Settings</a>
+    <!-- SYSTEM IDENTITY SUMMARY -->
+    <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #eee; margin-bottom: 3rem; display: flex; align-items: center; justify-content: space-between; gap: 30px;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="width: 80px; height: 80px; background: var(--accent-soft-red); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #eee;">
+                @php $systemLogo = \App\Models\SystemSetting::get('system_logo'); @endphp
+                @if($systemLogo)
+                    <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                @else
+                    <i class="fa-solid fa-calendar-check" style="font-size: 2rem; color: var(--corporate-red); opacity: 0.5;"></i>
+                @endif
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #333; font-size: 1.1rem; font-weight: 800; text-transform: uppercase;">{{ \App\Models\SystemSetting::get('system_name', 'EmCa Technologies') }}</h3>
+                <p style="margin: 5px 0 0; font-size: 0.85rem; color: #999;">Global Branding & Identity</p>
+            </div>
         </div>
-        <form action="{{ route('admin.settings.logo') }}" method="POST" enctype="multipart/form-data" style="display: grid; grid-template-columns: 1fr 1fr auto; align-items: flex-end; gap: 2rem;">
-            @csrf
-            <div>
-                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #666; font-size: 0.9rem;">Current System Name</label>
-                <div style="padding: 12px; background: #f8f8f8; border-radius: 8px; border: 1px solid #eee; font-weight: bold; color: #333;">
-                    {{ \App\Models\SystemSetting::get('system_name', 'EmCa Technologies') }}
-                </div>
-            </div>
-            <div>
-                <label for="system_logo" style="display: block; margin-bottom: 10px; font-weight: 600; color: #666; font-size: 0.9rem;">Update Logo</label>
-                <input type="file" name="system_logo" id="system_logo" class="form-control" style="background: #fff; padding: 10px; height: auto;" required>
-            </div>
-            <button type="submit" class="btn btn-primary" style="padding: 12px 30px;">Upload & Apply</button>
-        </form>
+        <a href="{{ route('admin.settings.index') }}" class="btn" style="background: white; border: 1px solid #ddd; color: #666; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; transition: 0.3s;" onmouseover="this.style.borderColor='var(--corporate-red)'; this.style.color='var(--corporate-red)'">
+            <i class="fa-solid fa-gears"></i> MANAGE BRANDING
+        </a>
     </div>
 
     <!-- REGISTRATIONS CHART SKELETON -->
