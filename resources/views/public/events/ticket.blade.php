@@ -85,9 +85,22 @@
     </div>
 
     <div style="margin-top: 3rem; width: 100%; max-width: 650px; display: flex; justify-content: center;">
-        <a href="{{ route('home') }}" class="btn-back">
+        @php
+            $backUrl = route('home');
+            $backText = 'Back to Home';
+            if(auth()->check()) {
+                if(auth()->user()->role === 'admin') {
+                    $backUrl = route('admin.dashboard');
+                    $backText = 'Back to Dashboard';
+                } elseif(auth()->user()->role === 'organizer') {
+                    $backUrl = route('dashboard');
+                    $backText = 'Back to Dashboard';
+                }
+            }
+        @endphp
+        <a href="{{ $backUrl }}" class="btn-back">
             <i class="fa-solid fa-arrow-left"></i>
-            Back to Home
+            {{ $backText }}
         </a>
     </div>
 </div>

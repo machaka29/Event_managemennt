@@ -4,6 +4,27 @@
 
 @section('content')
 <div class="container" style="padding: 2rem 0;">
+    <!-- Top Navigation -->
+    <div style="margin-bottom: 2rem;">
+        @php
+            $backUrl = route('home');
+            $backText = 'Back to Events';
+            if(auth()->check()) {
+                if(auth()->user()->role === 'admin') {
+                    $backUrl = route('admin.dashboard');
+                    $backText = 'Back to Dashboard';
+                } elseif(auth()->user()->role === 'organizer') {
+                    $backUrl = route('dashboard');
+                    $backText = 'Back to Dashboard';
+                }
+            }
+        @endphp
+        <a href="{{ $backUrl }}" class="btn-back" style="display: inline-flex; align-items: center; gap: 8px; color: #666; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: 0.3s; padding: 5px 0;"
+           onmouseover="this.style.color='var(--corporate-red)';" onmouseout="this.style.color='#666';">
+            <i class="fa-solid fa-chevron-left"></i> {{ $backText }}
+        </a>
+    </div>
+
     <div class="grid grid-cols-3" style="align-items: flex-start; gap: 3rem;">
         <!-- Left: Event Details -->
         <div style="grid-column: span 2;">
@@ -110,11 +131,6 @@
         </div>
     </div>
 
-    <div style="margin-top: 3rem; display: flex; justify-content: center;">
-        <a href="{{ route('home') }}" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i>
-            Back to Events
-        </a>
     </div>
 </div>
 @endsection

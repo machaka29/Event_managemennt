@@ -15,12 +15,19 @@
         </p>
         
         <!-- Search Form -->
-        <div style="max-width: 700px; margin: 0 auto; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee;">
-            <form action="{{ route('home') }}" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <input type="text" name="search" placeholder="Search events..." value="{{ request('search') }}" 
-                    style="flex: 2; min-width: 200px; padding: 12px 20px; border: 1px solid #eee; border-radius: 8px; outline: none; font-size: 1rem;">
-                <button type="submit" style="background: var(--corporate-red); color: white; padding: 12px 30px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;" onmouseover="this.style.opacity='0.9'">
-                    <i class="fa-solid fa-magnifying-glass"></i> SEARCH
+        <div style="max-width: 600px; margin: 0 auto; background: white; padding: 6px; border-radius: 50px; box-shadow: 0 15px 35px rgba(148,0,0,0.1); border: 1px solid #eee; display: flex; align-items: center; transition: 0.3s; position: relative;"
+             onfocusin="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 15px 35px rgba(148,0,0,0.15)';"
+             onfocusout="this.style.borderColor='#eee'; this.style.boxShadow='0 15px 35px rgba(148,0,0,0.1)';">
+            <form action="{{ route('home') }}" method="GET" style="display: flex; width: 100%; align-items: center;">
+                <div style="padding-left: 20px; color: #999;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <input type="text" name="search" placeholder="Find events, locations, or topics..." value="{{ request('search') }}" 
+                    style="flex: 1; border: none; padding: 15px 15px; outline: none; font-size: 1.05rem; background: transparent; color: #333;">
+                
+                <button type="submit" style="background: var(--corporate-red); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; margin-right: 2px;" 
+                    onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';">
+                    <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
         </div>
