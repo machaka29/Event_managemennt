@@ -20,45 +20,71 @@
         </div>
     @endif
 
-    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee;">
-        <form action="{{ route('admin.settings.update') }}" method="POST">
-            @csrf
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
+        <!-- Left Column: Branding/Logo -->
+        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee; height: fit-content;">
+            <h3 style="margin: 0 0 20px; font-size: 1.1rem; color: #333; border-bottom: 1px solid #f4f4f4; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">System Identity</h3>
             
-            <div style="margin-bottom: 2rem;">
-                <label for="system_name" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Application Name</label>
-                <input type="text" name="system_name" id="system_name" value="{{ old('system_name', \App\Models\SystemSetting::get('system_name', 'EmCa Technologies')) }}" 
-                    style="width: 100%; padding: 15px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; transition: all 0.3s; outline: none;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.05)';"
-                    onblur="this.style.borderColor='#eee'; this.style.boxShadow='none';">
-                <p style="color: #888; font-size: 0.85rem; margin-top: 8px;"><i class="fa-solid fa-circle-info"></i> This name will be displayed across the site headers and titles.</p>
+            <div style="text-align: center; margin-bottom: 25px;">
+                @php $systemLogo = \App\Models\SystemSetting::get('system_logo'); @endphp
+                <div style="width: 120px; height: 120px; margin: 0 auto 15px; background: var(--accent-soft-red); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px dashed #ddd;">
+                    @if($systemLogo)
+                        <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        <i class="fa-solid fa-image" style="font-size: 3rem; color: var(--corporate-red); opacity: 0.3;"></i>
+                    @endif
+                </div>
+                <p style="font-size: 0.8rem; color: #999;">Current System Logo</p>
             </div>
 
-            <div style="margin-bottom: 2rem;">
-                <label for="system_email" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Contact Email</label>
-                <input type="email" name="system_email" id="system_email" value="{{ old('system_email', \App\Models\SystemSetting::get('system_email', 'info@emca.tech')) }}" 
-                    style="width: 100%; padding: 15px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; transition: all 0.3s; outline: none;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.05)';"
-                    onblur="this.style.borderColor='#eee'; this.style.boxShadow='none';">
-                <p style="color: #888; font-size: 0.85rem; margin-top: 8px;"><i class="fa-solid fa-circle-info"></i> The primary contact email address for inquiries.</p>
-            </div>
-
-            <div style="margin-bottom: 2.5rem;">
-                <label for="system_footer" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Footer Text</label>
-                <input type="text" name="system_footer" id="system_footer" value="{{ old('system_footer', \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGY')) }}" 
-                    style="width: 100%; padding: 15px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; transition: all 0.3s; outline: none;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.05)';"
-                    onblur="this.style.borderColor='#eee'; this.style.boxShadow='none';">
-                <p style="color: #888; font-size: 0.85rem; margin-top: 8px;"><i class="fa-solid fa-circle-info"></i> The text displayed at the bottom of every page.</p>
-            </div>
-
-            <div style="padding-top: 20px; border-top: 1px solid #f4f4f4;">
-                <button type="submit" style="background: var(--corporate-red); color: white; padding: 15px 40px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 20px rgba(148, 0, 0, 0.2);"
-                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 30px rgba(148, 0, 0, 0.3)';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 20px rgba(148, 0, 0, 0.2)';">
-                    <i class="fa-solid fa-floppy-disk"></i> SAVE SETTINGS
+            <form action="{{ route('admin.settings.logo') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div style="margin-bottom: 15px;">
+                    <label for="system_logo" style="display: block; margin-bottom: 8px; color: #555; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Update Logo</label>
+                    <input type="file" name="system_logo" id="system_logo" style="width: 100%; padding: 8px; border: 1px solid #eee; border-radius: 8px; font-size: 0.8rem; background: #fafafa;">
+                </div>
+                <button type="submit" style="width: 100%; background: #666; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#333'">
+                    UPLOAD NEW LOGO
                 </button>
-            </div>
-        </form>
+            </form>
+        </div>
+
+        <!-- Right Column: General Settings -->
+        <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee;">
+            <h3 style="margin: 0 0 25px; font-size: 1.1rem; color: #333; border-bottom: 1px solid #f4f4f4; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">General Configuration</h3>
+            
+            <form action="{{ route('admin.settings.update') }}" method="POST">
+                @csrf
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="system_name" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">Application Name</label>
+                    <input type="text" name="system_name" id="system_name" value="{{ old('system_name', \App\Models\SystemSetting::get('system_name', 'EmCa Technologies')) }}" 
+                        style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 8px; font-size: 1rem; transition: 0.3s; outline: none;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="system_email" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">Contact Email</label>
+                    <input type="email" name="system_email" id="system_email" value="{{ old('system_email', \App\Models\SystemSetting::get('system_email', 'info@emca.tech')) }}" 
+                        style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 8px; font-size: 1rem; transition: 0.3s; outline: none;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label for="system_footer" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">Footer Text</label>
+                    <input type="text" name="system_footer" id="system_footer" value="{{ old('system_footer', \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGY')) }}" 
+                        style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 8px; font-size: 1rem; transition: 0.3s; outline: none;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                </div>
+
+                <div style="padding-top: 15px; border-top: 1px solid #f4f4f4;">
+                    <button type="submit" style="background: var(--corporate-red); color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 12px rgba(148,0,0,0.2);"
+                        onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <i class="fa-solid fa-floppy-disk"></i> SAVE CHANGES
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
