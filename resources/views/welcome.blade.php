@@ -32,8 +32,14 @@
     <!-- UPCOMING EVENTS SECTION -->
     <div id="events-list" style="padding-bottom: 40px; text-align: center;">
         <div style="display: inline-block; margin-bottom: 4rem;">
-            <h2 style="font-size: 2.2rem; color: #333; margin: 0; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Upcoming Events</h2>
-            <p style="color: #666; margin-top: 10px; font-size: 1.1rem;">Stay updated with scheduled events and confirm your attendance.</p>
+            <h2 style="font-size: 2.2rem; color: #333; margin: 0; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+                {{ request('search') ? 'Search Results' : 'Upcoming Events' }}
+            </h2>
+            @if(request('search'))
+                <p style="color: var(--corporate-red); margin-top: 10px; font-size: 1.1rem; font-weight: 600;">Showing results for "{{ request('search') }}"</p>
+            @else
+                <p style="color: #666; margin-top: 10px; font-size: 1.1rem;">Stay updated with scheduled events and confirm your attendance.</p>
+            @endif
             <div style="width: 60px; height: 4px; background: var(--corporate-red); margin: 15px auto 0;"></div>
         </div>
 

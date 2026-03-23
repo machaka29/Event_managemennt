@@ -137,11 +137,12 @@
                             </div>
                         @endif
                     </a>
-                    <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}" class="btn btn-outline" style="text-decoration: none; color: var(--corporate-red); font-weight: bold; font-size: 0.9rem;">Dashboard</a>
-                    <form action="{{ route('logout') }}" method="POST" style="margin:0;">
-                        @csrf
-                        <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background: var(--corporate-red); border: none; color: white; font-weight: bold; border-radius: 5px; cursor: pointer;">Logout</button>
-                    </form>
+                    @if(!request()->routeIs('home'))
+                        <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                            @csrf
+                            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background: var(--corporate-red); border: none; color: white; font-weight: bold; border-radius: 5px; cursor: pointer;">Logout</button>
+                        </form>
+                    @endif
                 </div>
             @else
                 <a href="{{ route('login') }}" class="btn btn-primary" style="background-color: var(--corporate-red); padding: 10px 35px; border-radius: 5px; color: white; text-decoration: none; font-weight: bold; border: none;">LOGIN</a>

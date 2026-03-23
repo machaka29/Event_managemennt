@@ -17,11 +17,12 @@ class PublicEventController extends Controller
     {
         $query = Event::where('status', 'approved');
 
-        if ($request->search) {
-            $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%')
-                  ->orWhere('location', 'like', '%' . $request->search . '%');
+        if ($request->filled('search')) {
+            $searchTerm = trim($request->search);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('location', 'like', '%' . $searchTerm . '%');
             });
         }
 
@@ -49,7 +50,7 @@ class PublicEventController extends Controller
 
         // On homepage (no filters), show only 3. If filtering, show more?
         // Actually, the mockup shows 3 events in "Upcoming Events".
-        $events = $query->paginate(6); 
+        $events = $query->paginate(6)->withQueryString(); 
         
         $categories = \App\Models\Category::withCount('events')->get();
         $locations = Event::distinct()->pluck('location')->filter()->values();
