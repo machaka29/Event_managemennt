@@ -33,8 +33,8 @@
             </div>
         </form>
 
-        <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-            Don't have an account? <a href="{{ route('register') }}" style="color: var(--corporate-red);">Register here</a>
+        <p style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: #999;">
+            Only authorized personnel can login here.
         </p>
     </div>
 

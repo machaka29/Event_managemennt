@@ -1,8 +1,9 @@
-@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->role === 'admin' ? 'layouts.admin' : 'layouts.organizer')
 
-@section('title', 'My Profile - EventPro')
+@section('title', 'Profile Settings - EmCa Technologies')
 
 @section('content')
+<<<<<<< HEAD
     <h1 style="text-align: center; margin-bottom: 2rem;">My Profile</h1>
     <div style="text-align: center; margin-bottom: 3rem;">
         <!-- Circular Profile Section -->
@@ -123,32 +124,117 @@
             Back
         </a>
     </div>
+=======
+<div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+    <div>
+        <h1 style="font-size: 2.22rem; color: #1a1a1a; margin: 0; font-weight: 800; letter-spacing: -0.5px; text-transform: none;">
+            Profile Settings
+        </h1>
+        <div style="width: 60px; height: 4px; background: var(--corporate-red); margin-top: 12px; border-radius: 2px;"></div>
+        <p style="font-size: 1.1rem; color: #666; margin-top: 15px; font-weight: 500;">Manage your personal information, profile picture, and security settings.</p>
+    </div>
+>>>>>>> 6cc1c78 (new changes)
 </div>
 
-<script>
-    document.getElementById('editToggle').addEventListener('click', function() {
-        const section = document.getElementById('editSection');
-        if (section.style.display === 'none') {
-            section.style.display = 'block';
-            this.style.transform = 'rotate(45deg)';
-            section.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            section.style.display = 'none';
-            this.style.transform = 'rotate(0deg)';
-        }
-    });
+@if (session('status'))
+    <div style="background: #eafaf1; border-left: 5px solid #2ecc71; color: #27ae60; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; display: flex; align-items: center; gap: 12px;">
+        <i class="fa-solid fa-circle-check"></i> 
+        @if(session('status') === 'profile-updated') Profile updated successfully. @endif
+        @if(session('status') === 'password-updated') Password updated successfully. @endif
+    </div>
+@endif
 
-    document.querySelectorAll('.closeEdit').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.getElementById('editSection').style.display = 'none';
-            document.getElementById('editToggle').style.transform = 'rotate(0deg)';
-        });
-    });
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: start;">
+    
+    <!-- Profile Card Summary -->
+    <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <div style="position: relative; width: 140px; height: 140px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; background: #FFF5F5; border: 4px solid var(--accent-soft-red); box-shadow: 0 4px 15px rgba(148,0,0,0.1);">
+            @if($user->profile_image)
+                <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+            @else
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; font-weight: 900; color: var(--corporate-red);">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+            @endif
+        </div>
+        <h2 style="margin: 0; font-size: 1.4rem; color: #1a1a1a; font-weight: 800;">{{ $user->name }}</h2>
+        <p style="color: var(--corporate-red); margin: 5px 0 0; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">{{ ucfirst($user->role) }}</p>
+        <p style="color: #666; margin: 10px 0 0; font-size: 0.95rem;">{{ $user->email }}</p>
+        @if($user->phone)
+            <p style="color: #888; margin: 5px 0 0; font-size: 0.95rem;">{{ $user->phone }}</p>
+        @endif
+    </div>
 
-    // Auto-open if there are errors
-    @if($errors->any())
-        document.getElementById('editSection').style.display = 'block';
-        document.getElementById('editToggle').style.transform = 'rotate(45deg)';
-    @endif
-</script>
+    <!-- Edit Forms -->
+    <div style="display: flex; flex-direction: column; gap: 30px;">
+        
+        <!-- Basic Info Form -->
+        <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+            <h3 style="margin: 0 0 25px; font-size: 1.3rem; color: #1a1a1a; font-weight: 800; border-bottom: 2px solid #f5f5f5; padding-bottom: 15px;">Basic Information</h3>
+            
+            <form action="{{ route('profile.info') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
+
+                <div style="margin-bottom: 25px;">
+                    <label for="name" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Full Name</label>
+                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    @error('name') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label for="email" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Email Address</label>
+                    <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    @error('email') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label for="phone" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Phone Number (Optional)</label>
+                    <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone ?? '+255') }}" placeholder="+255xxxxxxxxx" style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    @error('phone') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <label for="profile_image" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Profile Picture</label>
+                    <div style="border: 2px dashed #ccc; border-radius: 10px; padding: 20px; text-align: center; background: #fafafa;">
+                        <input type="file" name="profile_image" id="profile_image" style="font-family: inherit; font-size: 0.95rem; color: #666;" accept="image/*">
+                    </div>
+                    @error('profile_image') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+
+                <button type="submit" style="background: var(--corporate-red); color: white; border: none; padding: 14px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(148,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Password Form -->
+        <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+            <h3 style="margin: 0 0 25px; font-size: 1.3rem; color: #1a1a1a; font-weight: 800; border-bottom: 2px solid #f5f5f5; padding-bottom: 15px;">Update Password</h3>
+            
+            <form action="{{ route('profile.password') }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div style="margin-bottom: 25px;">
+                    <label for="current_password" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Current Password</label>
+                    <input type="password" name="current_password" id="current_password" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    @error('current_password') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label for="password" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">New Password</label>
+                    <input type="password" name="password" id="password" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    @error('password') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <label for="password_confirmation" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Confirm New Password</label>
+                    <input type="password" name="password_confirmation" id="password_confirmation" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                </div>
+
+                <button type="submit" style="background: #1a1a1a; color: white; border: none; padding: 14px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Update Password</button>
+            </form>
+        </div>
+
+    </div>
+</div>
 @endsection

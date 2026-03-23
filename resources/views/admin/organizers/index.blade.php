@@ -8,10 +8,16 @@
         <h1 style="color: #333; font-size: 1.8rem; margin-bottom: 0.5rem; text-transform: uppercase;">Organizers</h1>
         <p style="color: #666; font-size: 1rem;">Manage all event organizers on the platform.</p>
     </div>
-    <a href="#" class="btn btn-primary" style="padding: 12px 25px;">
-        <i class="fa-solid fa-user-plus"></i> Add New Organizer
+    <a href="{{ route('admin.organizers.create') }}" class="btn" style="background: var(--corporate-red); color: white; padding: 12px 25px; border-radius: 6px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-user-plus"></i> ADD NEW ORGANIZER
     </a>
 </div>
+
+@if(session('success'))
+    <div style="background: #eafaf1; border-left: 5px solid #2ecc71; color: #27ae60; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; display: flex; align-items: center; gap: 12px;">
+        <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+    </div>
+@endif
 
 <div class="card" style="max-width: 100%; border: 1px solid var(--corporate-red); border-radius: 8px; overflow: hidden; padding: 0;">
     <table style="width: 100%; border-collapse: collapse;">
@@ -32,7 +38,7 @@
                     <td style="padding: 15px 20px;">{{ $org->events()->count() }}</td>
                     <td style="padding: 15px 20px;">{{ $org->created_at->format('M d, Y') }}</td>
                     <td style="padding: 15px 20px; text-align: right;">
-                        <a href="#" style="color: var(--corporate-red); margin-right: 15px;"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" style="color: var(--corporate-red); margin-right: 15px;"><i class="fa-solid fa-pencil"></i></a>
                         <a href="#" style="color: #666;"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>

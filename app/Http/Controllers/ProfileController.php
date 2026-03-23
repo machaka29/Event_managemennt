@@ -22,8 +22,12 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+<<<<<<< HEAD
             'phone' => ['required', 'string', 'max:20'],
             'organization' => ['nullable', 'string', 'max:255'],
+=======
+            'phone' => ['nullable', 'string', 'starts_with:+255', 'max:20'],
+>>>>>>> 6cc1c78 (new changes)
             'profile_image' => ['nullable', 'image', 'max:1024'], // 1MB max
         ]);
 

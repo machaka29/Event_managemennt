@@ -25,25 +25,46 @@
         </div>
 
         <div style="background: var(--primary-bg); padding: 1.5rem; border-radius: 8px; text-align: left; margin-bottom: 2rem;">
-            <div style="margin-bottom: 1rem;">
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">Attendee Name</p>
-                <h4 style="margin: 0;">{{ $registration->attendee->full_name }}</h4>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">Event</p>
-                <h4 style="margin: 0;">{{ $registration->event->title }}</h4>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">Ticket ID</p>
-                <h4 style="margin: 0; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->ticket_id }}</h4>
-            </div>
-            <div>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">Attendance Status</p>
-                @if($registration->status === 'Attended')
-                    <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #d1fae5; color: #065f46; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">Already Checked In</span>
-                @else
-                    <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #fee2e2; color: #991b1b; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">Not Checked In</span>
+            <div style="margin-bottom: 1.5rem; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+                <h3 style="margin-bottom: 10px; color: var(--corporate-red); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Member Details</h3>
+                <div style="margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Full Name</p>
+                    <h4 style="margin: 0; font-size: 1.1rem;">{{ $registration->attendee->full_name }}</h4>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Email / Phone</p>
+                    <h4 style="margin: 0; font-weight: 500;">{{ $registration->attendee->email }} | {{ $registration->attendee->phone }}</h4>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Member ID / Access ID</p>
+                    <h4 style="margin: 0; font-family: monospace; color: #333;">{{ $registration->attendee->access_code }}</h4>
+                </div>
+                @if($registration->attendee->organization)
+                <div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Organization</p>
+                    <h4 style="margin: 0; font-weight: 500;">{{ $registration->attendee->organization }}</h4>
+                </div>
                 @endif
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <h3 style="margin-bottom: 10px; color: var(--corporate-red); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Event Info</h3>
+                <div style="margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Event Title</p>
+                    <h4 style="margin: 0;">{{ $registration->event->title }}</h4>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Ticket ID</p>
+                    <h4 style="margin: 0; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->ticket_id }}</h4>
+                </div>
+                <div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Status</p>
+                    @if($registration->attended)
+                        <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #d1fae5; color: #065f46; border-radius: 999px; font-size: 0.8rem; font-weight: bold;">Verified & Checked In</span>
+                    @else
+                        <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #fee2e2; color: #991b1b; border-radius: 999px; font-size: 0.8rem; font-weight: bold;">Authentic - Not Checked In</span>
+                    @endif
+                </div>
             </div>
         </div>
 

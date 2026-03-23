@@ -231,7 +231,7 @@
 </head>
 <body>
     <nav class="org-nav">
-        <a href="{{ route('home') }}" class="org-logo">
+        <a href="{{ route('dashboard') }}" class="org-logo">
             @php $systemLogo = \App\Models\SystemSetting::get('system_logo'); @endphp
             @if($systemLogo)
                 <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 45px; height: 45px; border-radius: 8px; object-fit: cover; border: 2px solid #eee;">
@@ -266,10 +266,10 @@
                 </div>
             </div>
             
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
                 @csrf
-                <button type="submit" class="logout-btn" title="Logout">
-                    <i class="fa-solid fa-power-off"></i>
+                <button type="submit" class="logout-btn" title="Logout" style="font-family: inherit;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </form>
         </div>
@@ -289,7 +289,8 @@
                 <i class="fa-solid fa-user-group"></i>
                 <span>Attendees</span>
             </a>
-            <a href="{{ route('organizer.reports.index') }}" class="sidebar-link {{ request()->routeIs('organizer.reports.index') ? 'active' : '' }}">
+
+            <a href="{{ route('organizer.reports.index') }}" class="sidebar-link {{ request()->routeIs('organizer.reports.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-chart-simple"></i>
                 <span>Analytics</span>
             </a>
@@ -310,10 +311,10 @@
 
                 <footer class="dashboard-footer">
                     <div class="footer-links">
-                        <a href="#" class="footer-link">About Us</a>
-                        <a href="#" class="footer-link">Contact</a>
-                        <a href="#" class="footer-link">Privacy Policy</a>
-                        <a href="#" class="footer-link">Terms of Use</a>
+                        <a href="javascript:void(0)" class="footer-link">About Us</a>
+                        <a href="javascript:void(0)" class="footer-link">Contact</a>
+                        <a href="javascript:void(0)" class="footer-link">Privacy Policy</a>
+                        <a href="javascript:void(0)" class="footer-link">Terms of Use</a>
                     </div>
                     <p class="copyright">&copy; {{ date('Y') }} EmCa Technologies. All rights reserved.</p>
                     <p class="powered-by">Global Event Registration Solutions</p>

@@ -37,6 +37,7 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         <!-- Right: Registration Form -->
         <div class="card" style="max-width: 100%; position: sticky; top: 2rem;">
             <h3 style="margin-bottom: 0.5rem; text-align: center;">Enter your credentials to register</h3>
@@ -45,43 +46,85 @@
             @if(session('error'))
                 <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
                     {{ session('error') }}
+=======
+        <!-- Right: Member Confirmation -->
+        <div class="card" style="max-width: 100%; position: sticky; top: 2rem; border-top: 4px solid var(--corporate-red); text-align: center; padding: 40px 30px;">
+            @if(session('member_access_id'))
+                <div style="width: 60px; height: 60px; background: #FFF5F5; color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 20px;">
+                    <i class="fa-solid fa-user-check"></i>
+>>>>>>> 6cc1c78 (new changes)
                 </div>
-            @endif
-
-            <form action="{{ route('events.public.register', $event->id) }}" method="POST">
-                @csrf
                 
-                <div class="form-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" name="full_name" id="full_name" class="form-control" required value="{{ old('full_name') }}">
-                    @error('full_name') <p class="text-error">{{ $message }}</p> @enderror
-                </div>
+                <h3 style="margin-bottom: 10px;">ID Verified</h3>
+                <p style="color: #666; margin-bottom: 30px; font-size: 0.95rem;">
+                    Welcome back! You are logged in with Member ID: <br>
+                    <strong style="color: var(--corporate-red); font-family: monospace;">{{ session('member_access_id') }}</strong>
+                </p>
+                
+                @if(session('error'))
+                    <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" name="email" id="email" class="form-control" required value="{{ old('email') }}">
-                    @error('email') <p class="text-error">{{ $message }}</p> @enderror
-                </div>
+                <form action="{{ route('events.public.register', $event->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn" style="width: 100%; padding: 18px; background: var(--corporate-red); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(148, 0, 0, 0.2);"
+                        onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';"
+                    >
+                        CONFIRM ATTENDANCE
+                    </button>
+                </form>
 
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" name="phone" id="phone" class="form-control" required value="{{ old('phone') }}">
-                    @error('phone') <p class="text-error">{{ $message }}</p> @enderror
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <form action="{{ route('member.logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" style="background: none; border: none; color: #999; cursor: pointer; font-size: 0.85rem; text-decoration: underline;">
+                            Not you? Switch Member ID
+                        </button>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="organization">Organization (Optional)</label>
-                    <input type="text" name="organization" id="organization" class="form-control" value="{{ old('organization') }}">
-                    @error('organization') <p class="text-error">{{ $message }}</p> @enderror
+            @else
+                <div style="width: 60px; height: 60px; background: #FFF5F5; color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 20px;">
+                    <i class="fa-solid fa-id-card"></i>
                 </div>
+                
+                <h3 style="margin-bottom: 10px;">Register for Event</h3>
+                <p style="color: #666; margin-bottom: 30px; font-size: 0.95rem;">
+                    Please enter your <strong>Member ID</strong> to confirm your attendance.
+                </p>
 
+<<<<<<< HEAD
                 <div style="margin-top: 2rem;">
                     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-family: 'Century Gothic', sans-serif;">Confirm Registration</button>
                     <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; font-family: 'Century Gothic', sans-serif;">
                         By registering, you agree to receive event-related notifications.
+=======
+                @if(session('error'))
+                    <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('events.public.register', $event->id) }}" method="POST">
+                    @csrf
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" name="access_code" placeholder="e.g. EM-1234-XYZ" required 
+                            style="width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 8px; text-align: center; font-family: monospace; font-weight: bold; font-size: 1.1rem; outline: none; transition: 0.3s;"
+                            onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; padding: 18px; background: var(--corporate-red); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(148, 0, 0, 0.2);"
+                        onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';"
+                    >
+                        VERIFY & REGISTER
+                    </button>
+                    
+                    <p style="margin-top: 15px; font-size: 0.8rem; color: #999;">
+                        Don't have an ID? Please contact the organizer.
+>>>>>>> 6cc1c78 (new changes)
                     </p>
-                </div>
-            </form>
+                </form>
+            @endif
         </div>
     </div>
 

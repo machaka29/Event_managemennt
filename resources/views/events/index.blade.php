@@ -83,7 +83,7 @@
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                             <a href="{{ route('events.edit', $event->id) }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #fef9e7; color: #f1c40f; border-radius: 8px; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='#f1c40f'; this.style.color='white';" onmouseout="this.style.background='#fef9e7'; this.style.color='#f1c40f';" title="Edit Event Listing">
-                                <i class="fa-solid fa-pen-to-square"></i>
+                                <i class="fa-solid fa-pencil"></i>
                             </a>
                             <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Wait! Are you sure you want to delete this event? This action cannot be undone.');">
                                 @csrf @method('DELETE')

@@ -202,6 +202,7 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <!-- SECTION 6: TIPS SECTION -->
 <div>
     <h3 style="font-size: 1.1rem; color: #333; margin: 0 0 15px; font-weight: bold; text-transform: uppercase; position: relative; display: inline-block;">
@@ -225,6 +226,8 @@
         </a>
     </div>
 </div>
+=======
+>>>>>>> 6cc1c78 (new changes)
 
 <script>
     function switchTab(tab) {

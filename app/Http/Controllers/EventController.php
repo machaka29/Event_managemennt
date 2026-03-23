@@ -181,6 +181,83 @@ class EventController extends Controller
         return view('events.registrations', compact('registrations'));
     }
 
+    /**
+     * Manage all unique attendees across events.
+     */
+    public function attendeesIndex()
+    {
+        // For organizers, show attendees who have registered for their events
+        $eventIds = auth()->user()->events()->pluck('id');
+        $attendeeIds = \App\Models\Registration::whereIn('event_id', $eventIds)->pluck('attendee_id')->unique();
+        
+        $attendees = \App\Models\Attendee::whereIn('id', $attendeeIds)
+            ->withCount('registrations')
+            ->latest()
+            ->paginate(15);
+            
+        return view('events.attendees.index', compact('attendees'));
+    }
+
+    /**
+     * Show form to manually create a new attendee (Member).
+     */
+    public function attendeeCreate()
+    {
+        return view('events.attendees.create');
+    }
+
+    /**
+     * Store a manually created attendee with an access code.
+     */
+    public function attendeeStore(Request $request)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:attendees,email',
+            'phone' => 'nullable|string|max:20',
+            'organization' => 'nullable|string|max:255',
+        ]);
+
+        // Generate unique access code: EM-XXXX-RAND
+        $count = \App\Models\Attendee::count() + 1;
+        $access_code = 'EM-' . str_pad($count, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(\Illuminate\Support\Str::random(4));
+
+        \App\Models\Attendee::create([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'organization' => $request->organization,
+            'access_code' => $access_code,
+        ]);
+
+        return redirect()->route('organizer.attendees.index')->with('success', "Member created successfully! Access ID: $access_code");
+    }
+
+    public function attendeeEdit(\App\Models\Attendee $attendee)
+    {
+        return view('events.attendees.edit', compact('attendee'));
+    }
+
+    public function attendeeUpdate(Request $request, \App\Models\Attendee $attendee)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:attendees,email,' . $attendee->id,
+            'phone' => 'nullable|string|max:20',
+            'organization' => 'nullable|string|max:255',
+        ]);
+
+        $attendee->update($request->only(['full_name', 'email', 'phone', 'organization']));
+
+        return redirect()->route('organizer.attendees.index')->with('success', 'Member updated successfully.');
+    }
+
+    public function attendeeDestroy(\App\Models\Attendee $attendee)
+    {
+        $attendee->delete();
+        return redirect()->route('organizer.attendees.index')->with('success', 'Member deleted successfully.');
+    }
+
     public function reports()
     {
         $user = auth()->user();

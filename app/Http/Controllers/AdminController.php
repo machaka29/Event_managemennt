@@ -120,4 +120,80 @@ class AdminController extends Controller
         $attendees = Attendee::withCount('registrations')->latest()->paginate(10);
         return view('admin.attendees.list', compact('attendees'));
     }
+
+    public function organizerCreate()
+    {
+        return view('admin.organizers.create');
+    }
+
+    public function organizerStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => 'organizer',
+        ]);
+
+        return redirect()->route('admin.organizers.index')->with('success', 'Organizer account created successfully.');
+    }
+
+    public function attendeeCreate()
+    {
+        return view('admin.attendees.create');
+    }
+
+    public function attendeeStore(Request $request)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:attendees',
+            'phone' => 'nullable|string|max:20',
+            'organization' => 'nullable|string|max:255',
+        ]);
+
+        $count = Attendee::count() + 1;
+        $access_code = 'EM-' . str_pad($count, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(\Illuminate\Support\Str::random(4));
+
+        Attendee::create([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'organization' => $request->organization,
+            'access_code' => $access_code,
+        ]);
+
+        return redirect()->route('admin.attendees.list')->with('success', 'Member registered successfully. ID: ' . $access_code);
+    }
+
+    public function attendeeEdit(Attendee $attendee)
+    {
+        return view('events.attendees.edit', compact('attendee'));
+    }
+
+    public function attendeeUpdate(Request $request, Attendee $attendee)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:attendees,email,' . $attendee->id,
+            'phone' => 'nullable|string|max:20',
+            'organization' => 'nullable|string|max:255',
+        ]);
+
+        $attendee->update($request->only(['full_name', 'email', 'phone', 'organization']));
+
+        return redirect()->route('admin.attendees.list')->with('success', 'Member updated successfully.');
+    }
+
+    public function attendeeDestroy(Attendee $attendee)
+    {
+        $attendee->delete();
+        return redirect()->route('admin.attendees.list')->with('success', 'Member deleted successfully.');
+    }
 }

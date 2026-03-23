@@ -65,6 +65,7 @@
             <div style="position: absolute; right: -16px; bottom: -16px; width: 32px; height: 32px; background: var(--primary-bg); border-radius: 50%; z-index: 2;"></div>
         </div>
 
+<<<<<<< HEAD
         <!-- Ticket Bottom Section -->
         <div style="padding: 2.5rem 3rem; background: #fafafa; display: flex; justify-content: space-between; align-items: center;">
             <div>
@@ -81,6 +82,14 @@
                     Print
                 </button>
             </div>
+=======
+        <!-- Ticket Footer -->
+        <div style="padding: 1.5rem; text-align: center; background: var(--accent-soft-red);">
+            <a href="{{ route('events.public.ticket.download', $registration->ticket_id) }}" class="btn btn-primary" style="text-decoration: none; display: inline-block; padding: 12px 30px; font-weight: bold; background: var(--corporate-red); color: white; border-radius: 5px; box-shadow: 0 4px 10px rgba(148, 0, 0, 0.2);">
+                <i class="fa-solid fa-file-pdf"></i> DOWNLOAD TICKET (PDF)
+            </a>
+            <p style="margin-top: 1rem; font-size: 0.8rem;">Please present this ticket at the entrance.</p>
+>>>>>>> 6cc1c78 (new changes)
         </div>
     </div>
 

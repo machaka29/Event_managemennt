@@ -107,7 +107,7 @@
 <body>
     <!-- FIXED TOP NAV -->
     <nav class="page-header" style="position: fixed; top: 0; width: 100%; z-index: 1000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--corporate-red); background: var(--header-gradient); margin: 0;">
-        <a href="{{ route('home') }}" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+        <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
             <div style="width: 40px; height: 40px; border-radius: 5px; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
                 <i class="fa-solid fa-calendar-check"></i>
             </div>
@@ -134,7 +134,7 @@
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" style="background: none; border: none; color: var(--corporate-red); cursor: pointer; font-size: 1.2rem;" title="Logout">
-                    <i class="fa-solid fa-unlock-keyhole"></i>
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </form>
         </div>
@@ -162,15 +162,25 @@
                 <span>ALL REGISTRATIONS</span>
             </a>
 
-            <a href="{{ route('admin.organizers.index') }}" class="menu-item {{ request()->routeIs('admin.organizers*') ? 'active' : '' }}">
-                <i class="fa-solid fa-users-gear"></i>
-                <span>ORGANIZERS</span>
-            </a>
+            <div style="position: relative;">
+                <a href="{{ route('admin.organizers.index') }}" class="menu-item {{ request()->routeIs('admin.organizers*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>ORGANIZERS</span>
+                </a>
+                <a href="{{ route('admin.organizers.create') }}" style="position: absolute; right: 20px; top: 50%; translate: 0 -50%; color: var(--corporate-red); opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity='1';" title="Add New Organizer">
+                    <i class="fa-solid fa-plus-circle"></i>
+                </a>
+            </div>
 
-            <a href="{{ route('admin.attendees.list') }}" class="menu-item {{ request()->routeIs('admin.attendees.list') ? 'active' : '' }}">
-                <i class="fa-solid fa-user-tie"></i>
-                <span>ATTENDEES</span>
-            </a>
+            <div style="position: relative;">
+                <a href="{{ route('admin.attendees.list') }}" class="menu-item {{ request()->routeIs('admin.attendees.list') ? 'active' : '' }}">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span>ATTENDEES</span>
+                </a>
+                <a href="{{ route('admin.attendees.create') }}" style="position: absolute; right: 20px; top: 50%; translate: 0 -50%; color: var(--corporate-red); opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity='1';" title="Add New Member">
+                    <i class="fa-solid fa-plus-circle"></i>
+                </a>
+            </div>
 
             <a href="{{ route('admin.reports.index') }}" class="menu-item {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
                 <i class="fa-solid fa-chart-pie"></i>

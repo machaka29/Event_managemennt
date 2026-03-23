@@ -10,7 +10,8 @@ class Attendee extends Model
         'full_name',
         'email',
         'phone',
-        'organization'
+        'organization',
+        'access_code'
     ];
 
     public function registrations()

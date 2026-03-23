@@ -53,7 +53,7 @@
                 $contactEmail = \App\Models\Setting::where('key', 'contact_email')->value('value') ?: 'info@EmCa.tech';
             @endphp
     <nav class="page-header" style="position: sticky; top: 0; z-index: 1000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--corporate-red); background: var(--header-gradient);">
-        <a href="{{ route('home') }}" style="text-decoration: none; display: flex; align-items: center; gap: 0.8rem;">
+        <a href="{{ auth()->check() ? (auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard')) : route('home') }}" style="text-decoration: none; display: flex; align-items: center; gap: 0.8rem;">
             @php $systemLogo = \App\Models\SystemSetting::get('system_logo'); @endphp
             @if($systemLogo)
                 <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 40px; height: 40px; border-radius: 5px; object-fit: cover;">
@@ -99,11 +99,13 @@
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
             @auth
-                <a href="{{ route('dashboard') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: bold;">Dashboard</a>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-primary" style="padding: 10px 25px; background: var(--corporate-red); border: none;">Logout</button>
-                </form>
+                @if(!Route::is('home'))
+
+                    <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+                        @csrf
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 25px; background: var(--corporate-red); border: none; text-decoration: none; color: white; display: inline-block; font-weight: bold; border-radius: 5px; cursor: pointer;">Logout</button>
+                    </form>
+                @endif
             @else
                 <a href="{{ route('login') }}" class="btn btn-primary" style="background-color: var(--corporate-red); padding: 10px 35px; border-radius: 5px; color: white; text-decoration: none; font-weight: bold; border: none;">LOGIN</a>
             @endauth
@@ -153,10 +155,10 @@
         </div>
 
         <div style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 2.5rem; color: var(--corporate-red); font-weight: 500;">
-            <a href="#" style="text-decoration: none; color: inherit;">About Us</a>
-            <a href="#" style="text-decoration: none; color: inherit;">Contact</a>
-            <a href="#" style="text-decoration: none; color: inherit;">Privacy Policy</a>
-            <a href="#" style="text-decoration: none; color: inherit;">Terms of Use</a>
+            <a href="javascript:void(0)" style="text-decoration: none; color: inherit;">About Us</a>
+            <a href="javascript:void(0)" style="text-decoration: none; color: inherit;">Contact</a>
+            <a href="javascript:void(0)" style="text-decoration: none; color: inherit;">Privacy Policy</a>
+            <a href="javascript:void(0)" style="text-decoration: none; color: inherit;">Terms of Use</a>
         </div>
 
         <div style="font-size: 0.95rem; color: #888;">

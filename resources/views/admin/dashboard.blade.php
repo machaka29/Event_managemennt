@@ -65,7 +65,23 @@
     <div style="background: #FFF5F5; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(148,0,0,0.05);">
         <div style="color: #333; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px;">Total Organizers</div>
         <div style="font-size: 28px; font-weight: bold; color: var(--corporate-red);">{{ $totalOrganizers }}</div>
-        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">{{ $pendingOrganizers }} pending</div>
+        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">{{ $pendingOrganizers }} pending approval</div>
+    </div>
+</div>
+
+<!-- QUICK ACTIONS SECTION -->
+<div style="margin-bottom: 40px; background: #fafafa; padding: 25px; border-radius: 12px; border: 1px dashed var(--corporate-red); display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+    <div>
+        <h3 style="margin: 0; font-size: 1rem; color: #333; text-transform: uppercase; font-weight: 800;">Quick Actions</h3>
+        <p style="margin: 5px 0 0; font-size: 0.85rem; color: #666;">Perform common administrative tasks instantly.</p>
+    </div>
+    <div style="display: flex; gap: 15px;">
+        <a href="{{ route('admin.organizers.create') }}" class="btn" style="background: var(--corporate-red); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(148, 0, 0, 0.2); transition: 0.3s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';" >
+            <i class="fa-solid fa-user-plus"></i> ADD NEW ORGANIZER
+        </a>
+        <a href="{{ route('admin.attendees.create') }}" class="btn" style="background: #1a1a1a; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: 0.3s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';" >
+            <i class="fa-solid fa-person-circle-plus"></i> REGISTER NEW MEMBER
+        </a>
     </div>
 </div>
 
@@ -173,10 +189,7 @@
                 <span style="color: #666;">• Total Attendees:</span>
                 <span style="font-weight: bold; color: var(--corporate-red);">{{ number_format($systemStats['total_attendees']) }}</span>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-                <span style="color: #666;">• Pending Appr:</span>
-                <span style="font-weight: bold; color: var(--corporate-red);">{{ $systemStats['pending_approvals'] }}</span>
-            </div>
+
             <div style="display: flex; justify-content: space-between;">
                 <span style="color: #666;">• Events This Month:</span>
                 <span style="font-weight: bold; color: var(--corporate-red);">{{ $systemStats['events_this_month'] }}</span>
