@@ -10,7 +10,7 @@
             <i class="fa-solid fa-key"></i>
         </div>
 
-        <h1 style="font-size: 2rem; color: #1a1a1a; margin-bottom: 10px; font-weight: 800; letter-spacing: -0.5px;">Member Access</h1>
+        <h1 style="font-size: 2rem; color: #333; margin-bottom: 10px; font-weight: 800; letter-spacing: -0.5px;">Member Access</h1>
         <p style="color: #666; margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6;">Enter your unique **Member ID** to view events and track your participation.</p>
 
         <form action="{{ route('member.gate.verify') }}" method="POST">
@@ -21,7 +21,7 @@
                     style="width: 100%; padding: 18px 25px; border-radius: 12px; border: 2px solid #eee; font-size: 1.2rem; outline: none; transition: border-color 0.3s; font-family: monospace; text-align: center; letter-spacing: 2px;"
                     onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
                 @error('access_code')
-                    <p style="color: #e74c3c; font-size: 0.85rem; margin-top: 10px; font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i> {{ $message }}</p>
+                    <p style="color: var(--corporate-red); font-size: 0.85rem; margin-top: 10px; font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i> {{ $message }}</p>
                 @enderror
             </div>
 

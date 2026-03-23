@@ -9,8 +9,8 @@
 </div>
 
 @if(session('success'))
-    <div style="background: #10b981; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        {{ session('success') }}
+    <div style="background: #FFF5F5; border-left: 5px solid var(--corporate-red); color: var(--corporate-red); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold;">
+        <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
     </div>
 @endif
 
@@ -38,11 +38,11 @@
                     <td style="padding: 15px 20px; text-align: right; display: flex; gap: 10px; justify-content: flex-end;">
                         <form action="{{ route('admin.events.approve', $event->id) }}" method="POST">
                             @csrf @method('PATCH')
-                            <button type="submit" class="btn btn-primary" style="background: #10b981; padding: 8px 15px; font-size: 0.85rem;">Approve</button>
+                            <button type="submit" class="btn btn-primary" style="background: var(--corporate-red); padding: 8px 15px; font-size: 0.85rem; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold;">Approve</button>
                         </form>
                         <form action="{{ route('admin.events.reject', $event->id) }}" method="POST">
                             @csrf @method('PATCH')
-                            <button type="submit" class="btn btn-primary" style="background: #ef4444; padding: 8px 15px; font-size: 0.85rem;">Reject</button>
+                            <button type="submit" class="btn btn-primary" style="background: #333; padding: 8px 15px; font-size: 0.85rem; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold;">Reject</button>
                         </form>
                     </td>
                 </tr>

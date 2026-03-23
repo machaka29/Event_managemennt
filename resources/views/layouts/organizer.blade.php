@@ -16,7 +16,7 @@
         :root {
             --corporate-red: #940000;
             --accent-soft-red: #FFF5F5;
-            --header-gradient: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
+            --header-gradient: linear-gradient(135deg, #940000 0%, #610000 100%);
         }
 
         body {
@@ -160,9 +160,10 @@
         }
 
         .sidebar-link.active {
-            background: #FFF5F5;
+            background: var(--accent-soft-red);
             color: var(--corporate-red);
-            border-left-color: var(--corporate-red);
+            border-left: 4px solid var(--corporate-red);
+            font-weight: 800;
         }
 
         /* Main Content Area */

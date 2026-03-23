@@ -24,6 +24,8 @@
             </div>
         </div>
         <a href="{{ route('events.create') }}" class="btn btn-primary">+ Create New Event</a>
+    </div>
+
 <!-- SECTION 2: WELCOME HEADER -->
 <div style="margin-bottom: 40px;">
     <h1 style="font-size: 2rem; color: #333; margin: 0; font-weight: bold; position: relative; display: inline-block;">
@@ -99,7 +101,7 @@
                             <td style="padding: 15px 20px; color: #666;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
                             <td style="padding: 15px 20px; color: #666;">{{ $event->location }}</td>
                             <td style="padding: 15px 20px; color: #666;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
-                            <td style="padding: 15px 20px;"><span style="color: var(--corporate-red); font-weight: bold;">🟢 Upcoming</span></td>
+                            <td style="padding: 15px 20px;"><span style="color: var(--corporate-red); font-weight: bold;"><i class="fa-solid fa-clock-rotate-left"></i> Upcoming</span></td>
                         </tr>
                     @empty
                         <tr><td colspan="5" style="padding: 40px; text-align: center; color: #999;">No upcoming events found.</td></tr>
@@ -127,7 +129,7 @@
                             <td style="padding: 15px 20px; color: #666;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
                             <td style="padding: 15px 20px; color: #666;">{{ $event->location }}</td>
                             <td style="padding: 15px 20px; color: #666;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
-                            <td style="padding: 15px 20px;"><span style="color: #666; font-weight: bold;">🔴 Past</span></td>
+                            <td style="padding: 15px 20px;"><span style="color: #999; font-weight: bold;"><i class="fa-solid fa-calendar-check"></i> Past</span></td>
                         </tr>
                     @empty
                         <tr><td colspan="5" style="padding: 40px; text-align: center; color: #999;">No past events found.</td></tr>
@@ -155,7 +157,7 @@
                             <td style="padding: 15px 20px; color: #666;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
                             <td style="padding: 15px 20px; color: #666;">{{ $event->location }}</td>
                             <td style="padding: 15px 20px; color: #666;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
-                            <td style="padding: 15px 20px;"><span style="color: #999; font-weight: bold;">⚪ Draft</span></td>
+                            <td style="padding: 15px 20px;"><span style="color: #ccc; font-weight: bold;"><i class="fa-solid fa-pencil"></i> Draft</span></td>
                         </tr>
                     @empty
                         <tr><td colspan="5" style="padding: 40px; text-align: center; color: #999;">No draft events found.</td></tr>
@@ -202,9 +204,8 @@
     </div>
 </div>
 
-<<<<<<< HEAD
 <!-- SECTION 6: TIPS SECTION -->
-<div>
+<div style="margin-bottom: 50px;">
     <h3 style="font-size: 1.1rem; color: #333; margin: 0 0 15px; font-weight: bold; text-transform: uppercase; position: relative; display: inline-block;">
         Tips
         <div style="width: 40px; height: 3px; background: var(--corporate-red); margin-top: 5px;"></div>
@@ -219,15 +220,13 @@
         </div>
     </div>
     
-    <div style="margin-top: 3rem;">
-        <a href="javascript:history.back()" class="btn-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
-            Back
+    <div style="margin-top: 3rem; display: flex; justify-content: center;">
+        <a href="{{ route('home') }}" class="btn-back">
+            <i class="fa-solid fa-house"></i>
+            Back to Home
         </a>
     </div>
 </div>
-=======
->>>>>>> 6cc1c78 (new changes)
 
 <script>
     function switchTab(tab) {
@@ -260,4 +259,3 @@
     }
 </script>
 @endsection
-

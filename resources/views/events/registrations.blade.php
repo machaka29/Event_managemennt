@@ -40,17 +40,17 @@
                     </td>
                     <td style="padding: 20px; text-align: center;">
                         @if($reg->attended)
-                            <span style="background: #10b981; color: white; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 2px 5px rgba(16,185,129,0.2);">
+                            <span style="background: var(--corporate-red); color: white; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 2px 5px rgba(148,0,0,0.2);">
                                 <i class="fa-solid fa-check-double"></i> ATTENDED
                             </span>
                         @else
-                            <span style="background: #f59e0b; color: white; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; box-shadow: 0 2px 5px rgba(245,158,11,0.2);">
+                            <span style="background: #f3f4f6; color: #666; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; border: 1px solid #ddd;">
                                 <i class="fa-solid fa-hourglass-half"></i> REGISTERED
                             </span>
                         @endif
                     </td>
                     <td style="padding: 20px; text-align: right;">
-                        <a href="{{ route('events.public.ticket', $reg->ticket_id) }}" target="_blank" class="btn-secondary" style="padding: 8px 15px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 8px;">
+                        <a href="{{ route('events.public.ticket', $reg->ticket_id) }}" target="_blank" class="btn-secondary" style="padding: 8px 15px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--corporate-red); border: 1px solid var(--corporate-red); border-radius: 6px; text-decoration: none; font-weight: bold; transition: all 0.3s;" onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';" onmouseout="this.style.background='white'; this.style.color='var(--corporate-red)';">
                             <i class="fa-solid fa-ticket"></i> VIEW TICKET
                         </a>
                     </td>

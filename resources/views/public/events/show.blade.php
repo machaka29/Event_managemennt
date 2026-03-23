@@ -37,22 +37,11 @@
             </div>
         </div>
 
-<<<<<<< HEAD
-        <!-- Right: Registration Form -->
-        <div class="card" style="max-width: 100%; position: sticky; top: 2rem;">
-            <h3 style="margin-bottom: 0.5rem; text-align: center;">Enter your credentials to register</h3>
-            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;">Fill in the details below to secure your spot.</p>
-            
-            @if(session('error'))
-                <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
-                    {{ session('error') }}
-=======
         <!-- Right: Member Confirmation -->
         <div class="card" style="max-width: 100%; position: sticky; top: 2rem; border-top: 4px solid var(--corporate-red); text-align: center; padding: 40px 30px;">
             @if(session('member_access_id'))
                 <div style="width: 60px; height: 60px; background: #FFF5F5; color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 20px;">
                     <i class="fa-solid fa-user-check"></i>
->>>>>>> 6cc1c78 (new changes)
                 </div>
                 
                 <h3 style="margin-bottom: 10px;">ID Verified</h3>
@@ -94,12 +83,6 @@
                     Please enter your <strong>Member ID</strong> to confirm your attendance.
                 </p>
 
-<<<<<<< HEAD
-                <div style="margin-top: 2rem;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-family: 'Century Gothic', sans-serif;">Confirm Registration</button>
-                    <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; font-family: 'Century Gothic', sans-serif;">
-                        By registering, you agree to receive event-related notifications.
-=======
                 @if(session('error'))
                     <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
                         {{ session('error') }}
@@ -119,19 +102,18 @@
                         VERIFY & REGISTER
                     </button>
                     
-                    <p style="margin-top: 15px; font-size: 0.8rem; color: #999;">
+                    <p style="margin-top: 20px; font-size: 0.8rem; color: #999;">
                         Don't have an ID? Please contact the organizer.
->>>>>>> 6cc1c78 (new changes)
                     </p>
                 </form>
             @endif
         </div>
     </div>
 
-    <div style="margin-top: 3rem;">
-        <a href="javascript:history.back()" class="btn-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
-            Back
+    <div style="margin-top: 3rem; display: flex; justify-content: center;">
+        <a href="{{ route('home') }}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Events
         </a>
     </div>
 </div>

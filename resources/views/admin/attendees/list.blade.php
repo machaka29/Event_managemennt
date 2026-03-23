@@ -14,7 +14,7 @@
 </div>
 
 @if(session('success'))
-    <div style="background: #eafaf1; border-left: 5px solid #2ecc71; color: #27ae60; padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; display: flex; align-items: center; gap: 12px;">
+    <div style="background: #FFF5F5; border-left: 5px solid var(--corporate-red); color: var(--corporate-red); padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; display: flex; align-items: center; gap: 12px;">
         <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
     </div>
 @endif
@@ -22,7 +22,7 @@
 <div class="card" style="max-width: 100%; border: 1px solid var(--corporate-red); border-radius: 8px; overflow: hidden; padding: 0;">
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
-            <tr style="background: var(--header-gradient); text-align: left; border-bottom: 2px solid var(--corporate-red);">
+            <tr style="background: var(--accent-soft-red); text-align: left; border-bottom: 2px solid var(--corporate-red);">
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Member Name</th>
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Email</th>
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Access ID</th>
@@ -50,7 +50,7 @@
                             <button onclick="navigator.clipboard.writeText('{{ $attendee->access_code }}'); alert('ID Copied!');" style="background: none; border: 1px solid #eee; color: #888; padding: 5px 10px; border-radius: 4px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='var(--corporate-red)'; this.style.color='var(--corporate-red)';" title="Copy Access ID">
                                 <i class="fa-solid fa-copy"></i>
                             </button>
-                            <a href="{{ route('admin.attendees.edit', $attendee->id) }}" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #fef9e7; color: #f1c40f; border-radius: 4px; border: 1px solid #eee; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='#f1c40f'; this.style.color='white';" title="Edit Member">
+                            <a href="{{ route('admin.attendees.edit', $attendee->id) }}" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: #333; border-radius: 4px; border: 1px solid #eee; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='#333'; this.style.color='white';" title="Edit Member">
                                 <i class="fa-solid fa-pencil" style="font-size: 0.8rem;"></i>
                             </a>
                             <form action="{{ route('admin.attendees.destroy', $attendee->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this member? This action cannot be undone.');">

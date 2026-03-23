@@ -43,9 +43,6 @@
                          alt="QR Code" 
                          style="width: 140px; height: 140px; display: block;">
                     <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; font-weight: bold;">SCAN TO VERIFY</p>
-                <!-- QR Code -->
-                <div style="width: 100px; height: 100px; border: 1px solid var(--border-color); padding: 0.25rem; background: white;">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ urlencode(route('events.public.verify', $registration->ticket_id)) }}" alt="QR Code" style="width: 100%; height: 100%;">
                 </div>
             </div>
 
@@ -61,11 +58,10 @@
             </div>
 
             <!-- Perforation circles for design -->
-            <div style="position: absolute; left: -16px; bottom: -16px; width: 32px; height: 32px; background: var(--primary-bg); border-radius: 50%; z-index: 2;"></div>
-            <div style="position: absolute; right: -16px; bottom: -16px; width: 32px; height: 32px; background: var(--primary-bg); border-radius: 50%; z-index: 2;"></div>
+            <div style="position: absolute; left: -16px; bottom: -16px; width: 32px; height: 32px; background: #fafafa; border-radius: 50%; z-index: 2;"></div>
+            <div style="position: absolute; right: -16px; bottom: -16px; width: 32px; height: 32px; background: #fafafa; border-radius: 50%; z-index: 2;"></div>
         </div>
 
-<<<<<<< HEAD
         <!-- Ticket Bottom Section -->
         <div style="padding: 2.5rem 3rem; background: #fafafa; display: flex; justify-content: space-between; align-items: center;">
             <div>
@@ -73,23 +69,13 @@
                 <p style="font-family: monospace; font-size: 1.25rem; font-weight: bold; color: var(--corporate-red); letter-spacing: 2px;">#{{ $registration->ticket_id }}</p>
             </div>
             <div style="display: flex; gap: 1rem;">
-                <button id="downloadBtn" onclick="downloadTicket()" class="btn btn-outline" style="padding: 0.8rem 1.5rem; border-radius: 12px; font-family: 'Century Gothic', sans-serif; display: flex; align-items: center; gap: 0.5rem; border-color: #ddd; color: #444;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    Download
+                <button id="downloadBtn" onclick="downloadTicket()" class="btn" style="padding: 10px 20px; border-radius: 8px; font-weight: bold; background: white; border: 1px solid #ddd; color: #444; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <i class="fa-solid fa-download"></i> Download
                 </button>
-                <button onclick="window.print()" class="btn btn-primary" style="padding: 0.8rem 1.5rem; border-radius: 12px; font-family: 'Century Gothic', sans-serif; display: flex; align-items: center; gap: 0.5rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                    Print
+                <button onclick="window.print()" class="btn" style="padding: 10px 20px; border-radius: 8px; font-weight: bold; background: var(--corporate-red); color: white; border: none; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(148, 0, 0, 0.2);">
+                    <i class="fa-solid fa-print"></i> Print
                 </button>
             </div>
-=======
-        <!-- Ticket Footer -->
-        <div style="padding: 1.5rem; text-align: center; background: var(--accent-soft-red);">
-            <a href="{{ route('events.public.ticket.download', $registration->ticket_id) }}" class="btn btn-primary" style="text-decoration: none; display: inline-block; padding: 12px 30px; font-weight: bold; background: var(--corporate-red); color: white; border-radius: 5px; box-shadow: 0 4px 10px rgba(148, 0, 0, 0.2);">
-                <i class="fa-solid fa-file-pdf"></i> DOWNLOAD TICKET (PDF)
-            </a>
-            <p style="margin-top: 1rem; font-size: 0.8rem;">Please present this ticket at the entrance.</p>
->>>>>>> 6cc1c78 (new changes)
         </div>
     </div>
 
@@ -98,9 +84,9 @@
         <p>Managed by <strong>EmCa TECHONOLOGY</strong></p>
     </div>
 
-    <div style="margin-top: 3rem; width: 100%; max-width: 650px;">
+    <div style="margin-top: 3rem; width: 100%; max-width: 650px; display: flex; justify-content: center;">
         <a href="{{ route('home') }}" class="btn-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+            <i class="fa-solid fa-arrow-left"></i>
             Back to Home
         </a>
     </div>

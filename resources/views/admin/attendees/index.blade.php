@@ -13,7 +13,7 @@
 <div class="card" style="max-width: 100%; border: 1px solid var(--corporate-red); border-radius: 8px; overflow: hidden; padding: 0;">
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
-            <tr style="background: var(--header-gradient); text-align: left; border-bottom: 2px solid var(--corporate-red);">
+            <tr style="background: var(--accent-soft-red); text-align: left; border-bottom: 2px solid var(--corporate-red);">
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Attendee Name</th>
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Email</th>
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Event</th>
@@ -31,9 +31,9 @@
                     <td style="padding: 15px 20px;">{{ $reg->created_at->format('M d, Y') }}</td>
                     <td style="padding: 15px 20px;">
                         @if($reg->attended)
-                            <span style="color: #10b981;">● Attended</span>
+                            <span style="color: var(--corporate-red); font-weight: bold;">● Attended</span>
                         @else
-                            <span style="color: #f59e0b;">● Registered</span>
+                            <span style="color: #666;">● Registered</span>
                         @endif
                     </td>
                     <td style="padding: 15px 20px; text-align: right;">

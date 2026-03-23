@@ -19,7 +19,7 @@
                     <div style="color: #666; font-size: 0.9rem;">Total Registrations</div>
                 </div>
                 <div style="text-align: right;">
-                    <div style="font-size: 2.5rem; font-weight: bold; color: #10b981;">{{ $stats['total_attendance'] }}</div>
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #333;">{{ $stats['total_attendance'] }}</div>
                     <div style="color: #666; font-size: 0.9rem;">Total Attendance</div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 @php 
                     $percent = $stats['total_registrations'] > 0 ? ($stats['total_attendance'] / $stats['total_registrations']) * 100 : 0;
                 @endphp
-                <div style="background: #10b981; width: {{ $percent }}%; height: 100%;"></div>
+                <div style="background: var(--corporate-red); width: {{ $percent }}%; height: 100%;"></div>
             </div>
             <p style="font-size: 0.85rem; color: #666; text-align: center;">Attendance Rate: <strong>{{ number_format($percent, 1) }}%</strong></p>
         </div>

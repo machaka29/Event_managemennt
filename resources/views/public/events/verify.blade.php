@@ -17,10 +17,10 @@
                 </div>
             @endif
 
-            <div style="width: 80px; height: 80px; background: var(--success, #10b981); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
+            <div style="width: 80px; height: 80px; background: var(--corporate-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
                 ✓
             </div>
-            <h2 style="color: var(--success, #10b981); margin-bottom: 0.5rem;">Valid Ticket</h2>
+            <h2 style="color: var(--corporate-red); margin-bottom: 0.5rem;">Valid Ticket</h2>
             <p style="color: var(--text-muted); font-size: 1.1rem;">This ticket is authentic and registered.</p>
         </div>
 
@@ -60,9 +60,9 @@
                 <div>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Status</p>
                     @if($registration->attended)
-                        <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #d1fae5; color: #065f46; border-radius: 999px; font-size: 0.8rem; font-weight: bold;">Verified & Checked In</span>
+                        <span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--corporate-red); color: white; border-radius: 999px; font-size: 0.8rem; font-weight: bold;">Verified & Checked In</span>
                     @else
-                        <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #fee2e2; color: #991b1b; border-radius: 999px; font-size: 0.8rem; font-weight: bold;">Authentic - Not Checked In</span>
+                        <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #f3f3f3; color: #666; border-radius: 999px; font-size: 0.8rem; font-weight: bold; border: 1px solid #ddd;">Authentic - Not Checked In</span>
                     @endif
                 </div>
             </div>

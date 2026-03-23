@@ -77,6 +77,11 @@ Route::middleware('auth')->group(function () {
         Route::put('/admin/attendees/{attendee}', [\App\Http\Controllers\AdminController::class, 'attendeeUpdate'])->name('admin.attendees.update');
         Route::delete('/admin/attendees/{attendee}', [\App\Http\Controllers\AdminController::class, 'attendeeDestroy'])->name('admin.attendees.destroy');
         Route::get('/admin/reports', [\App\Http\Controllers\AdminController::class, 'reports'])->name('admin.reports.index');
+        
+        // SMS Routes
+        Route::get('/admin/sms', [\App\Http\Controllers\AdminSmsController::class, 'create'])->name('admin.sms.create');
+        Route::post('/admin/sms/send', [\App\Http\Controllers\AdminSmsController::class, 'send'])->name('admin.sms.send');
+
         Route::get('/admin/settings', function() { return view('admin.settings'); })->name('admin.settings.index');
         
         Route::get('/admin/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');

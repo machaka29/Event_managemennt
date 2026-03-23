@@ -7,7 +7,7 @@
 <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h1 style="font-size: 2.22rem; color: #1a1a1a; margin: 0; font-weight: 800; letter-spacing: -0.5px; text-transform: none;">
+            <h1 style="font-size: 2.22rem; color: #333; margin: 0; font-weight: 800; letter-spacing: -0.5px; text-transform: none;">
                 All Events
             </h1>
             <div style="width: 60px; height: 4px; background: var(--corporate-red); margin-top: 12px; border-radius: 2px;"></div>
@@ -56,15 +56,15 @@
                     </td>
                     <td style="padding: 25px 35px; text-align: center;">
                         @if($event->status === 'approved')
-                            <span style="background: #eafaf1; color: #2ecc71; padding: 6px 15px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #d4efdf;">
+                            <span style="background: var(--accent-soft-red); color: var(--corporate-red); padding: 6px 15px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--corporate-red);">
                                 <i class="fa-solid fa-circle-check"></i> ACTIVE
                             </span>
                         @elseif($event->status === 'rejected')
-                            <span style="background: #fdf2f2; color: #e74c3c; padding: 6px 15px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #f9dcdc;">
+                            <span style="background: #f3f4f6; color: #333; padding: 6px 15px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #ddd;">
                                 <i class="fa-solid fa-circle-xmark"></i> REJECTED
                             </span>
                         @else
-                            <span style="background: #fff9e6; color: #f1c40f; padding: 6px 15px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #fef5d4;">
+                            <span style="background: #fafafa; color: #666; padding: 6px 15px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #eee;">
                                 <i class="fa-solid fa-clock"></i> PENDING
                             </span>
                         @endif
@@ -79,10 +79,10 @@
                     </td>
                     <td style="padding: 25px 35px; text-align: right;">
                         <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                            <a href="{{ route('events.show', $event->id) }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #ebf5fb; color: #3498db; border-radius: 8px; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='#3498db'; this.style.color='white';" onmouseout="this.style.background='#ebf5fb'; this.style.color='#3498db';" title="View Event Detail">
+                            <a href="{{ route('events.show', $event->id) }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: var(--corporate-red); border-radius: 8px; text-decoration: none; border: 1px solid #eee; transition: all 0.3s;" onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';" onmouseout="this.style.background='#f9f9f9'; this.style.color='var(--corporate-red)';" title="View Event Detail">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-                            <a href="{{ route('events.edit', $event->id) }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #fef9e7; color: #f1c40f; border-radius: 8px; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='#f1c40f'; this.style.color='white';" onmouseout="this.style.background='#fef9e7'; this.style.color='#f1c40f';" title="Edit Event Listing">
+                            <a href="{{ route('events.edit', $event->id) }}" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: #333; border-radius: 8px; text-decoration: none; border: 1px solid #eee; transition: all 0.3s;" onmouseover="this.style.background='#333'; this.style.color='white';" onmouseout="this.style.background='#f9f9f9'; this.style.color='#333';" title="Edit Event Listing">
                                 <i class="fa-solid fa-pencil"></i>
                             </a>
                             <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Wait! Are you sure you want to delete this event? This action cannot be undone.');">

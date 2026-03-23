@@ -84,26 +84,6 @@ class PublicEventController extends Controller
             return back()->with('error', 'Please enter your Member ID to register.');
         }
 
-<<<<<<< HEAD
-        // check duplicate
-        $existingAttendee = Attendee::where('email', $request->email)->first();
-        if ($existingAttendee) {
-            $duplicate = Registration::where('event_id', $event->id)
-                                     ->where('attendee_id', $existingAttendee->id)
-                                     ->exists();
-            if ($duplicate) {
-                return back()->with('error', 'You are already registered for this event.');
-            }
-            // Update attendee details with the latest registration info
-            $existingAttendee->update([
-                'full_name' => $request->full_name,
-                'phone' => $request->phone,
-                'organization' => $request->organization,
-            ]);
-            $attendee = $existingAttendee;
-        } else {
-            $attendee = Attendee::create($request->all());
-=======
         $attendee = Attendee::where('access_code', $access_code)->first();
         
         if (!$attendee) {
@@ -119,7 +99,6 @@ class PublicEventController extends Controller
                                  ->exists();
         if ($duplicate) {
             return back()->with('error', 'You are already registered for this event.');
->>>>>>> 6cc1c78 (new changes)
         }
 
         $ticket_id = strtoupper(Str::random(8));

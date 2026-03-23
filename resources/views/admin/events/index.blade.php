@@ -13,7 +13,7 @@
 <div class="card" style="max-width: 100%; border: 1px solid var(--corporate-red); border-radius: 8px; overflow: hidden; padding: 0;">
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
-            <tr style="background: var(--header-gradient); text-align: left; border-bottom: 2px solid var(--corporate-red);">
+            <tr style="background: var(--accent-soft-red); text-align: left; border-bottom: 2px solid var(--corporate-red);">
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Event Title</th>
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Organizer</th>
                 <th style="padding: 15px 20px; color: var(--corporate-red);">Date & Time</th>

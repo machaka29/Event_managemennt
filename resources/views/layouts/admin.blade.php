@@ -11,7 +11,16 @@
             --sidebar-width: 260px;
             --corporate-red: #940000;
             --accent-soft-red: #FFF5F5;
-            --header-gradient: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
+            --header-gradient: linear-gradient(135deg, #940000 0%, #610000 100%);
+            --border-color: #eee;
+            --text-muted: #666;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Century Gothic', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
         }
 
         .admin-layout {
@@ -59,10 +68,14 @@
         }
 
         .menu-item.active {
-            background: var(--header-gradient);
+            background: var(--accent-soft-red);
             border-left: 4px solid var(--corporate-red);
             color: var(--corporate-red);
             font-weight: bold;
+        }
+
+        .menu-item.active i {
+            color: var(--corporate-red);
         }
 
         .menu-item i {
@@ -106,34 +119,34 @@
 </head>
 <body>
     <!-- FIXED TOP NAV -->
-    <nav class="page-header" style="position: fixed; top: 0; width: 100%; z-index: 1000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--corporate-red); background: var(--header-gradient); margin: 0;">
+    <nav class="page-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--corporate-red); background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 72px; box-sizing: border-box;">
         <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; display: flex; align-items: center; gap: 1rem;">
-            <div style="width: 40px; height: 40px; border-radius: 5px; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+            <div style="width: 45px; height: 45px; border-radius: 8px; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 8px rgba(148,0,0,0.2);">
                 <i class="fa-solid fa-calendar-check"></i>
             </div>
             <div>
-                <h2 style="margin: 0; font-size: 1.3rem; color: #333333; text-transform: uppercase;">{{ \App\Models\SystemSetting::get('system_name', 'EmCa Technologies') }}</h2>
-                <p style="margin: 0; font-size: 0.75rem; color: var(--corporate-red); font-weight: bold; letter-spacing: 1px;">ADMIN PANEL</p>
+                <h2 style="margin: 0; font-size: 1.4rem; color: #333333; text-transform: uppercase; font-weight: 800; letter-spacing: -0.5px;">{{ \App\Models\SystemSetting::get('system_name', 'EmCa Technologies') }}</h2>
+                <p style="margin: 0; font-size: 0.75rem; color: var(--corporate-red); font-weight: bold; letter-spacing: 2px;">ADMINISTRATOR PANEL</p>
             </div>
         </a>
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <div style="text-align: right; display: none; @media (min-width: 768px) { display: block; }">
-                <p style="margin: 0; font-weight: bold; font-size: 0.9rem;">{{ auth()->user()->name }}</p>
-                <p style="margin: 0; font-size: 0.75rem; color: #666;">Administrator</p>
+            <div style="text-align: right;" class="admin-user-info">
+                <p style="margin: 0; font-weight: bold; font-size: 0.95rem; color: #333;">{{ auth()->user()->name }}</p>
+                <p style="margin: 0; font-size: 0.75rem; color: var(--corporate-red); font-weight: bold; text-transform: uppercase;">System Admin</p>
             </div>
-            <a href="{{ route('profile.show') }}">
+            <a href="{{ route('profile.show') }}" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                  @if(auth()->user()->profile_image)
-                    <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="P" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--corporate-red);">
+                    <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="P" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--corporate-red);">
                 @else
-                    <div style="width: 38px; height: 38px; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid var(--corporate-red);">
+                    <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid var(--corporate-red); font-size: 1.1rem;">
                         {{ strtoupper(auth()->user()->name[0]) }}
                     </div>
                 @endif
             </a>
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('logout') }}" method="POST" style="margin-left: 0.5rem;">
                 @csrf
-                <button type="submit" style="background: none; border: none; color: var(--corporate-red); cursor: pointer; font-size: 1.2rem;" title="Logout">
+                <button type="submit" style="background: var(--accent-soft-red); border: 1px solid var(--corporate-red); color: var(--corporate-red); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" title="Logout" onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';" onmouseout="this.style.background='var(--accent-soft-red)'; this.style.color='var(--corporate-red)';">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </form>
@@ -187,6 +200,11 @@
                 <span>REPORTS</span>
             </a>
 
+            <a href="{{ route('admin.sms.create') }}" class="menu-item {{ request()->routeIs('admin.sms*') ? 'active' : '' }}">
+                <i class="fa-solid fa-comment-sms"></i>
+                <span>SMS BROADCAST</span>
+            </a>
+
             <a href="{{ route('admin.settings.index') }}" class="menu-item {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
                 <i class="fa-solid fa-gears"></i>
                 <span>SYSTEM SETTINGS</span>
@@ -194,7 +212,7 @@
 
             <!-- Sidebar Footer -->
             <div class="sidebar-footer" style="padding: 2rem; border-top: 1px solid #FFF5F5; margin-top: auto;">
-                <p style="font-size: 0.75rem; color: #10b981; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> System Status: Online</p>
+                <p style="font-size: 0.75rem; color: var(--corporate-red); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> System Status: Online</p>
                 <p style="font-size: 0.75rem; color: #666; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-floppy-disk" style="font-size: 0.8rem; color: #999;"></i> Last Backup: Today</p>
             </div>
         </aside>
@@ -206,8 +224,8 @@
     </div>
 
     <footer style="text-align: center; padding: 20px 0; background: #FFFFFF; border-top: 1px solid var(--corporate-red); color: #666; font-size: 0.9rem; margin-top: auto;">
-        <div>&copy; {{ date('Y') }} Event Registration System</div>
-        <div style="font-size: 0.75rem; color: #999; margin-top: 5px;">Admin Panel v1.0</div>
+        <div>&copy; {{ date('Y') }} {{ \App\Models\SystemSetting::get('system_name', 'EmCa Technologies') }}</div>
+        <div style="font-size: 0.75rem; color: #999; margin-top: 5px;">{{ \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGY') }}</div>
     </footer>
 
     <!-- Toggle Sidebar Script for Mobile -->
