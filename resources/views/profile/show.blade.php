@@ -3,15 +3,26 @@
 @section('title', 'Profile Settings - EmCa Technologies')
 
 @section('content')
-<div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+<div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);" class="profile-header">
     <div>
-        <h1 style="font-size: 2.22rem; color: #333; margin: 0; font-weight: 800; letter-spacing: -0.5px; text-transform: none;">
+        <h1 style="font-size: 2.22rem; color: #333; margin: 0; font-weight: 800; letter-spacing: -0.5px; text-transform: none;" class="page-title">
             Profile Settings
         </h1>
         <div style="width: 60px; height: 4px; background: var(--corporate-red); margin-top: 12px; border-radius: 2px;"></div>
-        <p style="font-size: 1.1rem; color: #666; margin-top: 15px; font-weight: 500;">Manage your personal information, profile picture, and security settings.</p>
+        <p style="font-size: 1.1rem; color: #666; margin-top: 15px; font-weight: 500;" class="page-subtitle">Manage your personal information, profile picture, and security settings.</p>
     </div>
 </div>
+
+<style>
+    @media (max-width: 992px) {
+        .profile-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+        .profile-header { padding: 20px !important; margin-bottom: 25px !important; }
+        .page-title { font-size: 1.6rem !important; }
+        .page-subtitle { font-size: 0.95rem !important; }
+        .form-card { padding: 25px !important; }
+        .profile-summary-card { padding: 30px !important; }
+    }
+</style>
 </div>
 
 @if (session('status'))
@@ -22,10 +33,10 @@
     </div>
 @endif
 
-<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: start;">
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: start;" class="profile-grid">
     
     <!-- Profile Card Summary -->
-    <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+    <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);" class="profile-summary-card">
         <div style="position: relative; width: 140px; height: 140px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; background: #FFF5F5; border: 4px solid var(--accent-soft-red); box-shadow: 0 4px 15px rgba(148,0,0,0.1);">
             @if($user->profile_image)
                 <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
@@ -47,7 +58,7 @@
     <div style="display: flex; flex-direction: column; gap: 30px;">
         
         <!-- Basic Info Form -->
-        <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);" class="form-card">
             <h3 style="margin: 0 0 25px; font-size: 1.3rem; color: #333; font-weight: 800; border-bottom: 2px solid #f5f5f5; padding-bottom: 15px;">Basic Information</h3>
             
             <form action="{{ route('profile.info') }}" method="POST" enctype="multipart/form-data">
@@ -85,7 +96,7 @@
         </div>
 
         <!-- Password Form -->
-        <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <div style="background: white; border: 1px solid #eee; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);" class="form-card">
             <h3 style="margin: 0 0 25px; font-size: 1.3rem; color: #333; font-weight: 800; border-bottom: 2px solid #f5f5f5; padding-bottom: 15px;">Update Password</h3>
             
             <form action="{{ route('profile.password') }}" method="POST">

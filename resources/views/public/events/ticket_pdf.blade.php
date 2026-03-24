@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket - {{ $registration->ticket_id }}</title>
+    <title>Ticket - {{ $registration->attendee->access_code }}</title>
     <style>
         body { font-family: 'Helvetica', 'Arial', sans-serif; color: #333; margin: 0; padding: 0; }
         .ticket-container { width: 100%; max-width: 650px; margin: 10px auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; }
@@ -75,7 +75,7 @@
 
             <div class="ticket-id-section">
                 <div class="label">Serial Number / Ticket ID</div>
-                <div class="ticket-id">{{ $registration->ticket_id }}</div>
+                <div class="ticket-id">{{ $registration->attendee->access_code }}</div>
             </div>
             
             <div class="watermark">EMCA TICKETING SYSTEM</div>

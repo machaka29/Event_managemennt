@@ -117,15 +117,15 @@ class PublicEventController extends Controller
     public function ticket($ticket_id)
     {
         $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
-        return view('public.events.ticket', compact('registration'));
+        $qrData = route('events.public.verify', ['ticket_id' => $registration->ticket_id]);
+        return view('public.events.ticket', compact('registration', 'qrData'));
     }
 
     public function downloadTicket($ticket_id)
     {
         $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
         
-        // Fetch QR Code as SVG and encode to base64 to avoid GD extension dependency in DomPDF
-        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=" . urlencode(route('events.public.verify', ['ticket_id' => $registration->ticket_id, 'json' => 1])) . "&format=svg";
+        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=" . urlencode(route('events.public.verify', ['ticket_id' => $registration->ticket_id])) . "&format=svg";
         $qrCodeBase64 = base64_encode(file_get_contents($qrUrl));
         
         $pdf = Pdf::loadView('public.events.ticket_pdf', compact('registration', 'qrCodeBase64'))

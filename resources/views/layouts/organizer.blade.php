@@ -16,11 +16,14 @@
         :root {
             --corporate-red: #940000;
             --accent-soft-red: #FFF5F5;
-            --header-gradient: linear-gradient(135deg, #940000 0%, #610000 100%);
+            --header-gradient: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
+        }
+
+        body, h1, h2, h3, h4, h5, h6, p, span, a, div, input, button, select, textarea {
+            font-family: 'Century Gothic', sans-serif !important;
         }
 
         body {
-            font-family: 'Century Gothic', sans-serif !important;
             background-color: #FFFFFF;
             color: #333;
             margin: 0;
@@ -171,7 +174,6 @@
             flex: 1;
             margin-left: 280px;
             padding: 40px;
-            min-height: calc(100vh - 80px);
             background-color: #fafafa;
         }
 
@@ -225,27 +227,100 @@
         }
 
         @media (max-width: 992px) {
-            .sidebar { display: none; }
+            .sidebar { 
+                left: -280px; 
+                transition: left 0.3s ease;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            }
+            .sidebar.show {
+                left: 0;
+            }
             .content-area { margin-left: 0; padding: 20px; }
+            
+            .hamburger {
+                display: flex !important;
+            }
+            
+            .nav-right {
+                display: none !important;
+            }
+        }
+
+        /* Mobile Sidebar Backdrop */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 850;
+            backdrop-filter: blur(2px);
+        }
+
+        .sidebar-backdrop.show {
+            display: block;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--corporate-red);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 992px) {
+            .mobile-only {
+                display: flex !important;
+            }
+            .org-nav {
+                justify-content: space-between !important;
+                padding-right: 20px !important;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="org-nav">
-        <a href="{{ route('dashboard') }}" class="org-logo">
-            @php $systemLogo = \App\Models\SystemSetting::get('system_logo'); @endphp
-            @if($systemLogo)
-                <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 45px; height: 45px; border-radius: 8px; object-fit: cover; border: 2px solid #eee;">
-            @else
-                <div style="width: 45px; height: 45px; border-radius: 8px; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.4rem; box-shadow: 0 4px 10px rgba(148, 0, 0, 0.2);">
-                    <i class="fa-solid fa-calendar-check"></i>
-                </div>
-            @endif
-            <div>
-                <span style="font-weight: 900; font-size: 1.5rem; letter-spacing: -0.5px; color: #1a1a1a;">EmCa Technologies</span><br>
-                <span style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--corporate-red); letter-spacing: 2px;">Organizer Panel</span>
+    <nav class="org-nav" style="background: var(--header-gradient); border-bottom: 1px solid #e2e8f0; height: 70px;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="hamburger" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-        </a>
+            <a href="{{ route('dashboard') }}" class="org-logo">
+                <div style="width: 40px; height: 40px; border-radius: 6px; background: white; border: 1px solid #eee; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <img src="{{ asset('EmCa-Logo.png') }}" alt="EmCa" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div>
+                    <span style="font-weight: 800; font-size: 1.1rem; color: #1a1a1a; text-transform: uppercase;">EmCa Technologies</span><br>
+                    <span style="font-weight: 700; font-size: 0.65rem; text-transform: uppercase; color: var(--corporate-red); letter-spacing: 1px;">Organizer Panel</span>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Mobile Logout -->
+        <div class="mobile-only" style="display: none;">
+            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" style="background: var(--accent-soft-red); color: var(--corporate-red); border: 1px solid #f9dcdc; border-radius: 8px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </form>
+        </div>
         
         <div class="nav-right">
             <div style="display: flex; align-items: center; gap: 20px;">
@@ -317,11 +392,30 @@
                         <a href="javascript:void(0)" class="footer-link">Privacy Policy</a>
                         <a href="javascript:void(0)" class="footer-link">Terms of Use</a>
                     </div>
-                    <p class="copyright">&copy; {{ date('Y') }} EmCa Technologies. All rights reserved.</p>
-                    <p class="powered-by">Global Event Registration Solutions</p>
+                    <p class="copyright">&copy; {{ date('Y') }} {{ \App\Models\SystemSetting::get('system_name', 'EmCa Technologies') }}. All rights reserved.</p>
+                    <p class="powered-by">{{ \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGY') }}</p>
                 </footer>
             </div>
         </main>
     </div>
+    <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('show');
+            backdrop.classList.toggle('show');
+        }
+
+        // Close sidebar when clicking links on mobile
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,59 +1,67 @@
 @extends('layouts.admin')
 
-@section('title', 'Global Attendees - Admin Panel')
+@section('title', 'Global Registrations - Admin Panel')
 
 @section('content')
-<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
-    <div>
-        <h1 style="color: #333; font-size: 1.8rem; margin-bottom: 0.5rem; text-transform: uppercase;">Attendees</h1>
-        <p style="color: #666; font-size: 1rem;">View all registrations and attendees across all global events.</p>
+<div style="background: white; padding: 20px 25px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h1 style="font-size: 1.3rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase;">Registrations</h1>
+            <div style="width: 40px; height: 3px; background: var(--corporate-red); margin-top: 8px; border-radius: 2px;"></div>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; font-weight: 600;">View all registrations and attendance across all events.</p>
+        </div>
     </div>
 </div>
 
-<div class="card" style="max-width: 100%; border: 1px solid var(--corporate-red); border-radius: 8px; overflow: hidden; padding: 0;">
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background: var(--accent-soft-red); text-align: left; border-bottom: 2px solid var(--corporate-red);">
-                <th style="padding: 15px 20px; color: var(--corporate-red);">Attendee Name</th>
-                <th style="padding: 15px 20px; color: var(--corporate-red);">Email</th>
-                <th style="padding: 15px 20px; color: var(--corporate-red);">Event</th>
-                <th style="padding: 15px 20px; color: var(--corporate-red);">Registration Date</th>
-                <th style="padding: 15px 20px; color: var(--corporate-red);">Status</th>
-                <th style="padding: 15px 20px; color: var(--corporate-red); text-align: right;">Ticket</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($attendees as $reg)
-                <tr style="border-bottom: 1px solid #FFF5F5; transition: background 0.2s;" onmouseover="this.style.background='#FFF5F5'" onmouseout="this.style.background='white'">
-                    <td style="padding: 15px 20px; font-weight: bold;">{{ $reg->attendee->full_name }}</td>
-                    <td style="padding: 15px 20px;">{{ $reg->attendee->email }}</td>
-                    <td style="padding: 15px 20px;">{{ $reg->event->title }}</td>
-                    <td style="padding: 15px 20px;">{{ $reg->created_at->format('M d, Y') }}</td>
-                    <td style="padding: 15px 20px;">
-                        @if($reg->attended)
-                            <span style="color: #28a745; font-weight: bold; background: #e6ffed; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
-                                <i class="fa-solid fa-check-double"></i> Attended
-                            </span>
-                        @else
-                            <span style="color: #666; font-weight: 500; background: #f3f4f6; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
-                                <i class="fa-solid fa-user-check"></i> Registered
-                            </span>
-                        @endif
-                    </td>
-                    <td style="padding: 15px 20px; text-align: right;">
-                        <a href="{{ route('events.public.ticket', $reg->ticket_id) }}" target="_blank" 
-                           style="color: var(--corporate-red); border: 1.5px solid var(--corporate-red); padding: 6px 15px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: bold; transition: 0.3s; display: inline-block;"
-                           onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';"
-                           onmouseout="this.style.background='transparent'; this.style.color='var(--corporate-red)';">
-                            <i class="fa-solid fa-ticket"></i> View Ticket
-                        </a>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <div style="padding: 20px;">
-        {{ $attendees->links() }}
+<div style="background: white; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden;">
+    <div style="padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
+        <h2 style="margin: 0; font-size: 0.85rem; color: #475569; font-weight: 700;">All Event Registrations</h2>
+        <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 600;">Total: {{ $attendees->total() }}</div>
     </div>
+    <div class="table-responsive" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+            <thead>
+                <tr style="background: var(--corporate-red); color: white;">
+                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Attendee</th>
+                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Email</th>
+                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Event</th>
+                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Reg. Date</th>
+                    <th style="padding: 12px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Status</th>
+                    <th style="padding: 12px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Ticket</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($attendees as $reg)
+                    <tr style="border-bottom: 1px solid #f1f1f1; transition: all 0.2s;" onmouseover="this.style.background='#fdfdfd'" onmouseout="this.style.background='white'">
+                        <td style="padding: 14px 25px; font-weight: 700; color: #1e293b; font-size: 0.9rem;">{{ $reg->attendee->full_name }}</td>
+                        <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;">{{ $reg->attendee->email }}</td>
+                        <td style="padding: 14px 25px; color: #475569; font-weight: 600; font-size: 0.85rem;">{{ Str::limit($reg->event->title, 30) }}</td>
+                        <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;">{{ $reg->created_at->format('M d, Y') }}</td>
+                        <td style="padding: 14px 25px; text-align: center;">
+                            @if($reg->attended)
+                                <span style="color: #059669; font-weight: 800; background: #ECFDF5; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-check-double"></i> Attended
+                                </span>
+                            @else
+                                <span style="color: #64748B; font-weight: 800; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-user-check"></i> Registered
+                                </span>
+                            @endif
+                        </td>
+                        <td style="padding: 14px 25px; text-align: right;">
+                            <a href="{{ route('events.public.ticket', $reg->ticket_id) }}" target="_blank" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #FFF5F5; color: var(--corporate-red); border-radius: 8px; text-decoration: none; border: 1px solid rgba(148,0,0,0.15); transition: all 0.3s; margin-left: auto;" title="View Ticket" onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';" onmouseout="this.style.background='#FFF5F5'; this.style.color='var(--corporate-red)';">
+                                <i class="fa-solid fa-ticket" style="font-size: 0.85rem;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @if($attendees->hasPages())
+        <div style="padding: 15px 25px; border-top: 1px solid #eee; background: #fafafa;">
+            {{ $attendees->links() }}
+        </div>
+    @endif
 </div>
 @endsection

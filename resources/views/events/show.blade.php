@@ -4,24 +4,28 @@
 
 @section('content')
 <div class="container" style="padding: 2rem 0;">
-    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end;">
-        <div>
-            <h1 style="margin-top: 1rem;">{{ $event->title }}</h1>
-            <p style="color: var(--text-muted);">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} at {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }} • {{ $event->location }}</p>
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1; min-width: 250px;">
+            <h1 style="margin: 0; font-size: 1.8rem; font-weight: 800; color: #333;">{{ $event->title }}</h1>
+            <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">
+                <i class="fa-solid fa-calendar-day" style="color: var(--corporate-red); margin-right: 5px;"></i> {{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} at {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}
+                <br>
+                <i class="fa-solid fa-location-dot" style="color: var(--corporate-red); margin-right: 5px;"></i> {{ $event->location }}
+            </p>
         </div>
-        <div style="display: flex; gap: 1rem;">
-            <a href="{{ route('events.edit', $event) }}" class="btn btn-outline">Edit Event</a>
-            <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?')">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; min-width: 200px; justify-content: flex-end;">
+            <a href="{{ route('events.edit', $event) }}" class="btn btn-outline" style="flex: 1; text-align: center; min-width: 120px;">Edit Event</a>
+            <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?')" style="flex: 1; min-width: 120px;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-outline" style="color: grey; border-color: grey;">Delete</button>
+                <button type="submit" class="btn btn-outline" style="width: 100%; color: #666; border-color: #ddd;">Delete</button>
             </form>
         </div>
     </div>
 
-    <div class="grid grid-cols-3" style="align-items: flex-start; gap: 2rem;">
+    <div class="responsive-grid" style="grid-template-columns: 2fr 1fr; align-items: flex-start; gap: 2rem;">
         <!-- Left: Details -->
-        <div class="grid grid-cols-1" style="grid-column: span 2; gap: 2rem;">
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
             <div class="card" style="max-width: 100%;">
                 <h3 style="margin-bottom: 1rem;">About this Event</h3>
                 <p style="white-space: pre-wrap;">{{ $event->description }}</p>
@@ -35,56 +39,57 @@
 
             <!-- Attendee List -->
             <div class="card" style="max-width: 100%; border-top: 4px solid var(--corporate-red);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <h3>Attendees</h3>
-                    <a href="{{ route('events.export', $event) }}" class="btn btn-outline btn-sm" style="font-size: 0.8rem;">Export CSV</a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="margin: 0;">Attendees</h3>
+                    <a href="{{ route('events.export', $event) }}" class="btn btn-outline btn-sm" style="font-size: 0.8rem; padding: 8px 15px;">
+                        <i class="fa-solid fa-file-export"></i> Export CSV
+                    </a>
                 </div>
 
                 @if($event->registrations()->count() > 0)
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
-                                <th style="padding: 1rem;">Name</th>
-                                <th style="padding: 1rem;">Ticket ID</th>
-                                <th style="padding: 1rem;">Status</th>
-                                <th style="padding: 1rem; text-align: right;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($event->registrations as $reg)
-                                <tr style="border-bottom: 1px solid var(--border-color);">
-                                    <td style="padding: 1rem;">
-                                        <div style="font-weight: bold;">{{ $reg->attendee->full_name }}</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $reg->attendee->email }}</div>
-                                    </td>
-                                    <td style="padding: 1rem;"><code>{{ $reg->ticket_id }}</code></td>
-                                    <td style="padding: 1rem;">
-                                        <span style="padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; 
-                                            background: {{ $reg->status == 'Attended' ? '#C6F6D5' : ($reg->status == 'Absent' ? '#FED7D7' : '#E2E8F0') }};">
-                                            {{ $reg->status }}
-                                        </span>
-                                    </td>
-                                    <td style="padding: 1rem; text-align: right;">
-                                        @if($reg->status !== 'Attended')
-                                            <form action="{{ route('registrations.attendance', $reg) }}" method="POST" style="display: inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="status" value="Attended">
-                                                <button type="submit" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; border-color: green; color: green;">Mark Present</button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('registrations.attendance', $reg) }}" method="POST" style="display: inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="status" value="Absent">
-                                                <button type="submit" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.3rem 0.6rem; border-color: red; color: red;">Mark Absent</button>
-                                            </form>
-                                        @endif
-                                    </td>
+                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                            <thead>
+                                <tr style="background: var(--corporate-red); color: white;">
+                                    <th style="padding: 1rem; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">Name</th>
+                                    <th style="padding: 1rem; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">Ticket ID</th>
+                                    <th style="padding: 1rem; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">Status</th>
+                                    <th style="padding: 1rem; text-align: right; font-size: 0.8rem; text-transform: uppercase; font-weight: 800;">Action</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach($event->registrations as $reg)
+                                    <tr style="border-bottom: 1px solid var(--border-color); transition: 0.2s;" onmouseover="this.style.background='#fcfcfc'" onmouseout="this.style.background='white'">
+                                        <td style="padding: 1rem;">
+                                            <div style="font-weight: bold; color: #333;">{{ $reg->attendee->full_name }}</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ $reg->attendee->email }}</div>
+                                        </td>
+                                        <td style="padding: 1rem;"><code style="background: #f4f4f4; padding: 3px 6px; border-radius: 4px;">{{ $reg->ticket_id }}</code></td>
+                                        <td style="padding: 1rem;">
+                                            <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;
+                                                background: {{ $reg->status == 'Attended' ? '#e6f4ea' : ($reg->status == 'Absent' ? '#fce8e6' : '#f1f3f4') }};
+                                                color: {{ $reg->status == 'Attended' ? '#1e8e3e' : ($reg->status == 'Absent' ? '#d93025' : '#5f6368') }};">
+                                                {{ $reg->status }}
+                                            </span>
+                                        </td>
+                                        <td style="padding: 1rem; text-align: right;">
+                                            <form action="{{ route('registrations.attendance', $reg) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('PATCH')
+                                                @if($reg->status !== 'Attended')
+                                                    <input type="hidden" name="status" value="Attended">
+                                                    <button type="submit" class="btn btn-outline" style="font-size: 0.7rem; padding: 5px 10px; border-color: #1e8e3e; color: #1e8e3e;">Present</button>
+                                                @else
+                                                    <input type="hidden" name="status" value="Absent">
+                                                    <button type="submit" class="btn btn-outline" style="font-size: 0.7rem; padding: 5px 10px; border-color: #d93025; color: #d93025;">Absent</button>
+                                                @endif
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @else
                     <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No registrations yet.</p>
                 @endif

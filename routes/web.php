@@ -29,7 +29,7 @@ Route::middleware('guest')->group(function () {
     // Registration disabled for public
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
@@ -64,8 +64,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/organizers', [\App\Http\Controllers\AdminController::class, 'organizers'])->name('admin.organizers.index');
         Route::get('/admin/organizers/create', [\App\Http\Controllers\AdminController::class, 'organizerCreate'])->name('admin.organizers.create');
         Route::post('/admin/organizers', [\App\Http\Controllers\AdminController::class, 'organizerStore'])->name('admin.organizers.store');
+        Route::get('/admin/organizers/{organizer}/edit', [\App\Http\Controllers\AdminController::class, 'organizerEdit'])->name('admin.organizers.edit');
+        Route::put('/admin/organizers/{organizer}', [\App\Http\Controllers\AdminController::class, 'organizerUpdate'])->name('admin.organizers.update');
+        Route::delete('/admin/organizers/{organizer}', [\App\Http\Controllers\AdminController::class, 'organizerDestroy'])->name('admin.organizers.destroy');
+        
         Route::get('/admin/events', [\App\Http\Controllers\AdminController::class, 'events'])->name('admin.events.index');
         Route::get('/admin/events/pending', [\App\Http\Controllers\AdminController::class, 'pendingEvents'])->name('admin.events.pending');
+        Route::get('/admin/events/{event}/edit', [\App\Http\Controllers\AdminController::class, 'eventEdit'])->name('admin.events.edit');
+        Route::put('/admin/events/{event}', [\App\Http\Controllers\AdminController::class, 'eventUpdate'])->name('admin.events.update');
+        Route::delete('/admin/events/{event}', [\App\Http\Controllers\AdminController::class, 'eventDestroy'])->name('admin.events.destroy');
         Route::patch('/admin/events/{id}/approve', [\App\Http\Controllers\AdminController::class, 'approveEvent'])->name('admin.events.approve');
         Route::patch('/admin/events/{id}/reject', [\App\Http\Controllers\AdminController::class, 'rejectEvent'])->name('admin.events.reject');
         

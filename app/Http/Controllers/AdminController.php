@@ -91,6 +91,34 @@ class AdminController extends Controller
         return back()->with('success', 'Event rejected.');
     }
 
+    public function eventEdit(Event $event)
+    {
+        return view('admin.events.edit', compact('event'));
+    }
+
+    public function eventUpdate(Request $request, Event $event)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date' => 'required|date',
+            'time' => 'required',
+            'location' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+            'reg_start_date' => 'required|date',
+            'reg_end_date' => 'required|date',
+        ]);
+
+        $event->update($validated);
+        return redirect()->route('admin.events.index')->with('success', 'Event updated successfully.');
+    }
+
+    public function eventDestroy(Event $event)
+    {
+        $event->delete();
+        return redirect()->route('admin.events.index')->with('success', 'Event deleted successfully.');
+    }
+
     public function attendees()
     {
         $attendees = Registration::with(['event', 'attendee'])->latest()->paginate(10);
@@ -99,17 +127,56 @@ class AdminController extends Controller
 
     public function reports()
     {
-        // Simple aggregate report data
+        // 1. Attendance Statistics
+        $totalRegistrations = Registration::count();
+        $totalAttendance = Registration::where('attended', true)->count();
+        $attendancePercentage = $totalRegistrations > 0 ? round(($totalAttendance / $totalRegistrations) * 100, 1) : 0;
+
+        // Peak Check-in Time (Most common hour of updated_at where attended=true)
+        $peakCheckin = Registration::where('attended', true)
+            ->select(DB::raw('HOUR(updated_at) as hour'), DB::raw('count(*) as count'))
+            ->groupBy('hour')
+            ->orderBy('count', 'desc')
+            ->first();
+        
+        $peakHour = $peakCheckin ? \Carbon\Carbon::createFromTime($peakCheckin->hour)->format('h A') : 'N/A';
+
+        // 2. Event Participation Summaries
+        $totalEvents = Event::count();
+        $totalEventsThisMonth = Event::whereYear('date', now()->year)->whereMonth('date', now()->month)->count();
+        $totalEventsThisYear = Event::whereYear('date', now()->year)->count();
+        
+        $avgRegistrations = $totalEvents > 0 ? round($totalRegistrations / $totalEvents, 1) : 0;
+
+        $popularEvents = Event::withCount(['registrations', 'registrations as attendance_count' => function($q) {
+                $q->where('attended', true);
+            }])
+            ->orderBy('registrations_count', 'desc')
+            ->take(8)
+            ->get();
+
+        // Registration trends (Last 6 months)
+        $registrationTrend = Registration::select(
+            DB::raw('count(*) as count'),
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month")
+        )
+        ->groupBy('month')
+        ->orderBy('month', 'desc')
+        ->take(6)
+        ->get()
+        ->reverse();
+
         $stats = [
-            'total_registrations' => Registration::count(),
-            'total_attendance' => Registration::where('attended', true)->count(),
-            'events_by_month' => Event::select(DB::raw('count(*) as count, MONTH(date) as month'))
-                ->groupBy('month')
-                ->get(),
-            'popular_events' => Event::withCount('registrations')
-                ->orderBy('registrations_count', 'desc')
-                ->take(5)
-                ->get()
+            'total_registrations' => $totalRegistrations,
+            'total_attendance' => $totalAttendance,
+            'attendance_percentage' => $attendancePercentage,
+            'peak_hour' => $peakHour,
+            'total_events' => $totalEvents,
+            'total_events_this_month' => $totalEventsThisMonth,
+            'total_events_this_year' => $totalEventsThisYear,
+            'avg_registrations' => $avgRegistrations,
+            'popular_events' => $popularEvents,
+            'registration_trend' => $registrationTrend,
         ];
         
         return view('admin.reports.index', compact('stats'));
@@ -128,20 +195,62 @@ class AdminController extends Controller
 
     public function organizerStore(Request $request)
     {
+        if ($request->filled('phone_number')) {
+            $request->merge(['phone' => '+255' . $request->phone_number]);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
             'password' => 'required|string|min:8',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role' => 'organizer',
         ]);
 
         return redirect()->route('admin.organizers.index')->with('success', 'Organizer account created successfully.');
+    }
+
+    public function organizerEdit(User $organizer)
+    {
+        return view('admin.organizers.edit', compact('organizer'));
+    }
+
+    public function organizerUpdate(Request $request, User $organizer)
+    {
+        if ($request->filled('phone_number')) {
+            $request->merge(['phone' => '+255' . $request->phone_number]);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $organizer->id,
+            'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
+        ]);
+
+        $organizer->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ]);
+
+        if ($request->filled('password')) {
+            $organizer->update(['password' => \Illuminate\Support\Facades\Hash::make($request->password)]);
+        }
+
+        return redirect()->route('admin.organizers.index')->with('success', 'Organizer updated successfully.');
+    }
+
+    public function organizerDestroy(User $organizer)
+    {
+        $organizer->delete();
+        return redirect()->route('admin.organizers.index')->with('success', 'Organizer deleted successfully.');
     }
 
     public function attendeeCreate()
@@ -158,8 +267,7 @@ class AdminController extends Controller
             'organization' => 'nullable|string|max:255',
         ]);
 
-        $count = Attendee::count() + 1;
-        $access_code = 'EM-' . str_pad($count, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(\Illuminate\Support\Str::random(4));
+        $access_code = 'EmCa-' . strtoupper(\Illuminate\Support\Str::random(5)) . '-26';
 
         Attendee::create([
             'full_name' => $request->full_name,

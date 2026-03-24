@@ -3,8 +3,14 @@
 @section('title', 'Ticket Verification')
 
 @section('content')
-<div class="container" style="padding: 4rem 0; display: flex; justify-content: center;">
-    <div class="card" style="width: 100%; max-width: 500px; padding: 2.5rem; text-align: center;">
+<style>
+    @media (max-width: 600px) {
+        .verify-card { padding: 1.5rem !important; }
+        .verify-container { padding: 2rem 1rem !important; }
+    }
+</style>
+<div class="container verify-container" style="padding: 4rem 0; display: flex; justify-content: center;">
+    <div class="card verify-card" style="width: 100%; max-width: 500px; padding: 2.5rem; text-align: center;">
         <div style="margin-bottom: 2rem;">
             @if(session('success'))
                 <div class="alert alert-success" style="margin-bottom: 1rem;">
@@ -54,8 +60,8 @@
                     <h4 style="margin: 0;">{{ $registration->event->title }}</h4>
                 </div>
                 <div style="margin-bottom: 1rem;">
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Ticket ID</p>
-                    <h4 style="margin: 0; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->ticket_id }}</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Registration ID</p>
+                    <h4 style="margin: 0; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->attendee->access_code }}</h4>
                 </div>
                 <div>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Status</p>
@@ -75,14 +81,24 @@
                         @csrf
                         @method('PATCH')
                         <input type="hidden" name="status" value="Attended">
-                        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
-                            Mark as Attended
+                        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(148,0,0,0.2);">
+                            <i class="fa-solid fa-check-circle" style="margin-right: 8px;"></i> Mark as Attended
                         </button>
                     </form>
                 @else
-                    <button class="btn btn-outline" disabled style="width: 100%; font-size: 1.1rem; padding: 1rem; border-color: grey; color: grey;">
-                        Attendance Already Marked
-                    </button>
+                    <div style="display: flex; gap: 10px; flex-direction: column;">
+                        <button class="btn" disabled style="width: 100%; font-size: 1.1rem; padding: 1rem; background-color: #e6f4ea; color: #1e8e3e; border: 1px solid #1e8e3e; font-weight: bold;">
+                            <i class="fa-solid fa-check-double" style="margin-right: 8px;"></i> Attendance Marked
+                        </button>
+                        <form action="{{ route('registrations.attendance', $registration->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status" value="Absent">
+                            <button type="submit" class="btn" style="width: 100%; font-size: 0.9rem; padding: 0.8rem; background: transparent; color: #888; border: 1px dashed #ccc; transition: 0.3s;" onmouseover="this.style.color='var(--corporate-red)'; this.style.borderColor='var(--corporate-red)'" onmouseout="this.style.color='#888'; this.style.borderColor='#ccc'">
+                                <i class="fa-solid fa-rotate-left" style="margin-right: 5px;"></i> Undo: Mark as Absent
+                            </button>
+                        </form>
+                    </div>
                 @endif
             @endif
         @endauth
