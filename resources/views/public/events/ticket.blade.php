@@ -3,57 +3,47 @@
 @section('title', 'Your Ticket - ' . $registration->event->title)
 
 @section('content')
-<div class="container" style="padding: 4rem 0; display: flex; flex-direction: column; align-items: center;">
+<div class="container" style="padding: 2rem 15px; display: flex; flex-direction: column; align-items: center;">
     <div class="card" style="width: 100%; max-width: 650px; padding: 0; overflow: hidden; border: none; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); background: white; border-radius: 16px;">
         <!-- Ticket Header -->
-        <div style="background: var(--corporate-red); color: white; padding: 2.5rem 2rem; text-align: center; position: relative;">
-            <div style="position: absolute; top: 1rem; left: 1rem; opacity: 0.2; font-family: 'Century Gothic', sans-serif; font-size: 0.8rem; letter-spacing: 2px;">OFFICIAL TICKET</div>
-            <h2 style="color: white; margin-bottom: 0.5rem; font-size: 2rem;">Registration Confirmed!</h2>
-            <p style="opacity: 0.9; font-size: 1.1rem;">Present this ticket at the event entrance.</p>
+        <div style="background: var(--corporate-red); color: white; padding: 2rem 1.5rem; text-align: center; position: relative;">
+            <div style="position: absolute; top: 0.75rem; left: 1rem; opacity: 0.3; font-family: 'Century Gothic', sans-serif; font-size: 0.7rem; letter-spacing: 2px;">OFFICIAL TICKET</div>
+            <h2 style="color: white; margin-top: 1rem; margin-bottom: 0.25rem; font-size: 1.5rem; letter-spacing: -0.5px;">Registration Confirmed!</h2>
+            <p style="opacity: 0.9; font-size: 0.95rem;">Present this at the event entrance.</p>
         </div>
 
         <!-- Ticket Body -->
-        <div style="padding: 3rem; position: relative; border-bottom: 2px dashed #eee;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem;">
-                <div style="flex: 1;">
-                    <span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--accent-soft-red); color: var(--corporate-red); border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px;">Event Details</span>
-                    <h3 style="margin-bottom: 0.75rem; font-size: 1.75rem; line-height: 1.2; color: #1a202c;">{{ $registration->event->title }}</h3>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #4a5568; margin-bottom: 0.5rem;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        <div style="padding: 1.5rem; position: relative; border-bottom: 2px dashed #eee;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px;">
+                    <span style="display: inline-block; padding: 0.2rem 0.6rem; background: var(--accent-soft-red); color: var(--corporate-red); border-radius: 20px; font-size: 0.7rem; font-weight: bold; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Event Details</span>
+                    <h3 style="margin-bottom: 0.75rem; font-size: 1.5rem; line-height: 1.2; color: #1a202c;">{{ $registration->event->title }}</h3>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #4a5568; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                        <i class="fa-solid fa-calendar-day" style="color: var(--corporate-red); width: 16px;"></i>
                         <span>{{ \Carbon\Carbon::parse($registration->event->date)->format('l, F d, Y') }}</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #4a5568;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #4a5568; font-size: 0.9rem;">
+                        <i class="fa-solid fa-clock" style="color: var(--corporate-red); width: 16px;"></i>
                         <span>{{ \Carbon\Carbon::parse($registration->event->time)->format('h:i A') }}</span>
                     </div>
                 </div>
                 
-                <!-- Dynamic QR Code with Encoded Data -->
-                @php
-                    $qrData = "EVENT TICKET\n" .
-                              "------------------\n" .
-                              "Event: " . $registration->event->title . "\n" .
-                              "Date: " . \Carbon\Carbon::parse($registration->event->date)->format('M d, Y') . " " . \Carbon\Carbon::parse($registration->event->time)->format('h:i A') . "\n" .
-                              "Location: " . $registration->event->location . "\n" .
-                              "Attendee: " . $registration->attendee->full_name . "\n" .
-                              "Ticket ID: #" . $registration->ticket_id;
-                @endphp
-                <div style="text-align: center; background: white; padding: 0.75rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #f0f0f0;">
+                <div style="text-align: center; background: white; padding: 0.75rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #f0f0f0; margin: 0 auto;">
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode($qrData) }}" 
                          alt="QR Code" 
-                         style="width: 140px; height: 140px; display: block;">
-                    <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; font-weight: bold;">SCAN TO VERIFY</p>
+                         style="width: 120px; height: 120px; display: block;">
+                    <p style="font-size: 0.6rem; color: var(--text-muted); margin-top: 0.5rem; font-weight: bold;">SCAN TO VERIFY</p>
                 </div>
             </div>
 
-            <div style="margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                <div style="padding: 1rem; background: #fdfdfd; border-radius: 8px; border: 1px solid #f7f7f7;">
-                    <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Attendee Name</p>
-                    <p style="font-weight: 700; font-size: 1.1rem; color: #2d3748;">{{ $registration->attendee->full_name }}</p>
+            <div style="margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 15px;">
+                <div style="flex: 1; min-width: 140px; padding: 1rem; background: #fdfdfd; border-radius: 8px; border: 1px solid #f7f7f7;">
+                    <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;">Attendee Name</p>
+                    <p style="font-weight: 700; font-size: 1rem; color: #2d3748;">{{ $registration->attendee->full_name }}</p>
                 </div>
-                <div style="padding: 1rem; background: #fdfdfd; border-radius: 8px; border: 1px solid #f7f7f7;">
-                    <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Location</p>
-                    <p style="font-weight: 700; font-size: 1.1rem; color: #2d3748;">{{ $registration->event->location }}</p>
+                <div style="flex: 1; min-width: 140px; padding: 1rem; background: #fdfdfd; border-radius: 8px; border: 1px solid #f7f7f7;">
+                    <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem;">Location</p>
+                    <p style="font-weight: 700; font-size: 1rem; color: #2d3748;">{{ $registration->event->location }}</p>
                 </div>
             </div>
 
@@ -63,16 +53,16 @@
         </div>
 
         <!-- Ticket Bottom Section -->
-        <div style="padding: 2.5rem 3rem; background: #fafafa; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <p style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Registration ID</p>
-                <p style="font-family: monospace; font-size: 1.25rem; font-weight: bold; color: var(--corporate-red); letter-spacing: 2px;">#{{ $registration->ticket_id }}</p>
+        <div style="padding: 1.5rem; background: #fafafa; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div style="flex: 1; min-width: 150px;">
+                <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Member ID</p>
+                <p style="font-family: monospace; font-size: 1.1rem; font-weight: bold; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->attendee->access_code }}</p>
             </div>
-            <div style="display: flex; gap: 1rem;">
-                <button id="downloadBtn" onclick="downloadTicket()" class="btn" style="padding: 10px 20px; border-radius: 8px; font-weight: bold; background: white; border: 1px solid #ddd; color: #444; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <div style="display: flex; gap: 10px; flex: 1; min-width: 250px; justify-content: flex-end;">
+                <button id="downloadBtn" onclick="downloadTicket()" class="btn" style="flex: 1; padding: 10px 15px; border-radius: 8px; font-weight: bold; background: white; border: 1px solid #ddd; color: #444; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
                     <i class="fa-solid fa-download"></i> Download
                 </button>
-                <button onclick="window.print()" class="btn" style="padding: 10px 20px; border-radius: 8px; font-weight: bold; background: var(--corporate-red); color: white; border: none; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(148, 0, 0, 0.2);">
+                <button onclick="window.print()" class="btn" style="flex: 1; padding: 10px 15px; border-radius: 8px; font-weight: bold; background: var(--corporate-red); color: white; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(148, 0, 0, 0.2); font-size: 0.85rem;">
                     <i class="fa-solid fa-print"></i> Print
                 </button>
             </div>
@@ -135,7 +125,7 @@ function downloadTicket() {
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
         
         pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
-        pdf.save('Ticket-{{ $registration->ticket_id }}.pdf');
+        pdf.save('Ticket-{{ $registration->attendee->access_code }}.pdf');
         
         btn.innerHTML = originalText;
         btn.disabled = false;

@@ -9,166 +9,170 @@
 @section('title', 'Organizer Dashboard - EmCa Technologies')
 
 @section('content')
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 20px;">
         <div style="display: flex; align-items: center; gap: 1.5rem;">
             @if(auth()->user()->profile_image)
-                <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Profile" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Profile" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             @else
-                <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: 'Century Gothic', sans-serif;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--corporate-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     {{ strtoupper(auth()->user()->name[0]) }}
                 </div>
             @endif
             <div>
-                <h1 style="margin: 0;">Dashboard</h1>
-                <p style="color: var(--text-muted); margin: 0;">Welcome back, {{ auth()->user()->name }}!</p>
+                <h1 style="margin: 0; font-size: 1.5rem; font-weight: 800; color: #1e293b;">Organizer Panel</h1>
+                <p style="color: #64748b; margin: 4px 0 0; font-size: 0.9rem;">Welcome back, {{ auth()->user()->name }}</p>
             </div>
         </div>
-        <a href="{{ route('events.create') }}" class="btn btn-primary">+ Create New Event</a>
+        <a href="{{ route('events.create') }}" class="btn btn-primary" style="min-width: 180px;">
+            <i class="fa-solid fa-plus-circle"></i> NEW EVENT
+        </a>
     </div>
 
-<!-- SECTION 2: WELCOME HEADER -->
-<div style="margin-bottom: 40px;">
-    <h1 style="font-size: 2rem; color: #333; margin: 0; font-weight: bold; position: relative; display: inline-block;">
-        Organizer Dashboard
-        <div style="width: 100px; height: 3px; background: var(--corporate-red); margin-top: 8px;"></div>
-    </h1>
-    <p style="font-size: 1.1rem; color: #666; margin-top: 15px;">Welcome, {{ auth()->user()->name }}! Here's your event overview</p>
-</div>
-
 <!-- SECTION 3: STATISTICS CARDS -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 50px;">
+<div class="stats-grid">
     <!-- Card 1: Upcoming Events -->
-    <div style="background: #FFF5F5; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 25px;">
-        <p style="color: #666; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; margin: 0 0 10px;">Upcoming Events</p>
-        <div style="font-size: 2rem; font-weight: bold; color: var(--corporate-red); line-height: 1;">{{ $upcomingEventsCount }}</div>
-        <p style="color: #666; font-size: 0.85rem; margin: 10px 0 0;">{{ $myEventsCount }} upcoming</p>
+    <div class="card" style="border-left: 4px solid var(--corporate-red);">
+        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 0.5px;">Upcoming Events</p>
+        <div style="font-size: 2rem; font-weight: 800; color: #1e293b; line-height: 1;">{{ $upcomingEventsCount }}</div>
+        <p style="color: var(--corporate-red); font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">{{ $myEventsCount }} active</p>
     </div>
 
     <!-- Card 2: Total Attendees -->
-    <div style="background: #FFF5F5; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 25px;">
-        <p style="color: #666; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; margin: 0 0 10px;">Total Attendees</p>
-        <div style="font-size: 2rem; font-weight: bold; color: var(--corporate-red); line-height: 1;">{{ $totalAttendees }}</div>
-        <p style="color: #666; font-size: 0.85rem; margin: 10px 0 0;">+{{ $newAttendeesThisMonth }} this month</p>
+    <div class="card" style="border-left: 4px solid var(--corporate-red);">
+        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 0.5px;">Total Attendees</p>
+        <div style="font-size: 2rem; font-weight: 800; color: #1e293b; line-height: 1;">{{ $totalAttendees }}</div>
+        <p style="color: #059669; font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">+{{ $newAttendeesThisMonth }} this month</p>
     </div>
 
     <!-- Card 3: Tickets Issued -->
-    <div style="background: #FFF5F5; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 25px;">
-        <p style="color: #666; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; margin: 0 0 10px;">Tickets Issued</p>
-        <div style="font-size: 2rem; font-weight: bold; color: var(--corporate-red); line-height: 1;">{{ $ticketsIssued }}</div>
-        <p style="color: #666; font-size: 0.85rem; margin: 10px 0 0;">+{{ $ticketsIssued }} total</p>
+    <div class="card" style="border-left: 4px solid var(--corporate-red);">
+        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 0.5px;">Tickets Issued</p>
+        <div style="font-size: 2rem; font-weight: 800; color: #1e293b; line-height: 1;">{{ $ticketsIssued }}</div>
+        <p style="color: #64748b; font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">Verified entries</p>
     </div>
 
-    <!-- Card 4: Event Views -->
-    <div style="background: #FFF5F5; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 25px;">
-        <p style="color: #666; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; margin: 0 0 10px;">Event Views</p>
-        <div style="font-size: 2rem; font-weight: bold; color: var(--corporate-red); line-height: 1;">{{ $eventViews }}</div>
-        <p style="color: #666; font-size: 0.85rem; margin: 10px 0 0;">{{ $viewsGrowth }}</p>
-    </div>
 </div>
 
-<!-- SECTION 4: MY EVENTS TABLE WITH TABS -->
-<div style="margin-bottom: 50px;">
-    <div style="margin-bottom: 25px; position: relative; display: inline-block;">
-        <h2 style="font-size: 1.5rem; color: #333; margin: 0; font-weight: bold; text-transform: uppercase;">My Events</h2>
-        <div style="width: 80px; height: 3px; background: var(--corporate-red); margin-top: 5px;"></div>
-    </div>
-
-    <!-- Tabs -->
-    <div style="display: flex; gap: 40px; border-bottom: 1px solid #ddd; margin-bottom: 20px; font-family: 'Century Gothic', sans-serif;">
-        <div id="tab-upcoming" onclick="switchTab('upcoming')" style="padding: 10px 0; color: var(--corporate-red); font-weight: bold; border-bottom: 3px solid var(--corporate-red); cursor: pointer;">Upcoming ({{ $upcomingEvents->count() }})</div>
-        <div id="tab-past" onclick="switchTab('past')" style="padding: 10px 0; color: #666; cursor: pointer;">Past ({{ $pastEvents->count() }})</div>
-        <div id="tab-drafts" onclick="switchTab('drafts')" style="padding: 10px 0; color: #666; cursor: pointer;">Drafts ({{ $draftEvents->count() }})</div>
-    </div>
-
-    <!-- Tables Container -->
-    <div class="card" style="padding: 0; border: 1px solid var(--corporate-red); overflow: hidden;">
-        <!-- UPCOMING TABLE -->
-        <div id="table-upcoming" style="display: block;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead style="background: var(--header-gradient); text-align: left; border-bottom: 1px solid var(--corporate-red);">
-                    <tr>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Event Name</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Date</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Location</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Capacity</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($upcomingEvents as $event)
-                        <tr style="border-bottom: 1px dotted #eee;" onmouseover="this.style.background='#FFF5F5'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 15px 20px; font-weight: bold; color: #333;">{{ $event->title }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ $event->location }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
-                            <td style="padding: 15px 20px;"><span style="color: var(--corporate-red); font-weight: bold;"><i class="fa-solid fa-clock-rotate-left"></i> Upcoming</span></td>
-                        </tr>
-                    @empty
-                        <tr><td colspan="5" style="padding: 40px; text-align: center; color: #999;">No upcoming events found.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+<!-- SECTION 4: MY MANAGED EVENTS (SEQUENTIAL SECTIONS) -->
+<div style="margin-bottom: 100px;">
+    <!-- UPCOMING EVENTS -->
+    <div style="margin-bottom: 60px;">
+        <div style="margin-bottom: 25px;">
+            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Upcoming Events ({{ $upcomingEvents->count() }})</h2>
+            <div style="width: 40px; height: 4px; background: var(--corporate-red); margin-top: 8px; border-radius: 2px;"></div>
         </div>
-
-        <!-- PAST TABLE -->
-        <div id="table-past" style="display: none;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead style="background: var(--header-gradient); text-align: left; border-bottom: 1px solid var(--corporate-red);">
-                    <tr>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Event Name</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Date</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Location</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Capacity</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($pastEvents as $event)
-                        <tr style="border-bottom: 1px dotted #eee;" onmouseover="this.style.background='#FFF5F5'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 15px 20px; font-weight: bold; color: #333;">{{ $event->title }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ $event->location }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
-                            <td style="padding: 15px 20px;"><span style="color: #999; font-weight: bold;"><i class="fa-solid fa-calendar-check"></i> Past</span></td>
+        <div class="card" style="padding: 0; border: 1px solid #e2e8f0; overflow: hidden;">
+            <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--corporate-red); color: white;">
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Event Name</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Date</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Location</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Attendance</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Status</th>
                         </tr>
-                    @empty
-                        <tr><td colspan="5" style="padding: 40px; text-align: center; color: #999;">No past events found.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <!-- DRAFTS TABLE -->
-        <div id="table-drafts" style="display: none;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead style="background: var(--header-gradient); text-align: left; border-bottom: 1px solid var(--corporate-red);">
-                    <tr>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Event Name</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Date</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Location</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Capacity</th>
-                        <th style="padding: 15px 20px; color: var(--corporate-red); font-weight: bold;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($draftEvents as $event)
-                        <tr style="border-bottom: 1px dotted #eee;" onmouseover="this.style.background='#FFF5F5'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 15px 20px; font-weight: bold; color: #333;">{{ $event->title }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ $event->location }}</td>
-                            <td style="padding: 15px 20px; color: #666;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
-                            <td style="padding: 15px 20px;"><span style="color: #ccc; font-weight: bold;"><i class="fa-solid fa-pencil"></i> Draft</span></td>
-                        </tr>
-                    @empty
-                        <tr><td colspan="5" style="padding: 40px; text-align: center; color: #999;">No draft events found.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @forelse($upcomingEvents as $event)
+                            <tr style="border-bottom: 1px solid #f1f5f9;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                                <td style="padding: 18px 20px; font-weight: 700; color: #1e293b;">{{ $event->title }}</td>
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->location }}</td>
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
+                                <td style="padding: 18px 20px;">
+                                    <span style="color: #166534; font-weight: 800; font-size: 0.75rem; background: #f0fdf4; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
+                                        <i class="fa-solid fa-clock"></i> Upcoming
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="5" style="padding: 50px; text-align: center; color: #94a3b8;">No upcoming events found.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <!-- PAST EVENTS -->
+    <div style="margin-bottom: 60px;">
+        <div style="margin-bottom: 25px;">
+            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Past Events ({{ $pastEvents->count() }})</h2>
+            <div style="width: 40px; height: 4px; background: #64748b; margin-top: 8px; border-radius: 2px;"></div>
+        </div>
+        <div class="card" style="padding: 0; border: 1px solid #e2e8f0; overflow: hidden; opacity: 0.9;">
+            <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--corporate-red); color: white;">
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Event Name</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Date</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Location</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pastEvents as $event)
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 18px 20px; font-weight: 700; color: #1e293b;">{{ $event->title }}</td>
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->location }}</td>
+                                <td style="padding: 18px 20px;">
+                                    <span style="color: #64748b; font-weight: 800; font-size: 0.75rem; background: #f1f5f9; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
+                                        <i class="fa-solid fa-check-double"></i> Completed
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="5" style="padding: 50px; text-align: center; color: #94a3b8;">No past events found.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- PENDING APPROVAL EVENTS -->
+    @if($draftEvents->count() > 0)
+    <div style="margin-bottom: 60px;">
+        <div style="margin-bottom: 25px;">
+            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Pending Review ({{ $draftEvents->count() }})</h2>
+            <div style="width: 40px; height: 4px; background: #92400e; margin-top: 8px; border-radius: 2px;"></div>
+        </div>
+        <div class="card" style="padding: 0; border: 1px solid #e2e8f0; overflow: hidden;">
+            <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--corporate-red); color: white;">
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Event Name</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Status</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($draftEvents as $event)
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 18px 20px; font-weight: 700; color: #1e293b;">{{ $event->title }}</td>
+                                <td style="padding: 18px 20px;">
+                                    <span style="color: #92400e; font-weight: 800; font-size: 0.75rem; background: #fef3c7; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
+                                        <i class="fa-solid fa-clock-rotate-left"></i> PENDING
+                                    </span>
+                                </td>
+                                <td style="padding: 18px 20px;">
+                                    <a href="{{ route('events.edit', $event->id) }}" style="color: var(--corporate-red); font-weight: 700; text-decoration: none; font-size: 0.85rem;">Continue Editing</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @endif
     
-    <div style="margin-top: 20px; text-align: right;">
-        <a href="{{ route('organizer.events.index') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: bold;">View All Events →</a>
+    <div style="margin-top: 25px; text-align: right;">
+        <a href="{{ route('organizer.events.index') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid transparent; transition: 0.3s;" onmouseover="this.style.borderBottomColor='var(--corporate-red)'">View All Events <i class="fa-solid fa-arrow-right-long"></i></a>
     </div>
     
     <div style="margin-top: 3rem;">
@@ -180,89 +184,91 @@
 </div>
 
 <!-- SECTION 5: QUICK ACTIONS + EVENT INSIGHTS -->
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 50px;">
+<div class="responsive-grid" style="gap: 30px; margin-bottom: 50px;">
     <!-- Quick Actions -->
-    <div style="background: white; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 25px;">
-        <h3 style="font-size: 1.1rem; color: #333; margin: 0 0 20px; font-weight: bold; text-transform: uppercase;">Quick Actions</h3>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            <a href="{{ route('events.create') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: 500;">• Create New Event</a>
-            <a href="{{ route('organizer.registrations.index') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: 500;">• View Attendee Reports</a>
-            <a href="{{ route('profile.show') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: 500;">• Manage Panel Settings</a>
+    <div class="card" style="padding: 0; overflow: hidden; border-top: 4px solid var(--corporate-red); display: flex; flex-direction: column;">
+        <div style="padding: 25px 30px 15px; border-bottom: 1px solid #f1f5f9; background: #fafafa;">
+            <h3 style="font-size: 1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-bolt" style="color: var(--corporate-red); margin-right: 8px;"></i> Quick Controls
+            </h3>
+        </div>
+        <div style="padding: 20px 30px; display: flex; flex-direction: column; gap: 15px; flex: 1;">
+            
+            <a href="{{ route('events.create') }}" style="display: flex; align-items: center; gap: 15px; padding: 15px 20px; background: #f8fafc; border-radius: 10px; text-decoration: none; border: 1px solid #f1f5f9; transition: all 0.3s;" onmouseover="this.style.background='var(--accent-soft-red)'; this.style.borderColor='var(--corporate-red)';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#f1f5f9';">
+                <div style="width: 42px; height: 42px; border-radius: 8px; background: white; display: flex; justify-content: center; align-items: center; color: var(--corporate-red); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <i class="fa-solid fa-calendar-plus" style="font-size: 1.1rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 800; color: #1e293b; font-size: 0.95rem;">Create New Event</div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 3px;">Start a new registration listing</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="margin-left: auto; color: #cbd5e1; font-size: 0.8rem;"></i>
+            </a>
+
+            <a href="{{ route('organizer.registrations.index') }}" style="display: flex; align-items: center; gap: 15px; padding: 15px 20px; background: #f8fafc; border-radius: 10px; text-decoration: none; border: 1px solid #f1f5f9; transition: all 0.3s;" onmouseover="this.style.background='#f1fcf5'; this.style.borderColor='#16a34a';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#f1f5f9';">
+                <div style="width: 42px; height: 42px; border-radius: 8px; background: white; display: flex; justify-content: center; align-items: center; color: #16a34a; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <i class="fa-solid fa-chart-line" style="font-size: 1.1rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 800; color: #1e293b; font-size: 0.95rem;">View Attendee Reports</div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 3px;">Analytics & attendance data</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="margin-left: auto; color: #cbd5e1; font-size: 0.8rem;"></i>
+            </a>
+
+            <a href="{{ route('profile.show') }}" style="display: flex; align-items: center; gap: 15px; padding: 15px 20px; background: #f8fafc; border-radius: 10px; text-decoration: none; border: 1px solid #f1f5f9; transition: all 0.3s;" onmouseover="this.style.background='#eff6ff'; this.style.borderColor='#2563eb';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#f1f5f9';">
+                <div style="width: 42px; height: 42px; border-radius: 8px; background: white; display: flex; justify-content: center; align-items: center; color: #2563eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <i class="fa-solid fa-user-gear" style="font-size: 1.1rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 800; color: #1e293b; font-size: 0.95rem;">Manage Panel Settings</div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 3px;">Update your profile & security</div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="margin-left: auto; color: #cbd5e1; font-size: 0.8rem;"></i>
+            </a>
+
         </div>
     </div>
 
     <!-- Event Insights -->
-    <div style="background: white; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 25px;">
-        <h3 style="font-size: 1.1rem; color: #333; margin: 0 0 20px; font-weight: bold; text-transform: uppercase;">Event Insights</h3>
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            <div style="display: flex; justify-content: space-between;">
-                <span style="color: #666;">• Total Registered:</span>
-                <span style="font-weight: bold; color: var(--corporate-red);">{{ $totalAttendees }}</span>
+    <div class="card" style="padding: 0; overflow: hidden; border-top: 4px solid #1e293b; display: flex; flex-direction: column;">
+        <div style="padding: 25px 30px 15px; border-bottom: 1px solid #f1f5f9; background: #fafafa;">
+            <h3 style="font-size: 1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-chart-pie" style="color: #475569; margin-right: 8px;"></i> Panel Insights
+            </h3>
+        </div>
+        <div style="padding: 25px 30px; display: flex; flex-direction: column; gap: 15px; flex: 1; background: white;">
+            
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                     <div style="width: 32px; height: 32px; border-radius: 50%; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-users" style="font-size: 0.9rem;"></i></div>
+                     <div style="font-weight: 700; color: #475569; font-size: 0.9rem;">Total Registered</div>
+                </div>
+                <div style="font-weight: 900; color: #1e293b; font-size: 1.15rem; background: #f8fafc; padding: 4px 12px; border-radius: 20px; border: 1px solid #e2e8f0;">
+                    {{ $totalAttendees }}
+                </div>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-                <span style="color: #666;">• Unique Page Views:</span>
-                <span style="font-weight: bold; color: var(--corporate-red);">{{ $eventViews }}</span>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                     <div style="width: 32px; height: 32px; border-radius: 50%; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-ticket" style="font-size: 0.9rem;"></i></div>
+                     <div style="font-weight: 700; color: #475569; font-size: 0.9rem;">Tickets Distributed</div>
+                </div>
+                <div style="font-weight: 900; color: #1e293b; font-size: 1.15rem; background: #f8fafc; padding: 4px 12px; border-radius: 20px; border: 1px solid #e2e8f0;">
+                    {{ $ticketsIssued }}
+                </div>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-                <span style="color: #666;">• Total Tickets Issued:</span>
-                <span style="font-weight: bold; color: var(--corporate-red);">{{ $ticketsIssued }}</span>
-            </div>
+
         </div>
     </div>
 </div>
 
-<!-- SECTION 6: TIPS SECTION -->
-<div style="margin-bottom: 50px;">
-    <h3 style="font-size: 1.1rem; color: #333; margin: 0 0 15px; font-weight: bold; text-transform: uppercase; position: relative; display: inline-block;">
-        Tips
-        <div style="width: 40px; height: 3px; background: var(--corporate-red); margin-top: 5px;"></div>
-    </h3>
-    <div style="background: #FFF5F5; border: 1px solid var(--corporate-red); border-radius: 8px; padding: 25px;">
-        <p style="font-weight: bold; margin: 0 0 15px; color: #333;">Tips to increase your event visibility</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div style="color: #666; font-size: 0.95rem;">• Add eye-catching event images</div>
-            <div style="color: #666; font-size: 0.95rem;">• Promote on social media</div>
-            <div style="color: #666; font-size: 0.95rem;">• Share early bird discounts</div>
-            <div style="color: #666; font-size: 0.95rem;">• Send reminders to attendees</div>
-        </div>
     </div>
-    
-    <div style="margin-top: 3rem; display: flex; justify-content: center;">
-        <a href="{{ route('home') }}" class="btn-back">
-            <i class="fa-solid fa-house"></i>
-            Back to Home
-        </a>
-    </div>
-</div>
 
+
+@push('scripts')
 <script>
-    function switchTab(tab) {
-        // Reset all tabs
-        document.getElementById('tab-upcoming').style.color = '#666';
-        document.getElementById('tab-upcoming').style.borderBottom = 'none';
-        document.getElementById('tab-upcoming').style.fontWeight = 'normal';
-        
-        document.getElementById('tab-past').style.color = '#666';
-        document.getElementById('tab-past').style.borderBottom = 'none';
-        document.getElementById('tab-past').style.fontWeight = 'normal';
-        
-        document.getElementById('tab-drafts').style.color = '#666';
-        document.getElementById('tab-drafts').style.borderBottom = 'none';
-        document.getElementById('tab-drafts').style.fontWeight = 'normal';
-
-        // Hide all tables
-        document.getElementById('table-upcoming').style.display = 'none';
-        document.getElementById('table-past').style.display = 'none';
-        document.getElementById('table-drafts').style.display = 'none';
-
-        // Set active tab
-        const activeTab = document.getElementById('tab-' + tab);
-        activeTab.style.color = 'var(--corporate-red)';
-        activeTab.style.borderBottom = '3px solid var(--corporate-red)';
-        activeTab.style.fontWeight = 'bold';
-
-        // Show active table
-        document.getElementById('table-' + tab).style.display = 'block';
-    }
+    // Sequential layout applied, tab switching no longer needed.
 </script>
+@endpush
 @endsection

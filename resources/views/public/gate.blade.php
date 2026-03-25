@@ -17,7 +17,7 @@
             @csrf
             <div style="margin-bottom: 25px; text-align: left;">
                 <label for="access_code" style="display: block; font-weight: 700; color: #444; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Access ID</label>
-                <input type="text" name="access_code" id="access_code" placeholder="e.g. EM-1234-XYZ" required 
+                <input type="text" name="access_code" id="access_code" placeholder="e.g. EmCa-TSYCQ-26" required 
                     style="width: 100%; padding: 18px 25px; border-radius: 12px; border: 2px solid #eee; font-size: 1.2rem; outline: none; transition: border-color 0.3s; font-family: monospace; text-align: center; letter-spacing: 2px;"
                     onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
                 @error('access_code')

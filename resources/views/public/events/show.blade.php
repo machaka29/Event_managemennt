@@ -24,106 +24,102 @@
             <i class="fa-solid fa-chevron-left"></i> {{ $backText }}
         </a>
     </div>
-    <div class="grid grid-cols-3" style="align-items: flex-start; gap: 3rem;">
+    <div class="responsive-grid" style="align-items: flex-start; gap: 2.5rem;">
         <!-- Left: Event Details -->
-        <div style="grid-column: span 2;">
-            <div class="card" style="max-width: 100%; border-top: 4px solid var(--corporate-red);">
-                <h1 style="margin-bottom: 0.5rem;">{{ $event->title }}</h1>
-                <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        <div style="display: flex; flex-direction: column;">
+            <div class="card" style="border-top: 4px solid var(--corporate-red); padding: 35px;">
+                <h1 style="margin-bottom: 0.5rem; font-weight: 800; line-height: 1.2;">{{ $event->title }}</h1>
+                <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem;">
                     {{ \Carbon\Carbon::parse($event->date)->format('F d, Y') }} at {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}
                 </p>
                 
-                <div style="margin-bottom: 2rem; display: flex; gap: 2rem; flex-wrap: wrap;">
-                    <div class="stat-card" style="flex: 1; min-width: 150px;">
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Location</p>
-                        <p style="font-weight: bold;">{{ $event->location }}</p>
+                <div class="stats-grid" style="margin-bottom: 2.5rem; gap: 15px;">
+                    <div class="card" style="padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; margin-bottom: 0;">
+                        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 5px; text-transform: uppercase; font-weight: 800;">Location</p>
+                        <p style="font-weight: 700; color: #1e293b;">{{ $event->location }}</p>
                     </div>
-                    <div class="stat-card" style="flex: 1; min-width: 150px;">
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Available Seats</p>
-                        <p style="font-weight: bold;">{{ $event->capacity - $event->registrations()->count() }} / {{ $event->capacity }}</p>
+                    <div class="card" style="padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; margin-bottom: 0;">
+                        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 5px; text-transform: uppercase; font-weight: 800;">Available Seats</p>
+                        <p style="font-weight: 700; color: #1e293b;">{{ $event->capacity - $event->registrations()->count() }} / {{ $event->capacity }}</p>
                     </div>
                 </div>
 
-                <h3>About this Event</h3>
-                <div style="margin-top: 1rem; white-space: pre-wrap; line-height: 1.8;">
+                <h3 style="margin-bottom: 1.25rem; font-weight: 800; text-transform: uppercase; font-size: 1.1rem; color: #1e293b;">About this Event</h3>
+                <div style="color: #475569; white-space: pre-wrap; line-height: 1.8; font-size: 1.05rem;">
                     {{ $event->description }}
                 </div>
 
                 @if($event->image_path)
-                    <div style="margin-top: 2rem;">
-                        <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}" style="width: 100%; border-radius: 8px;">
+                    <div style="margin-top: 2.5rem; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+                        <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}" style="width: 100%; display: block;">
                     </div>
                 @endif
             </div>
         </div>
 
         <!-- Right: Member Confirmation -->
-        <div class="card" style="max-width: 100%; position: sticky; top: 2rem; border-top: 4px solid var(--corporate-red); text-align: center; padding: 40px 30px;">
+        <div class="card" style="border-top: 4px solid var(--corporate-red); text-align: center; padding: 45px 30px; position: sticky; top: 100px;">
             @if(session('member_access_id'))
-                <div style="width: 60px; height: 60px; background: #FFF5F5; color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 20px;">
+                <div style="width: 64px; height: 64px; background: #f0fdf4; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 20px; border: 2px solid #bbf7d0;">
                     <i class="fa-solid fa-user-check"></i>
                 </div>
                 
-                <h3 style="margin-bottom: 10px;">ID Verified</h3>
-                <p style="color: #666; margin-bottom: 30px; font-size: 0.95rem;">
-                    Welcome back! You are logged in with Member ID: <br>
-                    <strong style="color: var(--corporate-red); font-family: monospace;">{{ session('member_access_id') }}</strong>
+                <h3 style="margin-bottom: 15px; font-weight: 800; color: #1e293b;">ID VERIFIED</h3>
+                <p style="color: #64748b; margin-bottom: 35px; font-size: 0.95rem; line-height: 1.5;">
+                    Welcome back! You are logged in as: <br>
+                    <strong style="color: var(--corporate-red); font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; display: block; margin-top: 10px;">{{ session('member_access_id') }}</strong>
                 </p>
                 
                 @if(session('error'))
-                    <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    <div style="background: #fef2f2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.85rem; font-weight: 600; border: 1px solid #fecaca;">
                         {{ session('error') }}
                     </div>
                 @endif
 
                 <form action="{{ route('events.public.register', $event->id) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn" style="width: 100%; padding: 18px; background: var(--corporate-red); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(148, 0, 0, 0.2);"
-                        onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';"
-                    >
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 20px; font-size: 1.1rem; letter-spacing: 0.5px; box-shadow: 0 10px 15px -3px rgba(148,0,0,0.3);">
                         CONFIRM ATTENDANCE
                     </button>
                 </form>
 
-                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <div style="margin-top: 35px; padding-top: 25px; border-top: 1px solid #f1f5f9;">
                     <form action="{{ route('member.logout') }}" method="POST">
                         @csrf
-                        <button type="submit" style="background: none; border: none; color: #999; cursor: pointer; font-size: 0.85rem; text-decoration: underline;">
+                        <button type="submit" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='var(--corporate-red)'" onmouseout="this.style.color='#94a3b8'">
                             Not you? Switch Member ID
                         </button>
                     </form>
                 </div>
             @else
-                <div style="width: 60px; height: 60px; background: #FFF5F5; color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 20px;">
+                <div style="width: 64px; height: 64px; background: var(--accent-soft-red); color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 20px; border: 2px solid #fecaca;">
                     <i class="fa-solid fa-id-card"></i>
                 </div>
                 
-                <h3 style="margin-bottom: 10px;">Register for Event</h3>
-                <p style="color: #666; margin-bottom: 30px; font-size: 0.95rem;">
-                    Please enter your <strong>Member ID</strong> to confirm your attendance.
+                <h3 style="margin-bottom: 15px; font-weight: 800; color: #1e293b;">REGISTER NOW</h3>
+                <p style="color: #64748b; margin-bottom: 35px; font-size: 0.95rem; line-height: 1.5;">
+                    Please enter your unique <strong>Member ID</strong> to confirm your attendance.
                 </p>
 
                 @if(session('error'))
-                    <div style="background: #FED7D7; color: #C53030; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    <div style="background: #fef2f2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.85rem; font-weight: 600; border: 1px solid #fecaca;">
                         {{ session('error') }}
                     </div>
                 @endif
 
                 <form action="{{ route('events.public.register', $event->id) }}" method="POST">
                     @csrf
-                    <div style="margin-bottom: 20px;">
-                        <input type="text" name="access_code" placeholder="e.g. EM-1234-XYZ" required 
-                            style="width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 8px; text-align: center; font-family: monospace; font-weight: bold; font-size: 1.1rem; outline: none; transition: 0.3s;"
-                            onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    <div style="margin-bottom: 25px;">
+                        <input type="text" name="access_code" placeholder="ENTER ID (e.g. EmCa-...)" required 
+                            style="width: 100%; padding: 18px; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; font-family: monospace; font-weight: 800; font-size: 1.2rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
+                            onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none'">
                     </div>
-                    <button type="submit" class="btn" style="width: 100%; padding: 18px; background: var(--corporate-red); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(148, 0, 0, 0.2);"
-                        onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';"
-                    >
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 20px; font-size: 1.1rem; letter-spacing: 0.5px; box-shadow: 0 10px 15px -3px rgba(148,0,0,0.3);">
                         VERIFY & REGISTER
                     </button>
                     
-                    <p style="margin-top: 20px; font-size: 0.8rem; color: #999;">
-                        Don't have an ID? Please contact the organizer.
+                    <p style="margin-top: 25px; font-size: 0.8rem; color: #94a3b8; font-weight: 500;">
+                        Don't have an ID? Contact the event organizer for assistance.
                     </p>
                 </form>
             @endif

@@ -20,7 +20,7 @@
         <form action="{{ route('organizer.attendees.store') }}" method="POST" style="padding: 40px;">
             @csrf
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px;">
+            <div class="responsive-grid" style="margin-bottom: 40px; gap: 30px;">
                 <!-- Full Name -->
                 <div>
                     <label for="full_name" style="display: block; font-weight: 700; color: #444; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase;">Full Name <span style="color: var(--corporate-red);">*</span></label>
