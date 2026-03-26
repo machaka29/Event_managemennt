@@ -71,17 +71,17 @@
                         <i class="fa-regular fa-calendar-alt"></i> {{ $reg->created_at->format('M d, Y') }}
                     </td>
                     <td style="color: #166534; font-weight: 700; font-size: 0.85rem;">
-                        {{ $reg->check_in_at ? $reg->check_in_at->format('h:i A') : '---' }}
+                        {{ $reg->checked_in_at ? $reg->checked_in_at->format('h:i A') : '---' }}
                     </td>
                     <td style="color: #475569; font-weight: 700; font-size: 0.85rem;">
-                        {{ $reg->check_out_at ? $reg->check_out_at->format('h:i A') : '---' }}
+                        {{ $reg->checked_out_at ? $reg->checked_out_at->format('h:i A') : '---' }}
                     </td>
                     <td style="text-align: center;" class="col-status">
-                        @if($reg->check_out_at)
+                        @if($reg->checked_out_at)
                             <span style="background: #1e293b; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
                                 <i class="fa-solid fa-flag-checkered"></i> <span class="hide-mobile">LEFT</span>
                             </span>
-                        @elseif($reg->check_in_at)
+                        @elseif($reg->checked_in_at)
                             <span style="background: #166534; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
                                 <i class="fa-solid fa-person-walking-arrow-right"></i> <span class="hide-mobile">IN</span>
                             </span>

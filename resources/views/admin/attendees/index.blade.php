@@ -32,7 +32,7 @@
                     <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Email</th>
                     <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Event</th>
                     <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Reg. Date</th>
-                    <th style="padding: 12px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Status</th>
+                    <th style="padding: 12px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Status & Time</th>
                     <th style="padding: 12px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Ticket</th>
                 </tr>
             </thead>
@@ -44,13 +44,23 @@
                         <td style="padding: 14px 25px; color: #475569; font-weight: 600; font-size: 0.85rem;">{{ Str::limit($reg->event->title, 30) }}</td>
                         <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;">{{ $reg->created_at->format('M d, Y') }}</td>
                         <td style="padding: 14px 25px; text-align: center;">
-                            @if($reg->attended)
-                                <span style="color: #059669; font-weight: 800; background: #ECFDF5; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-check-double"></i> Attended
+                            @if($reg->status === 'Checked-Out')
+                                <span style="color: #475569; font-weight: 800; background: #e2e8f0; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-door-closed"></i> Checked Out
                                 </span>
+                                @if($reg->checked_out_at)
+                                <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px; font-weight: 700;">{{ $reg->checked_out_at->format('h:i A') }}</div>
+                                @endif
+                            @elseif($reg->attended)
+                                <span style="color: #059669; font-weight: 800; background: #ECFDF5; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-check-double"></i> Checked In
+                                </span>
+                                @if($reg->checked_in_at)
+                                <div style="font-size: 0.7rem; color: #059669; margin-top: 4px; font-weight: 700;">{{ $reg->checked_in_at->format('h:i A') }}</div>
+                                @endif
                             @else
-                                <span style="color: #64748B; font-weight: 800; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-user-check"></i> Registered
+                                <span style="color: #eab308; font-weight: 800; background: #fef9c3; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-clock"></i> Pending
                                 </span>
                             @endif
                         </td>
