@@ -70,7 +70,7 @@
 
     <!-- Branding Footer -->
     <div style="margin-top: 2rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
-        <p>Managed by <strong>EmCa TECHONOLOGY</strong></p>
+        <p>Managed by <strong>EmCa TECHONOLOGIES</strong></p>
     </div>
 
 <<<<<<< HEAD

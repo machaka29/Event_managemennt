@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Add New Organizer - EmCa TECHONOLOGY')
+@section('title', 'Add New Organizer - EmCa Techonologies')
 
 @section('content')
 <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--corporate-red); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
@@ -21,9 +21,18 @@
             <div class="form-group">
                 <label for="name" style="display: block; font-weight: bold; margin-bottom: 8px; color: #444;">Full Name</label>
                 <input type="text" name="name" id="name" required value="{{ old('name') }}" placeholder="e.g. John Doe"
+                    pattern="^[a-zA-Z\s.-]+$" title="Name should only contain letters, spaces, dots or hyphens"
                     style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; box-sizing: border-box;"
                     onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
                 @error('name') <p class="text-error" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="organization" style="display: block; font-weight: bold; margin-bottom: 8px; color: #444;">Organization Name</label>
+                <input type="text" name="organization" id="organization" required value="{{ old('organization') }}" placeholder="e.g. Acme Corporation"
+                    style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; box-sizing: border-box;"
+                    onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                @error('organization') <p class="text-error" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ $message }}</p> @enderror
             </div>
 
             <div class="form-group">
@@ -38,8 +47,8 @@
                 <label for="phone_number" style="display: block; font-weight: bold; margin-bottom: 8px; color: #444;">Phone Number</label>
                 <div style="display: flex; align-items: stretch; border: 2px solid #eee; border-radius: 10px; overflow: hidden; transition: border-color 0.3s; box-sizing: border-box;" onfocusin="this.style.borderColor='var(--corporate-red)'" onfocusout="this.style.borderColor='#eee'">
                     <span style="background: #f9f9f9; padding: 14px 20px; border-right: 2px solid #eee; color: #555; font-weight: bold; display: flex; align-items: center;">+255</span>
-                    <input type="text" name="phone_number" id="phone_number" required value="{{ old('phone_number') }}" placeholder="712345678" maxlength="9" pattern="\d{9}"
-                        style="border: none; padding: 14px 20px; flex: 1; outline: none; font-size: 1rem; box-sizing: border-box;">
+                    <input type="tel" name="phone_number" id="phone_number" required value="{{ old('phone_number') }}" placeholder="712345678" 
+                        maxlength="9" pattern="[0-9]{9}" title="Please enter exactly 9 digits">
                 </div>
                 @error('phone') <p class="text-error" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ $message }}</p> @enderror
             </div>

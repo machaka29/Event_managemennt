@@ -7,7 +7,7 @@
 
 @extends($layout)
 
-@section('title', 'Edit Member - EmCa TECHONOLOGY')
+@section('title', 'Edit Member - EmCa Techonologies')
 
 @section('content')
 <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
@@ -33,6 +33,7 @@
                 <div>
                     <label for="full_name" style="display: block; font-weight: 700; color: #444; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase;">Full Name <span style="color: var(--corporate-red);">*</span></label>
                     <input type="text" name="full_name" id="full_name" required value="{{ old('full_name', $attendee->full_name) }}"
+                        pattern="^[a-zA-Z\s.-]+$" title="Name should only contain letters, spaces, dots or hyphens"
                         style="width: 100%; padding: 14px 20px; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; outline: none;"
                         onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#ddd'">
                     @error('full_name') <p style="color: red; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</p> @enderror
@@ -50,9 +51,11 @@
                 <!-- Phone -->
                 <div>
                     <label for="phone" style="display: block; font-weight: 700; color: #444; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase;">Phone Number</label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone', $attendee->phone) }}"
+                    <input type="tel" name="phone" id="phone" value="{{ old('phone', $attendee->phone) }}" placeholder="+2557XXXXXXXX" 
+                        pattern="^\+255[0-9]{9}$" title="Phone number should be +255 followed by 9 digits"
                         style="width: 100%; padding: 14px 20px; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; outline: none;"
                         onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#ddd'">
+                    @error('phone') <p style="color: red; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Organization/Branch -->

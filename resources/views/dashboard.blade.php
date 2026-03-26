@@ -6,7 +6,7 @@
 
 @extends('layouts.organizer')
 
-@section('title', 'Organizer Dashboard - EmCa TECHONOLOGY')
+@section('title', 'Organizer Dashboard - EmCa Techonologies')
 
 @section('content')
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 20px;">
@@ -24,7 +24,7 @@
             </div>
         </div>
         <a href="{{ route('events.create') }}" class="btn btn-primary" style="min-width: 180px;">
-            <i class="fa-solid fa-plus-circle"></i> New event
+            <i class="fa-solid fa-plus-circle"></i> NEW EVENT
         </a>
     </div>
 
@@ -32,21 +32,21 @@
 <div class="stats-grid">
     <!-- Card 1: Upcoming Events -->
     <div class="card" style="border-left: 4px solid var(--corporate-red);">
-        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: none; margin: 0 0 12px; letter-spacing: 0.5px;">Upcoming Events</p>
+        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 0.5px;">Upcoming Events</p>
         <div style="font-size: 2rem; font-weight: 800; color: #1e293b; line-height: 1;">{{ $upcomingEventsCount }}</div>
         <p style="color: var(--corporate-red); font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">{{ $myEventsCount }} active</p>
     </div>
 
     <!-- Card 2: Total Attendees -->
     <div class="card" style="border-left: 4px solid var(--corporate-red);">
-        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: none; margin: 0 0 12px; letter-spacing: 0.5px;">Total Attendees</p>
+        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 0.5px;">Total Attendees</p>
         <div style="font-size: 2rem; font-weight: 800; color: #1e293b; line-height: 1;">{{ $totalAttendees }}</div>
         <p style="color: #059669; font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">+{{ $newAttendeesThisMonth }} this month</p>
     </div>
 
     <!-- Card 3: Tickets Issued -->
     <div class="card" style="border-left: 4px solid var(--corporate-red);">
-        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: none; margin: 0 0 12px; letter-spacing: 0.5px;">Tickets Issued</p>
+        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 0.5px;">Tickets Issued</p>
         <div style="font-size: 2rem; font-weight: 800; color: #1e293b; line-height: 1;">{{ $ticketsIssued }}</div>
         <p style="color: #64748b; font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">Verified entries</p>
     </div>
@@ -57,40 +57,31 @@
 <div style="margin-bottom: 100px;">
     <!-- UPCOMING EVENTS -->
     <div style="margin-bottom: 60px;">
-        <div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-            <div>
-                <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: none; letter-spacing: 1px;">Upcoming Events ({{ $upcomingEvents->count() }})</h2>
-                <div style="width: 40px; height: 4px; background: var(--corporate-red); margin-top: 8px; border-radius: 2px;"></div>
-            </div>
-            <div style="position: relative;">
-                <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem;"></i>
-                <input type="text" id="upcomingSearch" placeholder="Quick search..." 
-                    style="padding: 8px 12px 8px 32px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; outline: none; width: 220px; transition: all 0.3s;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px var(--accent-soft-red)';"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-            </div>
+        <div style="margin-bottom: 25px;">
+            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Upcoming Events ({{ $upcomingEvents->count() }})</h2>
+            <div style="width: 40px; height: 4px; background: var(--corporate-red); margin-top: 8px; border-radius: 2px;"></div>
         </div>
         <div class="card" style="padding: 0; border: 1px solid #e2e8f0; overflow: hidden;">
             <div class="table-responsive">
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: var(--corporate-red); color: white;">
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Event Name</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Date</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Location</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Attendance</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Status</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Event Name</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Date</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Location</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Attendance</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Status</th>
                         </tr>
                     </thead>
-                    <tbody id="upcomingTableBody">
-                        @forelse($upcomingEvents->take(5) as $event)
+                    <tbody>
+                        @forelse($upcomingEvents as $event)
                             <tr style="border-bottom: 1px solid #f1f5f9;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
                                 <td style="padding: 18px 20px; font-weight: 700; color: #1e293b;">{{ $event->title }}</td>
                                 <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
                                 <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->location }}</td>
                                 <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
                                 <td style="padding: 18px 20px;">
-                                    <span style="color: #166534; font-weight: 800; font-size: 0.75rem; background: #f0fdf4; padding: 5px 12px; border-radius: 20px; text-transform: none;">
+                                    <span style="color: #166534; font-weight: 800; font-size: 0.75rem; background: #f0fdf4; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
                                         <i class="fa-solid fa-clock"></i> Upcoming
                                     </span>
                                 </td>
@@ -99,22 +90,15 @@
                             <tr><td colspan="5" style="padding: 50px; text-align: center; color: #94a3b8;">No upcoming events found.</td></tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
         </div>
-        @if($upcomingEvents->count() > 5)
-            <div style="margin-top: 15px; text-align: center;">
-                <a href="{{ route('organizer.events.index') }}" style="display: inline-flex; align-items: center; gap: 8px; color: var(--corporate-red); text-decoration: none; font-weight: 800; font-size: 0.8rem; text-transform: none; background: var(--accent-soft-red); padding: 8px 20px; border-radius: 6px; border: 1px solid rgba(148,0,0,0.1); transition: 0.3s;" onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';">View more events <i class="fa-solid fa-chevron-right"></i></a>
-            </div>
-        @endif
     </div>
-
 
     <!-- PAST EVENTS -->
     <div style="margin-bottom: 60px;">
         <div style="margin-bottom: 25px;">
-            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: none; letter-spacing: 1px;">Past Events ({{ $pastEvents->count() }})</h2>
+            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Past Events ({{ $pastEvents->count() }})</h2>
             <div style="width: 40px; height: 4px; background: #64748b; margin-top: 8px; border-radius: 2px;"></div>
         </div>
         <div class="card" style="padding: 0; border: 1px solid #e2e8f0; overflow: hidden; opacity: 0.9;">
@@ -122,10 +106,10 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: var(--corporate-red); color: white;">
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Event Name</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Date</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Location</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Status</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Event Name</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Date</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Location</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,7 +119,7 @@
                                 <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
                                 <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->location }}</td>
                                 <td style="padding: 18px 20px;">
-                                    <span style="color: #64748b; font-weight: 800; font-size: 0.75rem; background: #f1f5f9; padding: 5px 12px; border-radius: 20px; text-transform: none;">
+                                    <span style="color: #64748b; font-weight: 800; font-size: 0.75rem; background: #f1f5f9; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
                                         <i class="fa-solid fa-check-double"></i> Completed
                                     </span>
                                 </td>
@@ -153,7 +137,7 @@
     @if($draftEvents->count() > 0)
     <div style="margin-bottom: 60px;">
         <div style="margin-bottom: 25px;">
-            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: none; letter-spacing: 1px;">Pending Review ({{ $draftEvents->count() }})</h2>
+            <h2 style="font-size: 1.1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Pending Review ({{ $draftEvents->count() }})</h2>
             <div style="width: 40px; height: 4px; background: #92400e; margin-top: 8px; border-radius: 2px;"></div>
         </div>
         <div class="card" style="padding: 0; border: 1px solid #e2e8f0; overflow: hidden;">
@@ -161,9 +145,9 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: var(--corporate-red); color: white;">
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Event Name</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Status</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: none; font-weight: 800;">Action</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Event Name</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Status</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -171,8 +155,8 @@
                             <tr style="border-bottom: 1px solid #f1f5f9;">
                                 <td style="padding: 18px 20px; font-weight: 700; color: #1e293b;">{{ $event->title }}</td>
                                 <td style="padding: 18px 20px;">
-                                    <span style="color: #92400e; font-weight: 800; font-size: 0.75rem; background: #fef3c7; padding: 5px 12px; border-radius: 20px; text-transform: none;">
-                                        <i class="fa-solid fa-clock-rotate-left"></i> Pending
+                                    <span style="color: #92400e; font-weight: 800; font-size: 0.75rem; background: #fef3c7; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
+                                        <i class="fa-solid fa-clock-rotate-left"></i> PENDING
                                     </span>
                                 </td>
                                 <td style="padding: 18px 20px;">
@@ -188,14 +172,7 @@
     @endif
     
     <div style="margin-top: 25px; text-align: right;">
-        <a href="{{ route('organizer.events.index') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: 800; font-size: 0.9rem; text-transform: none; letter-spacing: 0.5px; border-bottom: 2px solid transparent; transition: 0.3s;" onmouseover="this.style.borderBottomColor='var(--corporate-red)'">View all events <i class="fa-solid fa-arrow-right-long"></i></a>
-    </div>
-    
-    <div style="margin-top: 3rem;">
-        <a href="javascript:history.back()" class="btn-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
-            Back
-        </a>
+        <a href="{{ route('organizer.events.index') }}" style="color: var(--corporate-red); text-decoration: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid transparent; transition: 0.3s;" onmouseover="this.style.borderBottomColor='var(--corporate-red)'">View All Events <i class="fa-solid fa-arrow-right-long"></i></a>
     </div>
 </div>
 
@@ -204,7 +181,7 @@
     <!-- Quick Actions -->
     <div class="card" style="padding: 0; overflow: hidden; border-top: 4px solid var(--corporate-red); display: flex; flex-direction: column;">
         <div style="padding: 25px 30px 15px; border-bottom: 1px solid #f1f5f9; background: #fafafa;">
-            <h3 style="font-size: 1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: none; letter-spacing: 0.5px;">
+            <h3 style="font-size: 1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
                 <i class="fa-solid fa-bolt" style="color: var(--corporate-red); margin-right: 8px;"></i> Quick Controls
             </h3>
         </div>
@@ -246,10 +223,40 @@
         </div>
     </div>
 
+    <!-- Recent Signups -->
+    <div class="card" style="padding: 0; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; border-top: 4px solid var(--corporate-red);">
+        <div style="padding: 25px 30px 15px; border-bottom: 1px solid #f1f5f9; background: #fafafa;">
+            <h3 style="font-size: 1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase;">
+                <i class="fa-solid fa-user-plus" style="color: var(--corporate-red); margin-right: 8px;"></i> Recent Signups
+            </h3>
+        </div>
+        <div style="padding: 20px 30px; display: flex; flex-direction: column; gap: 15px;">
+            @forelse($recentRegistrations as $reg)
+                <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft-red); color: var(--corporate-red); display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                        {{ $reg->attendee->full_name[0] }}
+                    </div>
+                    <div style="flex: 1;">
+                        <p style="margin: 0; font-weight: 700; font-size: 0.9rem; color: #1e293b;">{{ $reg->attendee->full_name }}</p>
+                        <p style="margin: 0; font-size: 0.75rem; color: #64748b;">{{ $reg->event->title }}</p>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #94a3b8;">{{ $reg->created_at->diffForHumans() }}</div>
+                </div>
+            @empty
+                <div style="text-align: center; padding: 20px; color: #94a3b8;">
+                    No recent registrations found.
+                </div>
+            @endforelse
+            @if($recentRegistrations->count() > 0)
+                <a href="{{ route('organizer.attendees.index') }}" style="display: block; text-align: center; color: var(--corporate-red); text-decoration: none; font-weight: bold; font-size: 0.85rem; margin-top: 5px;">View All Members</a>
+            @endif
+        </div>
+    </div>
+
     <!-- Event Insights -->
     <div class="card" style="padding: 0; overflow: hidden; border-top: 4px solid #1e293b; display: flex; flex-direction: column;">
         <div style="padding: 25px 30px 15px; border-bottom: 1px solid #f1f5f9; background: #fafafa;">
-            <h3 style="font-size: 1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: none; letter-spacing: 0.5px;">
+            <h3 style="font-size: 1rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
                 <i class="fa-solid fa-chart-pie" style="color: #475569; margin-right: 8px;"></i> Panel Insights
             </h3>
         </div>
@@ -284,18 +291,6 @@
 
 @push('scripts')
 <script>
-    // Search for Upcoming Events
-    document.getElementById('upcomingSearch').addEventListener('keyup', function() {
-        let searchTerm = this.value.toLowerCase();
-        let tableBody = document.getElementById('upcomingTableBody');
-        let rows = tableBody.getElementsByTagName('tr');
-
-        for (let row of rows) {
-            let text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        }
-    });
-
     // Sequential layout applied, tab switching no longer needed.
 </script>
 @endpush

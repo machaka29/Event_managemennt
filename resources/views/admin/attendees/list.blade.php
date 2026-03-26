@@ -8,7 +8,7 @@
         <div>
             <h1 style="font-size: 1.3rem; color: #1e293b; margin: 0; font-weight: 800; text-transform: uppercase;">Attendee Directory</h1>
             <div style="width: 40px; height: 3px; background: var(--corporate-red); margin-top: 8px; border-radius: 2px;"></div>
-            <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; font-weight: 600;">Full registry of all participants registered via the public site.</p>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; font-weight: 600;">Full registry of all platform members and participants.</p>
         </div>
     </div>
 </div>
@@ -20,21 +20,18 @@
 @endif
 
 <div style="background: white; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden;">
-    <div style="padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
+    <div style="padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; flex-wrap: wrap; gap: 10px;">
         <h2 style="margin: 0; font-size: 0.85rem; color: #475569; font-weight: 700;">Global Members</h2>
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="position: relative;">
                 <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem;"></i>
-                <input type="text" id="tableSearch" placeholder="Quick search..." 
-                    style="padding: 8px 12px 8px 32px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; outline: none; width: 220px; transition: all 0.3s;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px var(--accent-soft-red)';"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                <input type="text" id="tableSearch" placeholder="Search members..." style="padding: 8px 15px 8px 35px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; outline: none; width: 250px; transition: all 0.2s;" onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
             </div>
             <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 600;">Total: {{ $attendees->total() }}</div>
         </div>
     </div>
     <div class="table-responsive" style="overflow-x: auto;">
-        <table id="mainTable" style="width: 100%; border-collapse: collapse; min-width: 750px;">
+        <table style="width: 100%; border-collapse: collapse; min-width: 750px;">
             <thead>
                 <tr style="background: var(--corporate-red); color: white;">
                     <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Full Name</th>
@@ -78,19 +75,21 @@
         </div>
     @endif
 </div>
-@endsection
 
-@push('scripts')
 <script>
-    document.getElementById('tableSearch').addEventListener('keyup', function() {
-        let searchTerm = this.value.toLowerCase();
-        let table = document.getElementById('mainTable');
-        let rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (let row of rows) {
-            let text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('tableSearch');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+    }
+});
 </script>
-@endpush
+@endsection

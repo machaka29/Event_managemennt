@@ -1,18 +1,12 @@
 <?php
 
-use App\Http\Controllers\MemberGateController;
 use App\Http\Controllers\PublicEventController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-// Member Gate Routes
-Route::get('/gate', [MemberGateController::class, 'showGate'])->name('member.gate');
-Route::post('/gate', [MemberGateController::class, 'verifyGate'])->name('member.gate.verify');
-Route::get('/member/logout', [MemberGateController::class, 'logout'])->name('member.logout.get');
-Route::post('/member/logout', [MemberGateController::class, 'logout'])->name('member.logout');
-
 // Public Event Routes
 Route::get('/', [PublicEventController::class, 'index'])->name('home');
+Route::get('/api/events/search', [PublicEventController::class, 'searchAjax'])->name('events.search.ajax');
 Route::get('/events/public/{id}', [PublicEventController::class, 'show'])->name('events.public.show');
 
 // Public Registration & Ticket Routes
@@ -20,6 +14,7 @@ Route::post('/events/public/{id}/register', [PublicEventController::class, 'regi
 Route::get('/tickets/{ticket_id}', [PublicEventController::class, 'ticket'])->name('events.public.ticket');
 Route::get('/tickets/{ticket_id}/download', [PublicEventController::class, 'downloadTicket'])->name('events.public.ticket.download');
 Route::get('/verify/{ticket_id}', [PublicEventController::class, 'verifyTicket'])->name('events.public.verify');
+Route::post('/verify/{ticket_id}/attendance', [PublicEventController::class, 'markPublicAttendance'])->name('public.attendance.update');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -46,8 +41,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::get('/organizer/events', [\App\Http\Controllers\EventController::class, 'allEvents'])->name('organizer.events.index');
         Route::get('/organizer/registrations', [\App\Http\Controllers\EventController::class, 'allRegistrations'])->name('organizer.registrations.index');
         Route::get('/organizer/attendees', [\App\Http\Controllers\EventController::class, 'attendeesIndex'])->name('organizer.attendees.index');
-        Route::get('/organizer/attendees/create', [\App\Http\Controllers\EventController::class, 'attendeeCreate'])->name('organizer.attendees.create');
-        Route::post('/organizer/attendees', [\App\Http\Controllers\EventController::class, 'attendeeStore'])->name('organizer.attendees.store');
+        // organizer.attendees.create/store removed
         Route::get('/organizer/attendees/{attendee}/edit', [\App\Http\Controllers\EventController::class, 'attendeeEdit'])->name('organizer.attendees.edit');
         Route::put('/organizer/attendees/{attendee}', [\App\Http\Controllers\EventController::class, 'attendeeUpdate'])->name('organizer.attendees.update');
         Route::delete('/organizer/attendees/{attendee}', [\App\Http\Controllers\EventController::class, 'attendeeDestroy'])->name('organizer.attendees.destroy');
@@ -80,8 +74,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         
         Route::get('/admin/registrations', [\App\Http\Controllers\AdminController::class, 'attendees'])->name('admin.attendees.index');
         Route::get('/admin/attendees', [\App\Http\Controllers\AdminController::class, 'globalAttendees'])->name('admin.attendees.list');
-        Route::get('/admin/attendees/create', [\App\Http\Controllers\AdminController::class, 'attendeeCreate'])->name('admin.attendees.create');
-        Route::post('/admin/attendees', [\App\Http\Controllers\AdminController::class, 'attendeeStore'])->name('admin.attendees.store');
+        // admin.attendees.create/store removed
         Route::get('/admin/attendees/{attendee}/edit', [\App\Http\Controllers\AdminController::class, 'attendeeEdit'])->name('admin.attendees.edit');
         Route::put('/admin/attendees/{attendee}', [\App\Http\Controllers\AdminController::class, 'attendeeUpdate'])->name('admin.attendees.update');
         Route::delete('/admin/attendees/{attendee}', [\App\Http\Controllers\AdminController::class, 'attendeeDestroy'])->name('admin.attendees.destroy');
@@ -91,8 +84,9 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::get('/admin/sms', [\App\Http\Controllers\AdminSmsController::class, 'create'])->name('admin.sms.create');
         Route::post('/admin/sms/send', [\App\Http\Controllers\AdminSmsController::class, 'send'])->name('admin.sms.send');
 
-        Route::get('/admin/settings', function() { return view('admin.settings.index'); })->name('admin.settings.index');
-        Route::post('/admin/settings/update', [\App\Http\Controllers\SystemSettingController::class, 'updateSettings'])->name('admin.settings.update');
+        Route::get('/admin/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
+        Route::post('/admin/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('/admin/settings/logo', [\App\Http\Controllers\SystemSettingController::class, 'updateLogo'])->name('admin.settings.logo');
+        Route::post('/admin/settings/general', [\App\Http\Controllers\SystemSettingController::class, 'updateSettings'])->name('admin.settings.general');
     });
 });

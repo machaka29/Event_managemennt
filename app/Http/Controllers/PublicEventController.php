@@ -13,6 +13,9 @@ use App\Notifications\NewAttendeeRegistration;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Notification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AdminRegistrationNotification;
+use App\Mail\AttendeeRegistrationNotification;
 
 class PublicEventController extends Controller
 {
@@ -61,6 +64,73 @@ class PublicEventController extends Controller
         return view('welcome', compact('events', 'locations', 'categories'));
     }
 
+    public function searchAjax(Request $request)
+    {
+        $query = Event::with('category')->where('status', 'approved');
+
+        if ($request->filled('search')) {
+            $searchTerm = trim($request->search);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('location', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('venue', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $events = $query->latest()->paginate(6);
+        
+        $html = '';
+        foreach($events as $event) {
+            $imageUrl = $event->image_path ? asset('storage/' . $event->image_path) : null;
+            $icon = $event->category->icon ?? 'fa-calendar-day';
+            $categoryName = $event->category->name ?? 'Event';
+            $date = \Carbon\Carbon::parse($event->date)->format('D, M d, Y');
+            $detailUrl = route('events.public.show', $event->id);
+            
+            $imageHtml = $imageUrl 
+                ? '<img src="'.$imageUrl.'" alt="'.htmlspecialchars($event->title).'" style="width: 100%; height: 100%; object-fit: cover;">'
+                : '<i class="fa-solid '.$icon.'" style="font-size: 3.5rem; color: #cbd5e1;"></i>';
+
+            $html .= '
+            <div class="card event-item" style="padding: 0; overflow: hidden; text-align: left;">
+                <div style="height: 200px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    '.$imageHtml.'
+                    <div style="position: absolute; top: 15px; right: 15px; background: var(--corporate-red); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        '.$categoryName.'
+                    </div>
+                </div>
+
+                <div style="padding: 25px; flex: 1; display: flex; flex-direction: column;">
+                    <h3 style="font-size: 1.15rem; color: #1e293b; margin-bottom: 1rem; font-weight: 800; line-height: 1.3;">
+                        '.htmlspecialchars($event->title).'
+                    </h3>
+                    
+                    <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 2rem; display: grid; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fa-solid fa-calendar" style="color: var(--corporate-red); width: 14px;"></i>
+                            '.$date.'
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fa-solid fa-location-dot" style="color: var(--corporate-red); width: 14px;"></i>
+                            '.htmlspecialchars($event->location).'
+                        </div>
+                    </div>
+
+                    <a href="'.$detailUrl.'" class="btn btn-outline" style="width: 100%; margin-top: auto;">
+                        View Details
+                    </a>
+                </div>
+            </div>';
+        }
+
+        return response()->json([
+            'html' => $html,
+            'hasMorePages' => $events->hasMorePages(),
+            'nextPageUrl' => $events->nextPageUrl()
+        ]);
+    }
+
     public function show($id)
     {
         $event = Event::findOrFail($id);
@@ -82,17 +152,19 @@ class PublicEventController extends Controller
             return back()->with('error', 'Registration for this event is currently closed.');
         }
 
-        // Validation for guest registration
+        // New Stricter Validation
         $request->validate([
-            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|email|max:255',
-            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
+            'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
             'organization' => 'nullable|string|max:255',
         ]);
 
-        // Find or create attendee by email
-        $attendee = Attendee::where('email', $request->email)->first();
-        
+        // Standardize Attendee (find by email OR phone)
+        $attendee = Attendee::where('email', $request->email)
+                            ->orWhere('phone', $request->phone)
+                            ->first();
+
         if (!$attendee) {
             // Generate unique access code: EM-XXXX-RAND (Backend only)
             $count = \App\Models\Attendee::count() + 1;
@@ -103,19 +175,21 @@ class PublicEventController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'organization' => $request->organization,
-                'access_code' => $access_code,
+                'access_code' => $access_code
             ]);
         } else {
             // Update existing attendee info if provided
             $attendee->update($request->only(['full_name', 'phone', 'organization']));
         }
 
-        // check duplicate registration for this specific event
+        // check duplicate registration for this specific event (Strict: both attendee identity and inputs)
         $duplicate = Registration::where('event_id', $event->id)
-                                 ->where('attendee_id', $attendee->id)
-                                 ->exists();
+            ->where(function($q) use ($attendee, $request) {
+                $q->where('attendee_id', $attendee->id);
+            })->exists();
+
         if ($duplicate) {
-            return back()->with('error', 'You are already registered for this event.');
+            return back()->with('error', 'You (or this phone/email) are already registered for this event.');
         }
 
         $ticket_id = 'EmCa-' . strtoupper(Str::random(5)) . '-26';
@@ -124,14 +198,31 @@ class PublicEventController extends Controller
             'event_id' => $event->id,
             'attendee_id' => $attendee->id,
             'ticket_id' => $ticket_id,
+            'is_read' => false,
         ]);
 
-        // Send Notification to Admins and Organizer
+        // Send Notification to Admins and Organizer (in-app)
         $admins = User::where('role', 'admin')->get();
         Notification::send($admins, new NewAttendeeRegistration($attendee, $event));
 
         if ($event->organizer && $event->organizer->role !== 'admin') {
             $event->organizer->notify(new NewAttendeeRegistration($attendee, $event));
+        }
+        
+        // Send Email Notification to Admin
+        try {
+            if ($admins->count() > 0) {
+                Mail::to($admins)->send(new AdminRegistrationNotification($registration));
+            }
+        } catch (\Exception $e) {
+            \Log::error('Mail Admin Notification Error: ' . $e->getMessage());
+        }
+
+        // Send Email Notification to Attendee
+        try {
+            Mail::to($attendee->email)->send(new AttendeeRegistrationNotification($registration));
+        } catch (\Exception $e) {
+            \Log::error('Mail Attendee Notification Error: ' . $e->getMessage());
         }
 
         return redirect()->route('events.public.ticket', $ticket_id)->with('success', 'Registration confirmed successfully!');
@@ -184,5 +275,42 @@ class PublicEventController extends Controller
         }
 
         return view('public.events.verify', compact('registration'));
+    }
+
+    /**
+     * Public attendance marking (for guards/scanners - no login required)
+     */
+    public function markPublicAttendance(Request $request, $ticket_id)
+    {
+        $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
+
+        if ($request->action === 'check_in') {
+            if ($registration->attended && $registration->status !== 'Checked-Out') {
+                return back()->with('error', 'Mshiriki huyu tayari amesajiliwa kuingia (Already checked in).');
+            }
+            $registration->update([
+                'status' => 'Attended',
+                'attended' => true,
+                'checked_in_at' => now(),
+                'checked_out_at' => null, // Reset check-out if re-entering
+            ]);
+            return back()->with('success', '✅ ' . $registration->attendee->full_name . ' ameingizwa kikamilifu! (Checked in at ' . now()->format('h:i:s A') . ')');
+        }
+
+        if ($request->action === 'check_out') {
+            if (!$registration->attended) {
+                return back()->with('error', 'Mshiriki huyu hajaingizwa bado. Tafadhali sajili kuingia kwanza (Not checked in yet).');
+            }
+            if ($registration->status === 'Checked-Out') {
+                return back()->with('error', 'Mshiriki huyu tayari ametoka (Already checked out).');
+            }
+            $registration->update([
+                'status' => 'Checked-Out',
+                'checked_out_at' => now(),
+            ]);
+            return back()->with('success', '🚪 ' . $registration->attendee->full_name . ' ametoka kikamilifu! (Checked out at ' . now()->format('h:i:s A') . ')');
+        }
+
+        return back()->with('error', 'Kitendo kisichojulikana (Unknown action).');
     }
 }

@@ -14,28 +14,24 @@
 </div>
 
 <div style="background: white; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden;">
-    <div style="padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
+    <div style="padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; flex-wrap: wrap; gap: 10px;">
         <h2 style="margin: 0; font-size: 0.85rem; color: #475569; font-weight: 700;">All Event Registrations</h2>
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="position: relative;">
                 <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem;"></i>
-                <input type="text" id="tableSearch" placeholder="Quick search..." 
-                    style="padding: 8px 12px 8px 32px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; outline: none; width: 220px; transition: all 0.3s;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px var(--accent-soft-red)';"
-                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                <input type="text" id="tableSearch" placeholder="Search registrations..." style="padding: 8px 15px 8px 35px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; outline: none; width: 250px; transition: all 0.2s;" onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
             </div>
             <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 600;">Total: {{ $attendees->total() }}</div>
         </div>
     </div>
     <div class="table-responsive" style="overflow-x: auto;">
-        <table id="mainTable" style="width: 100%; border-collapse: collapse; min-width: 800px;">
+        <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
             <thead>
                 <tr style="background: var(--corporate-red); color: white;">
                     <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Attendee</th>
                     <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Email</th>
                     <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Event</th>
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Check-in</th>
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Check-out</th>
+                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Reg. Date</th>
                     <th style="padding: 12px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Status</th>
                     <th style="padding: 12px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Ticket</th>
                 </tr>
@@ -45,24 +41,15 @@
                     <tr style="border-bottom: 1px solid #f1f1f1; transition: all 0.2s;" onmouseover="this.style.background='#fdfdfd'" onmouseout="this.style.background='white'">
                         <td style="padding: 14px 25px; font-weight: 700; color: #1e293b; font-size: 0.9rem;">{{ $reg->attendee->full_name }}</td>
                         <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;">{{ $reg->attendee->email }}</td>
-                        <td style="padding: 14px 25px; color: #475569; font-weight: 600; font-size: 0.85rem;">{{ Str::limit($reg->event->title, 25) }}</td>
-                        <td style="padding: 14px 25px; color: #166534; font-weight: 700; font-size: 0.8rem;">
-                            {{ $reg->check_in_at ? $reg->check_in_at->format('h:i A') : '---' }}
-                        </td>
-                        <td style="padding: 14px 25px; color: #475569; font-weight: 700; font-size: 0.8rem;">
-                            {{ $reg->check_out_at ? $reg->check_out_at->format('h:i A') : '---' }}
-                        </td>
+                        <td style="padding: 14px 25px; color: #475569; font-weight: 600; font-size: 0.85rem;">{{ Str::limit($reg->event->title, 30) }}</td>
+                        <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;">{{ $reg->created_at->format('M d, Y') }}</td>
                         <td style="padding: 14px 25px; text-align: center;">
-                            @if($reg->check_out_at)
-                                <span style="color: #1e293b; font-weight: 800; background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #e2e8f0;">
-                                    <i class="fa-solid fa-flag-checkered"></i> Left
-                                </span>
-                            @elseif($reg->check_in_at)
-                                <span style="color: white; font-weight: 800; background: #166534; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
-                                    <i class="fa-solid fa-check-double"></i> In
+                            @if($reg->attended)
+                                <span style="color: #059669; font-weight: 800; background: #ECFDF5; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa-solid fa-check-double"></i> Attended
                                 </span>
                             @else
-                                <span style="color: #64748B; font-weight: 800; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                                <span style="color: #64748B; font-weight: 800; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
                                     <i class="fa-solid fa-user-check"></i> Registered
                                 </span>
                             @endif
@@ -83,19 +70,21 @@
         </div>
     @endif
 </div>
-@endsection
 
-@push('scripts')
 <script>
-    document.getElementById('tableSearch').addEventListener('keyup', function() {
-        let searchTerm = this.value.toLowerCase();
-        let table = document.getElementById('mainTable');
-        let rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (let row of rows) {
-            let text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('tableSearch');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+    }
+});
 </script>
-@endpush
+@endsection

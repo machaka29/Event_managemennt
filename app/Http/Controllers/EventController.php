@@ -35,6 +35,13 @@ class EventController extends Controller
         $eventViews = number_format($totalAttendees * 4.5 + 120, 0); // Simulated views
         $viewsGrowth = "+215 this month"; // Simulated growth
 
+        // 5. Recent Registerations for this organizer
+        $recentRegistrations = \App\Models\Registration::with(['event', 'attendee'])
+            ->whereIn('event_id', $allEvents->pluck('id'))
+            ->latest()
+            ->take(5)
+            ->get();
+
         return view('dashboard', compact(
             'upcomingEvents', 
             'pastEvents', 
@@ -45,7 +52,8 @@ class EventController extends Controller
             'newAttendeesThisMonth',
             'ticketsIssued',
             'eventViews',
-            'viewsGrowth'
+            'viewsGrowth',
+            'recentRegistrations'
         ));
     }
 
@@ -62,7 +70,9 @@ class EventController extends Controller
             'date' => 'required|date|after_or_equal:today',
             'time' => 'required',
             'location' => 'required|string|max:255',
+            'venue' => 'nullable|string|max:255',
             'capacity' => 'required|integer|min:1',
+            'target_audience' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:2048',
             'reg_start_date' => 'required|date|before_or_equal:date',
             'reg_end_date' => 'required|date|after_or_equal:reg_start_date|before_or_equal:date',
@@ -99,7 +109,9 @@ class EventController extends Controller
             'date' => 'required|date|after_or_equal:today',
             'time' => 'required',
             'location' => 'required|string|max:255',
+            'venue' => 'nullable|string|max:255',
             'capacity' => 'required|integer|min:1',
+            'target_audience' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:2048',
             'reg_start_date' => 'required|date|before_or_equal:date',
             'reg_end_date' => 'required|date|after_or_equal:reg_start_date|before_or_equal:date',
@@ -125,27 +137,27 @@ class EventController extends Controller
     {
         $this->authorizeOwner($registration->event);
 
-        if ($request->action === 'check_in') {
+        if ($request->status === 'Attended') {
             $registration->update([
                 'status' => 'Attended',
                 'attended' => true,
-                'check_in_at' => now(),
+                'checked_in_at' => $registration->checked_in_at ?? now(),
             ]);
-            $msg = 'Checked in successfully!';
-        } elseif ($request->action === 'check_out') {
+        } elseif ($request->status === 'Checked-Out') {
             $registration->update([
-                'check_out_at' => now(),
+                'status' => 'Checked-Out',
+                'checked_out_at' => now(),
             ]);
-            $msg = 'Checked out successfully!';
         } else {
             $registration->update([
                 'status' => $request->status,
-                'attended' => ($request->status === 'Attended'),
+                'attended' => false,
+                'checked_in_at' => null,
+                'checked_out_at' => null,
             ]);
-            $msg = 'Attendance updated successfully.';
         }
 
-        return back()->with('success', $msg);
+        return back()->with('success', 'Attendance updated successfully.');
     }
 
     public function exportAttendees(\App\Models\Event $event)
@@ -182,7 +194,7 @@ class EventController extends Controller
 
     public function allEvents()
     {
-        $events = auth()->user()->events()->withCount('registrations')->latest()->paginate(100);
+        $events = auth()->user()->events()->withCount('registrations')->latest()->paginate(10);
         return view('events.index', compact('events'));
     }
 
@@ -192,7 +204,7 @@ class EventController extends Controller
         $registrations = \App\Models\Registration::with(['event', 'attendee'])
             ->whereIn('event_id', $eventIds)
             ->latest()
-            ->paginate(100);
+            ->paginate(20);
         return view('events.registrations', compact('registrations'));
     }
 
@@ -208,26 +220,12 @@ class EventController extends Controller
         $attendees = \App\Models\Attendee::whereIn('id', $attendeeIds)
             ->withCount('registrations')
             ->latest()
-            ->paginate(100);
+            ->paginate(15);
             
         return view('events.attendees.index', compact('attendees'));
     }
 
-    /**
-     * Show form to manually create a new attendee (Member).
-     */
-    public function attendeeCreate()
-    {
-        return redirect()->route('organizer.attendees.index')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
-    }
-
-    /**
-     * Store a manually created attendee with an access code.
-     */
-    public function attendeeStore(Request $request)
-    {
-        return redirect()->route('organizer.attendees.index')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
-    }
+    // attendeeCreate and attendeeStore removed to enforce public-only registration
 
     public function attendeeEdit(\App\Models\Attendee $attendee)
     {
@@ -236,10 +234,17 @@ class EventController extends Controller
 
     public function attendeeUpdate(Request $request, \App\Models\Attendee $attendee)
     {
+        if ($request->filled('phone')) {
+            $phoneNumber = ltrim($request->phone, '0');
+            if (!str_starts_with($phoneNumber, '+255')) {
+                $request->merge(['phone' => '+255' . $phoneNumber]);
+            }
+        }
+
         $request->validate([
-            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|email|unique:attendees,email,' . $attendee->id,
-            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
+            'phone' => ['nullable', 'string', 'regex:/^\+255[0-9]{9}$/'],
             'organization' => 'nullable|string|max:255',
         ]);
 

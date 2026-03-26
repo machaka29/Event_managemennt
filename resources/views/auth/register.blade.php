@@ -13,7 +13,8 @@
             
             <div class="form-group">
                 <label for="name">Full Name</label>
-                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required autofocus>
+                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required autofocus
+                    pattern="^[a-zA-Z\s.-]+$" title="Name should only contain letters, spaces, dots or hyphens">
                 @error('name') <p class="text-error">{{ $message }}</p> @enderror
             </div>
 
@@ -25,7 +26,8 @@
 
             <div class="form-group">
                 <label for="phone">Phone Number</label>
-                <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone') }}" required>
+                <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone') }}" placeholder="+255xxxxxxxxx" required
+                    pattern="^\+255[0-9]{9}$" title="Phone number should be +255 followed by 9 digits">
                 @error('phone') <p class="text-error">{{ $message }}</p> @enderror
             </div>
 

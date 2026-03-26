@@ -25,6 +25,16 @@
         </div>
 
         <div class="form-group" style="margin-bottom: 20px;">
+            <label for="category_id">Event Category</label>
+            <select name="category_id" id="category_id" class="form-control" required>
+                @foreach(\App\Models\Category::all() as $category)
+                    <option value="{{ $category->id }}" {{ old('category_id', $event->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                @endforeach
+            </select>
+            @error('category_id') <p class="text-error">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
             <label for="description">Description</label>
             <textarea name="description" id="description" class="form-control" rows="4" required>{{ old('description', $event->description) }}</textarea>
             @error('description') <p class="text-error">{{ $message }}</p> @enderror
@@ -42,14 +52,24 @@
                 @error('time') <p class="text-error">{{ $message }}</p> @enderror
             </div>
             <div class="form-group">
-                <label for="location">Location</label>
+                <label for="location">City / Region</label>
                 <input type="text" name="location" id="location" class="form-control" value="{{ old('location', $event->location) }}" required>
                 @error('location') <p class="text-error">{{ $message }}</p> @enderror
+            </div>
+            <div class="form-group">
+                <label for="venue">Venue Name</label>
+                <input type="text" name="venue" id="venue" class="form-control" value="{{ old('venue', $event->venue) }}">
+                @error('venue') <p class="text-error">{{ $message }}</p> @enderror
             </div>
             <div class="form-group">
                 <label for="capacity">Capacity</label>
                 <input type="number" name="capacity" id="capacity" class="form-control" value="{{ old('capacity', $event->capacity) }}" required min="1">
                 @error('capacity') <p class="text-error">{{ $message }}</p> @enderror
+            </div>
+            <div class="form-group">
+                <label for="target_audience">Target Audience</label>
+                <input type="text" name="target_audience" id="target_audience" class="form-control" value="{{ old('target_audience', $event->target_audience) }}">
+                @error('target_audience') <p class="text-error">{{ $message }}</p> @enderror
             </div>
             <div class="form-group">
                 <label for="reg_start_date">Registration Opens</label>

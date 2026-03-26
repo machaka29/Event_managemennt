@@ -1,6 +1,6 @@
 @extends(auth()->check() && auth()->user()->role === 'admin' ? 'layouts.admin' : 'layouts.organizer')
 
-@section('title', 'Profile Settings - EmCa TECHONOLOGY')
+@section('title', 'Profile Settings - EmCa Techonologies')
 
 @section('content')
 <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);" class="profile-header">
@@ -67,7 +67,9 @@
 
                 <div style="margin-bottom: 25px;">
                     <label for="name" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Full Name</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required 
+                        pattern="^[a-zA-Z\s.-]+$" title="Name should only contain letters, spaces, dots or hyphens"
+                        style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
                     @error('name') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
 
@@ -79,7 +81,9 @@
 
                 <div style="margin-bottom: 25px;">
                     <label for="phone" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Phone Number (Optional)</label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone ?? '+255') }}" placeholder="+255xxxxxxxxx" style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone ?? '+255') }}" placeholder="+255xxxxxxxxx" 
+                        pattern="^\+255[0-9]{9}$" title="Phone number should be +255 followed by 9 digits"
+                        style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
                     @error('phone') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
 

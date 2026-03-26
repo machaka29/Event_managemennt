@@ -1,6 +1,6 @@
 @extends('layouts.organizer')
 
-@section('title', 'Manage Members - EmCa TECHONOLOGY')
+@section('title', 'Manage Members - EmCa Techonologies')
 
 @section('content')
 <!-- SECTION: PREMIUM HEADER -->
@@ -14,7 +14,7 @@
             <p style="font-size: 1.1rem; color: #666; margin-top: 15px; font-weight: 500;" class="page-subtitle">View and manage registered members who can access your events using their unique IDs.</p>
         </div>
         <div style="text-align: right;" class="header-actions">
-            <p style="font-size: 0.8rem; color: #888; margin: 0; font-weight: 600;">Registrations are managed via the public event links.</p>
+            <!-- Member addition by Organizer disabled as per request -->
         </div>
     </div>
 </div>
@@ -43,23 +43,19 @@
 
 <!-- SECTION: MEMBERS TABLE -->
 <div style="background: white; border: 1px solid #eee; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; width: 100%;">
-    <div style="padding: 25px 35px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; flex-wrap: wrap; gap: 15px;">
+    <div style="padding: 25px 35px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; flex-wrap: wrap; gap: 10px;">
         <h2 style="margin: 0; font-size: 1.3rem; color: #333; font-weight: 700;">Verified Members</h2>
-        
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="position: relative;">
-                <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #999; font-size: 0.9rem;"></i>
-                <input type="text" id="tableSearch" placeholder="Quick search members..." 
-                    style="padding: 12px 15px 12px 42px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; outline: none; width: 300px; transition: all 0.3s; background: white;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px var(--accent-soft-red)';"
-                    onblur="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+                <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem;"></i>
+                <input type="text" id="tableSearch" placeholder="Search members..." style="padding: 8px 15px 8px 35px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; outline: none; width: 250px; transition: all 0.2s;" onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
             </div>
-            <div style="font-size: 0.9rem; color: #888; font-weight: 600;">Total Members: {{ $attendees->total() }}</div>
+            <div style="font-size: 0.9rem; color: #888;">Total Members: {{ $attendees->total() }}</div>
         </div>
     </div>
     
     <div class="table-responsive">
-        <table id="mainTable" style="width: 100%; border-collapse: collapse;">
+        <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: var(--corporate-red); color: white;">
                     <th style="padding: 20px 35px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Member</th>
@@ -117,7 +113,7 @@
                         <td colspan="5" style="padding: 80px; text-align: center; color: #bbb;">
                             <div style="font-size: 4rem; margin-bottom: 20px; opacity: 0.2;"><i class="fa-solid fa-users-slash"></i></div>
                             <div style="font-size: 1.2rem; font-weight: 600;">No members registered in your database.</div>
-                            <p style="margin-top: 10px;">Add your first member to provide them event access.</p>
+                            <p style="margin-top: 10px;">Members will appear here once they register for your events via the public link.</p>
                         </td>
                     </tr>
                 @endif
@@ -131,19 +127,21 @@
         </div>
     @endif
 </div>
-@endsection
 
-@push('scripts')
 <script>
-    document.getElementById('tableSearch').addEventListener('keyup', function() {
-        let searchTerm = this.value.toLowerCase();
-        let table = document.getElementById('mainTable');
-        let rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (let row of rows) {
-            let text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('tableSearch');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+    }
+});
 </script>
-@endpush
+@endsection

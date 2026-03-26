@@ -49,7 +49,8 @@ class AdminController extends Controller
             'total_attendees' => Attendee::count(),
             'pending_approvals' => Event::where('status', 'pending')->count(),
             'events_this_month' => Event::where('created_at', '>=', now()->startOfMonth())->count(),
-            'active_organizers' => User::where('role', 'organizer')->count()
+            'active_organizers' => User::where('role', 'organizer')->count(),
+            'unread_registrations' => Registration::where('is_read', false)->count()
         ];
 
         return view('admin.dashboard', compact(
@@ -61,19 +62,19 @@ class AdminController extends Controller
 
     public function organizers()
     {
-        $organizers = User::where('role', 'organizer')->latest()->paginate(100);
+        $organizers = User::where('role', 'organizer')->latest()->paginate(10);
         return view('admin.organizers.index', compact('organizers'));
     }
 
     public function events()
     {
-        $events = Event::with('organizer')->latest()->paginate(100);
+        $events = Event::with('organizer')->latest()->paginate(10);
         return view('admin.events.index', compact('events'));
     }
 
     public function pendingEvents()
     {
-        $events = Event::with('organizer')->where('status', 'pending')->latest()->paginate(100);
+        $events = Event::with('organizer')->where('status', 'pending')->latest()->paginate(10);
         return view('admin.events.pending', compact('events'));
     }
 
@@ -104,7 +105,10 @@ class AdminController extends Controller
             'date' => 'required|date',
             'time' => 'required',
             'location' => 'required|string|max:255',
+            'venue' => 'nullable|string|max:255',
             'capacity' => 'required|integer|min:1',
+            'target_audience' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'reg_start_date' => 'required|date',
             'reg_end_date' => 'required|date',
         ]);
@@ -121,7 +125,10 @@ class AdminController extends Controller
 
     public function attendees()
     {
-        $attendees = Registration::with(['event', 'attendee'])->latest()->paginate(100);
+        // Mark unread as read when viewing the list
+        Registration::where('is_read', false)->update(['is_read' => true]);
+        
+        $attendees = Registration::with(['event', 'attendee'])->latest()->paginate(10);
         return view('admin.attendees.index', compact('attendees'));
     }
 
@@ -184,7 +191,7 @@ class AdminController extends Controller
 
     public function globalAttendees()
     {
-        $attendees = Attendee::withCount('registrations')->latest()->paginate(100);
+        $attendees = Attendee::withCount('registrations')->latest()->paginate(10);
         return view('admin.attendees.list', compact('attendees'));
     }
 
@@ -200,9 +207,10 @@ class AdminController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
+            'organization' => 'required|string|max:255',
             'password' => 'required|string|min:8',
         ]);
 
@@ -210,6 +218,7 @@ class AdminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'organization' => $request->organization,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role' => 'organizer',
         ]);
@@ -229,15 +238,17 @@ class AdminController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|string|email|max:255|unique:users,email,' . $organizer->id,
             'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
+            'organization' => 'required|string|max:255',
         ]);
 
         $organizer->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'organization' => $request->organization,
         ]);
 
         if ($request->filled('password')) {
@@ -253,15 +264,7 @@ class AdminController extends Controller
         return redirect()->route('admin.organizers.index')->with('success', 'Organizer deleted successfully.');
     }
 
-    public function attendeeCreate()
-    {
-        return redirect()->route('admin.attendees.list')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
-    }
-
-    public function attendeeStore(Request $request)
-    {
-        return redirect()->route('admin.attendees.list')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
-    }
+    // attendeeCreate and attendeeStore removed to enforce public-only registration
 
     public function attendeeEdit(Attendee $attendee)
     {
@@ -270,10 +273,17 @@ class AdminController extends Controller
 
     public function attendeeUpdate(Request $request, Attendee $attendee)
     {
+        if ($request->filled('phone')) {
+            $phoneNumber = ltrim($request->phone, '0');
+            if (!str_starts_with($phoneNumber, '+255')) {
+                $request->merge(['phone' => '+255' . $phoneNumber]);
+            }
+        }
+
         $request->validate([
-            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|email|max:255|unique:attendees,email,' . $attendee->id,
-            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
+            'phone' => ['nullable', 'string', 'regex:/^\+255[0-9]{9}$/'],
             'organization' => 'nullable|string|max:255',
         ]);
 
@@ -286,17 +296,5 @@ class AdminController extends Controller
     {
         $attendee->delete();
         return redirect()->route('admin.attendees.list')->with('success', 'Member deleted successfully.');
-    }
-
-    public function notifications()
-    {
-        $notifications = auth()->user()->notifications()->paginate(20);
-        return view('admin.notifications.index', compact('notifications'));
-    }
-
-    public function markNotificationsRead()
-    {
-        auth()->user()->unreadNotifications->markAsRead();
-        return back()->with('success', 'All notifications marked as read.');
     }
 }

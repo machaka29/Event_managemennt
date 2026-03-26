@@ -12,14 +12,14 @@ class Registration extends Model
         'ticket_id',
         'status',
         'attended',
-        'check_in_at',
-        'check_out_at'
+        'checked_in_at',
+        'checked_out_at'
     ];
 
     protected $casts = [
-        'check_in_at' => 'datetime',
-        'check_out_at' => 'datetime',
         'attended' => 'boolean',
+        'checked_in_at' => 'datetime',
+        'checked_out_at' => 'datetime',
     ];
 
     public function event()

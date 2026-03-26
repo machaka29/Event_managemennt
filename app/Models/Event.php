@@ -18,7 +18,9 @@ class Event extends Model
         'reg_end_date',
         'organizer_id',
         'status',
-        'category_id'
+        'category_id',
+        'venue',
+        'target_audience'
     ];
 
     public function category()

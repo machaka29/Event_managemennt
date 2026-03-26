@@ -175,36 +175,6 @@
             margin-left: 280px;
             padding: 40px;
             background-color: #fafafa;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Collapsed Sidebar State - DESKTOP ONLY */
-        @media (min-width: 993px) {
-            body.sidebar-collapsed .sidebar {
-                width: 80px;
-            }
-            body.sidebar-collapsed .content-area {
-                margin-left: 80px;
-            }
-            body.sidebar-collapsed .sidebar-text,
-            body.sidebar-collapsed .org-logo div:last-child,
-            body.sidebar-collapsed .logout-btn-text {
-                display: none;
-            }
-            body.sidebar-collapsed .sidebar-link {
-                justify-content: center;
-                padding: 14px 0;
-                border-left-width: 0;
-                border-bottom: 4px solid transparent;
-            }
-            body.sidebar-collapsed .sidebar-link.active {
-                border-bottom-color: var(--corporate-red);
-                background: var(--accent-soft-red);
-            }
-            body.sidebar-collapsed .sidebar-link i {
-                font-size: 1.4rem;
-                margin: 0;
-            }
         }
 
         .content-container {
@@ -294,7 +264,7 @@
         }
 
         .hamburger {
-            display: flex;
+            display: none;
             flex-direction: column;
             gap: 5px;
             cursor: pointer;
@@ -333,16 +303,11 @@
             </div>
             <a href="{{ route('dashboard') }}" class="org-logo">
                 <div style="width: 40px; height: 40px; border-radius: 6px; background: white; border: 1px solid #eee; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    @php $systemLogo = \App\Models\SystemSetting::get('system_logo'); @endphp
-                    @if($systemLogo)
-                        <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                    @else
-                        <img src="{{ asset('EmCa-Logo.png') }}" alt="EmCa" style="width: 100%; height: 100%; object-fit: contain;">
-                    @endif
+                    <img src="{{ asset('EmCa-Logo.png') }}" alt="EmCa" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <div>
-                    <span style="font-weight: 800; font-size: 1.1rem; color: #1a1a1a; text-transform: none;">EmCa Techonology</span><br>
-                    <span style="font-weight: 700; font-size: 0.65rem; text-transform: none; color: var(--corporate-red); letter-spacing: 1px;">Organizer Panel</span>
+                    <span style="font-weight: 800; font-size: 1.1rem; color: #1a1a1a; text-transform: uppercase;">EmCa Techonologies</span><br>
+                    <span style="font-weight: 700; font-size: 0.65rem; text-transform: uppercase; color: var(--corporate-red); letter-spacing: 1px;">Organizer Panel</span>
                 </div>
             </a>
         </div>
@@ -359,49 +324,7 @@
         
         <div class="nav-right">
             <div style="display: flex; align-items: center; gap: 20px;">
-                <!-- NOTIFICATIONS BELL -->
-                @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
-                <div style="position: relative;" id="notificationWrapper">
-                    <button onclick="toggleNotifications()" style="background: #f5f5f5; border: none; width: 40px; height: 40px; border-radius: 50%; color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; position: relative; transition: all 0.3s;" onmouseover="this.style.background='#eee';">
-                        <i class="fa-solid fa-bell"></i>
-                        @if($unreadCount > 0)
-                            <span style="position: absolute; top: -2px; right: -2px; background: var(--corporate-red); color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid white;">{{ $unreadCount }}</span>
-                        @endif
-                    </button>
-
-                    <!-- NOTIFICATIONS DROPDOWN -->
-                    <div id="notificationDropdown" style="display: none; position: absolute; top: 50px; right: -100px; width: 320px; background: white; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1001; max-height: 400px; overflow-y: auto;">
-                        <div style="padding: 15px 20px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
-                            <h3 style="margin: 0; font-size: 0.9rem; font-weight: 800; color: #1e293b;">Notifications</h3>
-                            @if($unreadCount > 0)
-                                <form action="{{ route('notifications.markRead') }}" method="POST" style="margin: 0;">
-                                    @csrf
-                                    <button type="submit" style="background: none; border: none; font-size: 0.75rem; color: var(--corporate-red); text-decoration: none; font-weight: 700; cursor: pointer; padding: 0;">Mark all read</button>
-                                </form>
-                            @endif
-                        </div>
-                        <div style="padding: 5px 0;">
-                            @forelse(auth()->user()->notifications->take(5) as $notification)
-                                <div style="padding: 12px 20px; border-bottom: 1px solid #f8fafc; {{ $notification->unread() ? 'background: var(--accent-soft-red);' : '' }}">
-                                    <p style="margin: 0; font-size: 0.8rem; color: #334155; line-height: 1.4;">
-                                        <strong>{{ $notification->data['message'] ?? 'New Notification' }}</strong>
-                                    </p>
-                                    <p style="margin: 5px 0 0; font-size: 0.7rem; color: #64748b;">
-                                        <i class="fa-solid fa-clock" style="font-size: 0.65rem; margin-right: 4px;"></i> {{ $notification->created_at->diffForHumans() }}
-                                    </p>
-                                </div>
-                            @empty
-                                <div style="padding: 30px 20px; text-align: center; color: #94a3b8;">
-                                    <i class="fa-solid fa-bell-slash" style="font-size: 1.5rem; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
-                                    <p style="margin: 0; font-size: 0.8rem;">No notifications yet</p>
-                                </div>
-                            @endforelse
-                        </div>
-                        <div style="padding: 12px; border-top: 1px solid #f1f5f9; text-align: center;">
-                            <a href="{{ route('notifications.index') }}" style="font-size: 0.8rem; color: #475569; text-decoration: none; font-weight: 700;">View All Notifications</a>
-                        </div>
-                    </div>
-                </div>
+                <button style="border: none; background: #f5f5f5; width: 40px; height: 40px; border-radius: 50%; color: #666; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='#eee';"><i class="fa-solid fa-bell"></i></button>
                 <div style="height: 30px; width: 1px; background: #eee;"></div>
             </div>
 
@@ -418,8 +341,6 @@
                     @endif
                 </div>
             </div>
-            
-
         </div>
     </nav>
 
@@ -427,42 +348,36 @@
         <aside class="sidebar">
             <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fa-solid fa-grip-vertical"></i>
-                <span class="sidebar-text">Dashboard</span>
+                <span>Dashboard</span>
             </a>
             <a href="{{ route('organizer.events.index') }}" class="sidebar-link {{ request()->routeIs('organizer.events.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-calendar-plus"></i>
-                <span class="sidebar-text">My events</span>
+                <span>My Events</span>
             </a>
             <a href="{{ route('organizer.registrations.index') }}" class="sidebar-link {{ request()->routeIs('organizer.registrations.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-user-group"></i>
-                <span class="sidebar-text">Attendees</span>
+                <span>Attendees</span>
             </a>
 
-            <a href="{{ route('organizer.reports.index') }}" class="sidebar-link {{ request()->routeIs('organizer.reports.*') ? 'active' : '' }}">
-                <i class="fa-solid fa-chart-simple"></i>
-                <span class="sidebar-text">Analytics</span>
-            </a>
+
             <a href="{{ route('profile.show') }}" class="sidebar-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-sliders"></i>
-                <span class="sidebar-text">Settings</span>
+                <span>Settings</span>
             </a>
             
-            
-            <div style="margin-top: auto; padding: 20px; border-top: 1px solid #eee;">
-                <div style="margin-bottom: 15px;">
-                    <p style="font-size: 0.7rem; color: #059669; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; margin: 0 0 4px;">
-                        <i class="fa-solid fa-circle" style="font-size: 0.4rem;"></i> Online
-                    </p>
-                    <p style="font-size: 0.65rem; color: #999; margin: 0;">Organizer Panel v1.2</p>
-                </div>
-
-                <form action="{{ route('logout') }}" method="POST" style="margin: 0; padding: 0;">
+            <div style="position: absolute; bottom: 120px; left: 0; right: 0; padding: 0 40px;">
+                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                     @csrf
-                    <button type="submit" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px; background: #fff5f5; border: 1px solid #ffe4e4; border-radius: 8px; color: #dc2626; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: 0.2s; font-family: inherit; text-transform: uppercase;">
+                    <button type="submit" class="sidebar-link" style="width: 100%; background: #fff5f5; color: #940000; border: 1px solid #fecaca; border-radius: 10px; cursor: pointer; padding: 12px 20px; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 800;">
                         <i class="fa-solid fa-right-from-bracket"></i>
-                        <span class="logout-btn-text">Logout</span>
+                        <span>Logout</span>
                     </button>
                 </form>
+            </div>
+
+            <div style="position: absolute; bottom: 40px; left: 40px;">
+                <p style="font-size: 0.75rem; color: #bbb; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Status: Online</p>
+                <p style="font-size: 0.7rem; color: #ccc;">Organizer Panel v1.2</p>
             </div>
         </aside>
 
@@ -470,15 +385,16 @@
             <div class="content-container">
                 @yield('content')
 
-                <footer class="dashboard-footer">
-                    <div class="footer-links">
-                        <a href="javascript:void(0)" class="footer-link">About Us</a>
-                        <a href="javascript:void(0)" class="footer-link">Contact</a>
-                        <a href="javascript:void(0)" class="footer-link">Privacy Policy</a>
-                        <a href="javascript:void(0)" class="footer-link">Terms of Use</a>
+                <footer style="margin-top: 60px; padding: 40px 0; border-top: 3px solid var(--corporate-red); background: white;">
+                    <div style="display: flex; justify-content: center; gap: 25px; margin-bottom: 20px;">
+                        <a href="javascript:void(0)" style="color: #666; text-decoration: none; font-size: 0.85rem; font-weight: 700;">About Us</a>
+                        <a href="javascript:void(0)" style="color: #666; text-decoration: none; font-size: 0.85rem; font-weight: 700;">Help Center</a>
+                        <a href="javascript:void(0)" style="color: #666; text-decoration: none; font-size: 0.85rem; font-weight: 700;">Privacy</a>
                     </div>
-                    <p class="copyright">&copy; {{ date('Y') }} {{ \App\Models\SystemSetting::get('system_name', 'EmCa TECHONOLOGY') }}. All rights reserved.</p>
-                    <p class="powered-by">{{ \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGY') }}</p>
+                    <div style="text-align: center;">
+                        <p style="margin: 0; color: #1a1a1a; font-size: 0.9rem; font-weight: 800;">&copy; {{ date('Y') }} {{ \App\Models\SystemSetting::get('system_name', 'EmCa Techonologies') }}</p>
+                        <p style="margin: 5px 0 0; color: var(--corporate-red); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">{{ \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGIES') }}</p>
+                    </div>
                 </footer>
             </div>
         </main>
@@ -486,21 +402,11 @@
     <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 
     <script>
-        // Apply sidebar state as soon as possible
-        if (window.innerWidth > 992 && localStorage.getItem('sidebar-collapsed') === 'true') {
-            document.body.classList.add('sidebar-collapsed');
-        }
-
         function toggleSidebar() {
-            if (window.innerWidth <= 992) {
-                const sidebar = document.querySelector('.sidebar');
-                const backdrop = document.getElementById('sidebar-backdrop');
-                sidebar.classList.toggle('show');
-                backdrop.classList.toggle('show');
-            } else {
-                document.body.classList.toggle('sidebar-collapsed');
-                localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed'));
-            }
+            const sidebar = document.querySelector('.sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('show');
+            backdrop.classList.toggle('show');
         }
 
         // Close sidebar when clicking links on mobile
@@ -511,21 +417,6 @@
                 }
             });
         });
-
-        function toggleNotifications() {
-            const dropdown = document.getElementById('notificationDropdown');
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function(e) {
-            const wrapper = document.getElementById('notificationWrapper');
-            const dropdown = document.getElementById('notificationDropdown');
-            if (wrapper && !wrapper.contains(e.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
     </script>
-    @stack('scripts')
 </body>
 </html>

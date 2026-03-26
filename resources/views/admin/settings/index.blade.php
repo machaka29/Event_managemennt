@@ -58,7 +58,7 @@
                 
                 <div style="margin-bottom: 1.5rem;">
                     <label for="system_name" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">Application Name</label>
-                    <input type="text" name="system_name" id="system_name" value="{{ old('system_name', \App\Models\SystemSetting::get('system_name', 'EmCa TECHONOLOGY')) }}" 
+                    <input type="text" name="system_name" id="system_name" value="{{ old('system_name', \App\Models\SystemSetting::get('system_name', 'EmCa Techonologies')) }}" 
                         style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 8px; font-size: 1rem; transition: 0.3s; outline: none;"
                         onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
                 </div>
@@ -72,7 +72,7 @@
 
                 <div style="margin-bottom: 2rem;">
                     <label for="system_footer" style="display: block; margin-bottom: 10px; color: #333; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">Footer Text</label>
-                    <input type="text" name="system_footer" id="system_footer" value="{{ old('system_footer', \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGY')) }}" 
+                    <input type="text" name="system_footer" id="system_footer" value="{{ old('system_footer', \App\Models\SystemSetting::get('system_footer', 'Managed by EmCa TECHONOLOGIES')) }}" 
                         style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 8px; font-size: 1rem; transition: 0.3s; outline: none;"
                         onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
                 </div>

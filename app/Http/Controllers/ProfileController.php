@@ -20,9 +20,9 @@ class ProfileController extends Controller
         $user = auth()->user();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'regex:/^\+255[0-9]{9}$/'],
             'organization' => ['nullable', 'string', 'max:255'],
             'profile_image' => ['nullable', 'image', 'max:1024'], // 1MB max
         ]);

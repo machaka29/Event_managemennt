@@ -22,6 +22,18 @@
             </div>
 
             <div style="margin-bottom: 35px;">
+                <label for="category_id" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Event Category</label>
+                <select name="category_id" id="category_id" required
+                    style="width: 100%; padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
+                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none'">
+                    @foreach(\App\Models\Category::all() as $category)
+                        <option value="{{ $category->id }}" {{ old('category_id', $event->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                @error('category_id') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
+            </div>
+
+            <div style="margin-bottom: 35px;">
                 <label for="description" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Detailed Description</label>
                 <textarea name="description" id="description" rows="6" required placeholder="What is this event about?"
                     style="width: 100%; padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b; resize: vertical; line-height: 1.6;"
@@ -48,7 +60,7 @@
 
             <div class="responsive-grid" style="margin-bottom: 35px; gap: 20px;">
                 <div>
-                    <label for="location" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem;">Venue Location</label>
+                    <label for="location" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem;">City / Region</label>
                     <input type="text" name="location" id="location" required value="{{ old('location', $event->location) }}" placeholder="Search Venue..." list="tanzania-locations"
                         style="width: 100%; padding: 15px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
                         onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
@@ -58,11 +70,28 @@
                     @error('location') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
                 <div>
+                    <label for="venue" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem;">Venue Name</label>
+                    <input type="text" name="venue" id="venue" value="{{ old('venue', $event->venue) }}" placeholder="e.g. Diamond Jubilee Hall"
+                        style="width: 100%; padding: 15px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
+                    @error('venue') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+            </div>
+
+            <div class="responsive-grid" style="margin-bottom: 35px; gap: 20px;">
+                <div>
                     <label for="capacity" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem;">Attendee Capacity</label>
                     <input type="number" name="capacity" id="capacity" required value="{{ old('capacity', $event->capacity) }}" min="1" placeholder="e.g. 500"
                         style="width: 100%; padding: 15px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
                         onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
                     @error('capacity') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label for="target_audience" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem;">Target Audience</label>
+                    <input type="text" name="target_audience" id="target_audience" value="{{ old('target_audience', $event->target_audience) }}" placeholder="e.g. Professionals, Students"
+                        style="width: 100%; padding: 15px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
+                    @error('target_audience') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
             </div>
 
