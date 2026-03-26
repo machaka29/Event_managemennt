@@ -20,6 +20,7 @@
     .status-pending { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
     .status-in { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
     .status-out { background: #e2e8f0; color: #475569; border: 1px solid #94a3b8; }
+    .status-expired { background: #fee2e2; color: #b91c1c; border: 1px solid #f87171; }
     
     .time-card { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 15px 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 15px; }
     .time-card.out { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-color: #cbd5e1; }
@@ -70,6 +71,15 @@
                 </div>
             @endif
 
+            {{-- Expiration Warning --}}
+            @if($isExpired)
+            <div class="alert-box alert-error" style="margin-bottom: 25px; flex-direction: column; text-align: center; padding: 25px;">
+                <div style="font-size: 2.5rem; margin-bottom: 15px;">⚠️</div>
+                <div style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: #b91c1c;">TICKET EXPIRED / TUKIO LIMEISHA</div>
+                <p style="margin: 10px 0 0; font-size: 0.85rem; font-weight: 500; opacity: 0.9; line-height: 1.4;">Huwezi kurekodi mahudhurio kwa tukio ambalo tarehe yake ya kufanyika ilishapita.</p>
+            </div>
+            @endif
+
             {{-- Ticket Status --}}
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="width: 70px; height: 70px; background: var(--corporate-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 12px; box-shadow: 0 8px 20px rgba(148,0,0,0.2);">
@@ -77,7 +87,9 @@
                 </div>
                 <h3 style="color: var(--corporate-red); margin: 0 0 5px; font-size: 1.1rem;">Valid Ticket</h3>
                 <div>
-                    @if($registration->status === 'Checked-Out')
+                    @if($isExpired)
+                        <span class="status-badge status-expired"><i class="fa-solid fa-calendar-xmark"></i> Event Ended</span>
+                    @elseif($registration->status === 'Checked-Out')
                         <span class="status-badge status-out"><i class="fa-solid fa-door-closed"></i> Checked Out</span>
                     @elseif($registration->attended)
                         <span class="status-badge status-in"><i class="fa-solid fa-check-double"></i> Checked In</span>
@@ -155,7 +167,11 @@
 
             {{-- Action Buttons (Public - No Login Required) --}}
             <div style="margin-top: 10px;">
-                @if(!$registration->attended || $registration->status === 'Checked-Out')
+                @if($isExpired)
+                    <div class="action-btn btn-disabled">
+                        <i class="fa-solid fa-lock"></i> VERIFICATION DISABLED
+                    </div>
+                @elseif(!$registration->attended || $registration->status === 'Checked-Out')
                     {{-- Show CHECK-IN button --}}
                     <form action="{{ route('public.attendance.update', $registration->ticket_id) }}" method="POST">
                         @csrf

@@ -252,13 +252,15 @@ class PublicEventController extends Controller
     public function verifyTicket($ticket_id)
     {
         $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
+        $isExpired = $registration->event->date < (now()->toDateString());
         
         // Support JSON response for scanner apps or direct data access
         if (request()->wantsJson() || request()->has('json')) {
             return response()->json([
                 'success' => true,
                 'ticket_id' => $registration->ticket_id,
-                'status' => $registration->attended ? 'Verified' : 'Authentic',
+                'status' => $registration->attended ? 'Verified' : ($isExpired ? 'Expired' : 'Authentic'),
+                'is_expired' => $isExpired,
                 'member' => [
                     'full_name' => $registration->attendee->full_name,
                     'email' => $registration->attendee->email,
@@ -274,7 +276,7 @@ class PublicEventController extends Controller
             ]);
         }
 
-        return view('public.events.verify', compact('registration'));
+        return view('public.events.verify', compact('registration', 'isExpired'));
     }
 
     /**
@@ -283,6 +285,11 @@ class PublicEventController extends Controller
     public function markPublicAttendance(Request $request, $ticket_id)
     {
         $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
+
+        // Prevent attendance for past events
+        if ($registration->event->date < now()->toDateString()) {
+            return back()->with('error', '❌ Tukio hili lilishapita (Event has ended). Tiketi hii imechuja wakati.');
+        }
 
         if ($request->action === 'check_in') {
             if ($registration->attended && $registration->status !== 'Checked-Out') {
