@@ -25,9 +25,8 @@ class EventController extends Controller
         $upcomingEventsCount = $upcomingEvents->count();
         $totalAttendees = \App\Models\Registration::whereIn('event_id', $allEvents->pluck('id'))->count();
         
-        // Growth stats
-        $newAttendeesThisMonth = \App\Models\Registration::whereIn('event_id', $allEvents->pluck('id'))
-            ->where('created_at', '>=', $thisMonth)
+        $totalAttendance = \App\Models\Registration::whereIn('event_id', $allEvents->pluck('id'))
+            ->where('attended', true)
             ->count();
             
         // Mockup specific stats
@@ -49,6 +48,7 @@ class EventController extends Controller
             'upcomingEventsCount',
             'myEventsCount',
             'totalAttendees',
+            'totalAttendance',
             'newAttendeesThisMonth',
             'ticketsIssued',
             'eventViews',

@@ -20,6 +20,10 @@ class AdminController extends Controller
         $registrationsThisMonth = Registration::where('created_at', '>=', now()->startOfMonth())->count();
         $activeEventsCount = Event::where('status', 'approved')->where('date', '>=', now()->toDateString())->count();
         $ongoingEventsCount = Event::where('status', 'approved')->where('date', '=', now()->toDateString())->count();
+        $totalAttendance = Registration::where('attended', true)->count();
+        $ongoingAttendance = Registration::where('attended', true)->whereHas('event', function($q) {
+            $q->where('date', '=', now()->toDateString());
+        })->count();
         $totalOrganizers = User::where('role', 'organizer')->count();
         $pendingOrganizers = 0; // No status column in users yet, using 0
 
@@ -56,6 +60,7 @@ class AdminController extends Controller
         return view('admin.dashboard', compact(
             'totalEvents', 'upcomingEventsCount', 'totalRegistrations', 'registrationsThisMonth',
             'activeEventsCount', 'ongoingEventsCount', 'totalOrganizers', 'pendingOrganizers',
+            'totalAttendance', 'ongoingAttendance',
             'recentEvents', 'recentRegistrations', 'registrationsByWeek', 'systemStats'
         ));
     }

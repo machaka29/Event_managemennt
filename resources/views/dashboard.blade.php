@@ -51,6 +51,13 @@
         <p style="color: #64748b; font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">Verified entries</p>
     </div>
 
+    <!-- Card 4: Attendance -->
+    <div class="card" style="border-left: 4px solid #059669;">
+        <p style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin: 0 0 12px; letter-spacing: 0.5px;">Checked In</p>
+        <div style="font-size: 2rem; font-weight: 800; color: #1e293b; line-height: 1;">{{ $totalAttendance }}</div>
+        <p style="color: #059669; font-size: 0.8rem; margin: 10px 0 0; font-weight: 600;">{{ $totalAttendees > 0 ? round(($totalAttendance / $totalAttendees) * 100, 1) : 0 }}% rate</p>
+    </div>
+
 </div>
 
 <!-- SECTION 4: MY MANAGED EVENTS (SEQUENTIAL SECTIONS) -->

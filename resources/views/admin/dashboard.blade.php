@@ -52,13 +52,22 @@
             <div style="font-size: 0.7rem; color: #059669; margin-top: 5px; font-weight: 700;">+{{ $registrationsThisMonth }} this month</div>
         </div>
 
-        <!-- Organizers -->
+        <!-- Total Organizers -->
         <div class="card" style="padding: 18px; border-left: 4px solid var(--corporate-red);">
             <div style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between;">
                 Staff <i class="fa-solid fa-user-tie" style="color: var(--corporate-red); opacity: 0.5;"></i>
             </div>
-            <div style="font-size: 1.75rem; font-weight: 900; color: #1e293b;">{{ $totalOrganizers }}</div>
+            <div style="font-size: 1.75rem; font-weight: 900; color: #1e293b;">{{ number_format($totalOrganizers) }}</div>
             <div style="font-size: 0.7rem; color: #64748b; margin-top: 5px;">Active Organizers</div>
+        </div>
+
+        <!-- Attendance Stats -->
+        <div class="card" style="padding: 18px; border-left: 4px solid #059669;">
+            <div style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between;">
+                Attendance <i class="fa-solid fa-clipboard-check" style="color: #059669; opacity: 0.5;"></i>
+            </div>
+            <div style="font-size: 1.75rem; font-weight: 900; color: #1e293b;">{{ number_format($totalAttendance) }}</div>
+            <div style="font-size: 0.7rem; color: #059669; margin-top: 5px; font-weight: 700;">{{ $ongoingAttendance }} Present Today</div>
         </div>
 
         <!-- Pending Approvals -->
