@@ -125,12 +125,27 @@ class EventController extends Controller
     {
         $this->authorizeOwner($registration->event);
 
-        $registration->update([
-            'status' => $request->status,
-            'attended' => ($request->status === 'Attended'),
-        ]);
+        if ($request->action === 'check_in') {
+            $registration->update([
+                'status' => 'Attended',
+                'attended' => true,
+                'check_in_at' => now(),
+            ]);
+            $msg = 'Checked in successfully!';
+        } elseif ($request->action === 'check_out') {
+            $registration->update([
+                'check_out_at' => now(),
+            ]);
+            $msg = 'Checked out successfully!';
+        } else {
+            $registration->update([
+                'status' => $request->status,
+                'attended' => ($request->status === 'Attended'),
+            ]);
+            $msg = 'Attendance updated successfully.';
+        }
 
-        return back()->with('success', 'Attendance updated successfully.');
+        return back()->with('success', $msg);
     }
 
     public function exportAttendees(\App\Models\Event $event)
@@ -167,7 +182,7 @@ class EventController extends Controller
 
     public function allEvents()
     {
-        $events = auth()->user()->events()->withCount('registrations')->latest()->paginate(10);
+        $events = auth()->user()->events()->withCount('registrations')->latest()->paginate(100);
         return view('events.index', compact('events'));
     }
 
@@ -177,7 +192,7 @@ class EventController extends Controller
         $registrations = \App\Models\Registration::with(['event', 'attendee'])
             ->whereIn('event_id', $eventIds)
             ->latest()
-            ->paginate(20);
+            ->paginate(100);
         return view('events.registrations', compact('registrations'));
     }
 
@@ -193,7 +208,7 @@ class EventController extends Controller
         $attendees = \App\Models\Attendee::whereIn('id', $attendeeIds)
             ->withCount('registrations')
             ->latest()
-            ->paginate(15);
+            ->paginate(100);
             
         return view('events.attendees.index', compact('attendees'));
     }
@@ -203,7 +218,7 @@ class EventController extends Controller
      */
     public function attendeeCreate()
     {
-        return view('events.attendees.create');
+        return redirect()->route('organizer.attendees.index')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
     }
 
     /**
@@ -211,26 +226,7 @@ class EventController extends Controller
      */
     public function attendeeStore(Request $request)
     {
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:attendees,email',
-            'phone' => 'nullable|string|max:20',
-            'organization' => 'nullable|string|max:255',
-        ]);
-
-        // Generate unique access code: EM-XXXX-RAND
-        $count = \App\Models\Attendee::count() + 1;
-        $access_code = 'EM-' . str_pad($count, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(\Illuminate\Support\Str::random(4));
-
-        \App\Models\Attendee::create([
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'organization' => $request->organization,
-            'access_code' => $access_code,
-        ]);
-
-        return redirect()->route('organizer.attendees.index')->with('success', "Member created successfully! Access ID: $access_code");
+        return redirect()->route('organizer.attendees.index')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
     }
 
     public function attendeeEdit(\App\Models\Attendee $attendee)
@@ -241,9 +237,9 @@ class EventController extends Controller
     public function attendeeUpdate(Request $request, \App\Models\Attendee $attendee)
     {
         $request->validate([
-            'full_name' => 'required|string|max:255',
+            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'email' => 'required|email|unique:attendees,email,' . $attendee->id,
-            'phone' => 'nullable|string|max:20',
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
             'organization' => 'nullable|string|max:255',
         ]);
 

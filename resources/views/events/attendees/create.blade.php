@@ -1,6 +1,6 @@
 @extends('layouts.organizer')
 
-@section('title', 'Add New Member - EmCa Technologies')
+@section('title', 'Add New Member - EmCa TECHONOLOGY')
 
 @section('content')
 <div style="max-width: 800px; margin: 0 auto;">

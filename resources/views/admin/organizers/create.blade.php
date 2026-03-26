@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Add New Organizer - EmCa Technologies')
+@section('title', 'Add New Organizer - EmCa TECHONOLOGY')
 
 @section('content')
 <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--corporate-red); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">

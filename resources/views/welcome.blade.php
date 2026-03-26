@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Find & Register for Amazing Events - EmCa Technologies')
+@section('title', 'Find & Register for Amazing Events - EmCa TECHONOLOGY')
 
 @section('content')
 <!-- HERO SECTION -->

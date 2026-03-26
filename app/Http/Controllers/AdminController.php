@@ -61,19 +61,19 @@ class AdminController extends Controller
 
     public function organizers()
     {
-        $organizers = User::where('role', 'organizer')->latest()->paginate(10);
+        $organizers = User::where('role', 'organizer')->latest()->paginate(100);
         return view('admin.organizers.index', compact('organizers'));
     }
 
     public function events()
     {
-        $events = Event::with('organizer')->latest()->paginate(10);
+        $events = Event::with('organizer')->latest()->paginate(100);
         return view('admin.events.index', compact('events'));
     }
 
     public function pendingEvents()
     {
-        $events = Event::with('organizer')->where('status', 'pending')->latest()->paginate(10);
+        $events = Event::with('organizer')->where('status', 'pending')->latest()->paginate(100);
         return view('admin.events.pending', compact('events'));
     }
 
@@ -121,7 +121,7 @@ class AdminController extends Controller
 
     public function attendees()
     {
-        $attendees = Registration::with(['event', 'attendee'])->latest()->paginate(10);
+        $attendees = Registration::with(['event', 'attendee'])->latest()->paginate(100);
         return view('admin.attendees.index', compact('attendees'));
     }
 
@@ -184,7 +184,7 @@ class AdminController extends Controller
 
     public function globalAttendees()
     {
-        $attendees = Attendee::withCount('registrations')->latest()->paginate(10);
+        $attendees = Attendee::withCount('registrations')->latest()->paginate(100);
         return view('admin.attendees.list', compact('attendees'));
     }
 
@@ -255,29 +255,12 @@ class AdminController extends Controller
 
     public function attendeeCreate()
     {
-        return view('admin.attendees.create');
+        return redirect()->route('admin.attendees.list')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
     }
 
     public function attendeeStore(Request $request)
     {
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:attendees',
-            'phone' => 'nullable|string|max:20',
-            'organization' => 'nullable|string|max:255',
-        ]);
-
-        $access_code = 'EmCa-' . strtoupper(\Illuminate\Support\Str::random(5)) . '-26';
-
-        Attendee::create([
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'organization' => $request->organization,
-            'access_code' => $access_code,
-        ]);
-
-        return redirect()->route('admin.attendees.list')->with('success', 'Member registered successfully. ID: ' . $access_code);
+        return redirect()->route('admin.attendees.list')->with('error', 'Manual attendee registration is disabled. Please use the public registration link.');
     }
 
     public function attendeeEdit(Attendee $attendee)
@@ -288,9 +271,9 @@ class AdminController extends Controller
     public function attendeeUpdate(Request $request, Attendee $attendee)
     {
         $request->validate([
-            'full_name' => 'required|string|max:255',
+            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'email' => 'required|email|max:255|unique:attendees,email,' . $attendee->id,
-            'phone' => 'nullable|string|max:20',
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
             'organization' => 'nullable|string|max:255',
         ]);
 
@@ -303,5 +286,17 @@ class AdminController extends Controller
     {
         $attendee->delete();
         return redirect()->route('admin.attendees.list')->with('success', 'Member deleted successfully.');
+    }
+
+    public function notifications()
+    {
+        $notifications = auth()->user()->notifications()->paginate(20);
+        return view('admin.notifications.index', compact('notifications'));
+    }
+
+    public function markNotificationsRead()
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+        return back()->with('success', 'All notifications marked as read.');
     }
 }

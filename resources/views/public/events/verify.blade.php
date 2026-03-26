@@ -42,8 +42,8 @@
                     <h4 style="margin: 0; font-weight: 500;">{{ $registration->attendee->email }} | {{ $registration->attendee->phone }}</h4>
                 </div>
                 <div style="margin-bottom: 1rem;">
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Member ID / Access ID</p>
-                    <h4 style="margin: 0; font-family: monospace; color: #333;">{{ $registration->attendee->access_code }}</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Ticket ID</p>
+                    <h4 style="margin: 0; font-family: monospace; color: #333;">{{ $registration->ticket_id }}</h4>
                 </div>
                 @if($registration->attendee->organization)
                 <div>
@@ -59,10 +59,6 @@
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Event Title</p>
                     <h4 style="margin: 0;">{{ $registration->event->title }}</h4>
                 </div>
-                <div style="margin-bottom: 1rem;">
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Registration ID</p>
-                    <h4 style="margin: 0; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->attendee->access_code }}</h4>
-                </div>
                 <div>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Status</p>
                     @if($registration->attended)
@@ -76,30 +72,59 @@
 
         @auth
             @if(auth()->user()->role === 'organizer' || auth()->user()->role === 'admin')
-                @if($registration->status !== 'Attended')
-                    <form action="{{ route('registrations.attendance', $registration->id) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="status" value="Attended">
-                        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(148,0,0,0.2);">
-                            <i class="fa-solid fa-check-circle" style="margin-right: 8px;"></i> Mark as Attended
-                        </button>
-                    </form>
-                @else
-                    <div style="display: flex; gap: 10px; flex-direction: column;">
-                        <button class="btn" disabled style="width: 100%; font-size: 1.1rem; padding: 1rem; background-color: #e6f4ea; color: #1e8e3e; border: 1px solid #1e8e3e; font-weight: bold;">
-                            <i class="fa-solid fa-check-double" style="margin-right: 8px;"></i> Attendance Marked
-                        </button>
+                <div style="margin-top: 1.5rem; border-top: 1px solid #f1f1f1; pt: 1.5rem;">
+                    @if(!$registration->check_in_at)
                         <form action="{{ route('registrations.attendance', $registration->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
-                            <input type="hidden" name="status" value="Absent">
-                            <button type="submit" class="btn" style="width: 100%; font-size: 0.9rem; padding: 0.8rem; background: transparent; color: #888; border: 1px dashed #ccc; transition: 0.3s;" onmouseover="this.style.color='var(--corporate-red)'; this.style.borderColor='var(--corporate-red)'" onmouseout="this.style.color='#888'; this.style.borderColor='#ccc'">
-                                <i class="fa-solid fa-rotate-left" style="margin-right: 5px;"></i> Undo: Mark as Absent
+                            <input type="hidden" name="action" value="check_in">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(148,0,0,0.2); background: #166534; border-color: #166534;">
+                                <i class="fa-solid fa-right-to-bracket" style="margin-right: 8px;"></i> Check-in Attendee
                             </button>
                         </form>
-                    </div>
-                @endif
+                    @elseif(!$registration->check_out_at)
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: left;">
+                            <p style="color: #166534; font-weight: 700; margin-bottom: 5px; font-size: 0.85rem;">
+                                <i class="fa-solid fa-circle-check"></i> Checked in: {{ \Carbon\Carbon::parse($registration->check_in_at)->format('h:i A') }}
+                            </p>
+                            <p style="color: #666; font-size: 0.75rem; margin: 0;">Arrival recorded on {{ \Carbon\Carbon::parse($registration->check_in_at)->format('M d, Y') }}</p>
+                        </div>
+                        
+                        <form action="{{ route('registrations.attendance', $registration->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="action" value="check_out">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #94a3b8; border-color: #94a3b8;">
+                                <i class="fa-solid fa-right-from-bracket" style="margin-right: 8px;"></i> Check-out Attendee
+                            </button>
+                        </form>
+                    @else
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                            <div style="display: flex; flex-direction: column; gap: 10px; text-align: left;">
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; pb: 8px;">
+                                    <span style="font-size: 0.8rem; color: #64748b;">Check-in</span>
+                                    <span style="font-weight: 700; color: #1e293b;">{{ \Carbon\Carbon::parse($registration->check_in_at)->format('h:i A') }}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 0.8rem; color: #64748b;">Check-out</span>
+                                    <span style="font-weight: 700; color: #1e293b;">{{ \Carbon\Carbon::parse($registration->check_out_at)->format('h:i A') }}</span>
+                                </div>
+                            </div>
+                            <div style="margin-top: 15px; color: #166534; font-weight: 800; font-size: 0.9rem;">
+                                <i class="fa-solid fa-square-check"></i> Attendance Complete
+                            </div>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('registrations.attendance', $registration->id) }}" method="POST" style="margin-top: 15px;">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="status" value="Absent">
+                        <button type="submit" style="background: none; border: none; color: #94a3b8; font-size: 0.75rem; text-decoration: underline; cursor: pointer;" onclick="return confirm('Reset attendance for this member?')">
+                            Reset Attendance Record
+                        </button>
+                    </form>
+                </div>
             @endif
         @endauth
         

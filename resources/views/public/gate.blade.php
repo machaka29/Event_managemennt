@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Member Access - EmCa Technologies')
+@section('title', 'Member Access - EmCa TECHONOLOGY')
 
 @section('content')
 <div style="min-height: 80vh; display: flex; align-items: center; justify-content: center; background: #fafafa; padding: 20px;">

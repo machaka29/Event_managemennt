@@ -25,14 +25,29 @@
 </style>
 
 <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+<div style="padding: 15px 20px; border-bottom: 1px solid #eee; background: #fafafa; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <h3 style="margin: 0; font-size: 0.9rem; color: #444; font-weight: 700;">Registration Records</h3>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="position: relative;">
+            <i class="fa-solid fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #999; font-size: 0.75rem;"></i>
+            <input type="text" id="tableSearch" placeholder="Filter registrations..." 
+                style="padding: 6px 12px 6px 30px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.8rem; outline: none; width: 200px; transition: 0.3s;"
+                onfocus="this.style.borderColor='var(--corporate-red)';"
+                onblur="this.style.borderColor='#ddd';">
+        </div>
+        <div style="font-size: 0.75rem; color: #888; font-weight: 700;">Total: {{ $registrations->total() }}</div>
+    </div>
+</div>
 <div class="table-responsive">
-    <table class="table-compact" style="width: 100%; border-collapse: collapse;">
+    <table id="mainTable" class="table-compact" style="width: 100%; border-collapse: collapse;">
         <thead>
             <tr style="background: var(--corporate-red); color: white; text-align: left;">
                 <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;" class="col-id">ID</th>
                 <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;">Attendee</th>
                 <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;" class="col-event">Event</th>
                 <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;" class="col-date">Date</th>
+                <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;">Check-in</th>
+                <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;">Check-out</th>
                 <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; text-align: center;" class="col-status">Status</th>
                 <th style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; text-align: right;" class="col-action">ACTION</th>
             </tr>
@@ -55,10 +70,20 @@
                     <td class="col-date" style="color: #64748B; font-size: 0.85rem;">
                         <i class="fa-regular fa-calendar-alt"></i> {{ $reg->created_at->format('M d, Y') }}
                     </td>
+                    <td style="color: #166534; font-weight: 700; font-size: 0.85rem;">
+                        {{ $reg->check_in_at ? $reg->check_in_at->format('h:i A') : '---' }}
+                    </td>
+                    <td style="color: #475569; font-weight: 700; font-size: 0.85rem;">
+                        {{ $reg->check_out_at ? $reg->check_out_at->format('h:i A') : '---' }}
+                    </td>
                     <td style="text-align: center;" class="col-status">
-                        @if($reg->attended)
-                            <span style="background: var(--corporate-red); color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
-                                <i class="fa-solid fa-check"></i> <span class="hide-mobile">DONE</span>
+                        @if($reg->check_out_at)
+                            <span style="background: #1e293b; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
+                                <i class="fa-solid fa-flag-checkered"></i> <span class="hide-mobile">LEFT</span>
+                            </span>
+                        @elseif($reg->check_in_at)
+                            <span style="background: #166534; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
+                                <i class="fa-solid fa-person-walking-arrow-right"></i> <span class="hide-mobile">IN</span>
                             </span>
                         @else
                             <span style="background: #F1F5F9; color: #64748B; padding: 5px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border: 1px solid #E2E8F0;">
@@ -88,3 +113,18 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.getElementById('tableSearch').addEventListener('keyup', function() {
+        let searchTerm = this.value.toLowerCase();
+        let table = document.getElementById('mainTable');
+        let rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        for (let row of rows) {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        }
+    });
+</script>
+@endpush

@@ -52,11 +52,10 @@
             <div style="position: absolute; right: -16px; bottom: -16px; width: 32px; height: 32px; background: #fafafa; border-radius: 50%; z-index: 2;"></div>
         </div>
 
-        <!-- Ticket Bottom Section -->
         <div style="padding: 1.5rem; background: #fafafa; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
             <div style="flex: 1; min-width: 150px;">
-                <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Member ID</p>
-                <p style="font-family: monospace; font-size: 1.1rem; font-weight: bold; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->attendee->access_code }}</p>
+                <p style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Ticket ID</p>
+                <p style="font-family: monospace; font-size: 1.1rem; font-weight: bold; color: var(--corporate-red); letter-spacing: 1px;">{{ $registration->ticket_id }}</p>
             </div>
             <div style="display: flex; gap: 10px; flex: 1; min-width: 250px; justify-content: flex-end;">
                 <button id="downloadBtn" onclick="downloadTicket()" class="btn" style="flex: 1; padding: 10px 15px; border-radius: 8px; font-weight: bold; background: white; border: 1px solid #ddd; color: #444; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
@@ -125,7 +124,7 @@ function downloadTicket() {
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
         
         pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
-        pdf.save('Ticket-{{ $registration->attendee->access_code }}.pdf');
+        pdf.save('Ticket-{{ $registration->ticket_id }}.pdf');
         
         btn.innerHTML = originalText;
         btn.disabled = false;

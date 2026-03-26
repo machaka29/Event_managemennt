@@ -11,7 +11,15 @@ class Registration extends Model
         'attendee_id',
         'ticket_id',
         'status',
-        'attended'
+        'attended',
+        'check_in_at',
+        'check_out_at'
+    ];
+
+    protected $casts = [
+        'check_in_at' => 'datetime',
+        'check_out_at' => 'datetime',
+        'attended' => 'boolean',
     ];
 
     public function event()

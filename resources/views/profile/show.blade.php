@@ -1,6 +1,6 @@
 @extends(auth()->check() && auth()->user()->role === 'admin' ? 'layouts.admin' : 'layouts.organizer')
 
-@section('title', 'Profile Settings - EmCa Technologies')
+@section('title', 'Profile Settings - EmCa TECHONOLOGY')
 
 @section('content')
 <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);" class="profile-header">

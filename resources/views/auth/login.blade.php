@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login - EventPro')
+@section('title', 'Login - EmCa TECHONOLOGY')
 
 @section('content')
 <div class="auth-container" style="background: #fafafa; padding: 40px 15px;">

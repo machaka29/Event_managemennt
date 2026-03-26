@@ -1,6 +1,6 @@
 @extends('layouts.organizer')
 
-@section('title', 'Analytics & Reports - EmCa Technologies')
+@section('title', 'Analytics & Reports - EmCa TECHONOLOGY')
 
 @section('content')
 <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);" class="report-header">
@@ -170,6 +170,6 @@
 </div>
 
 <div style="margin-top: 40px; text-align: center; color: #999; font-size: 0.9rem;">
-    <p>Premium Analytics Engine powered by <span style="color: var(--corporate-red); font-weight: bold;">EmCa Technologies</span></p>
+    <p>Premium Analytics Engine powered by <span style="color: var(--corporate-red); font-weight: bold;">EmCa TECHONOLOGY</span></p>
 </div>
 @endsection

@@ -8,7 +8,10 @@ use App\Models\Event;
 use App\Models\Attendee;
 use App\Models\Registration;
 use App\Models\Category;
+use App\Models\User;
+use App\Notifications\NewAttendeeRegistration;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Notification;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PublicEventController extends Controller
@@ -79,21 +82,33 @@ class PublicEventController extends Controller
             return back()->with('error', 'Registration for this event is currently closed.');
         }
 
-        // Get attendee code from request OR session
-        $access_code = $request->access_code ?? session('member_access_id');
-        
-        if (!$access_code) {
-            return back()->with('error', 'Please enter your Member ID to register.');
-        }
+        // Validation for guest registration
+        $request->validate([
+            'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'email' => 'required|email|max:255',
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9]+$/'],
+            'organization' => 'nullable|string|max:255',
+        ]);
 
-        $attendee = Attendee::where('access_code', $access_code)->first();
+        // Find or create attendee by email
+        $attendee = Attendee::where('email', $request->email)->first();
         
         if (!$attendee) {
-            return back()->with('error', 'Invalid Member ID. Please check and try again.');
-        }
+            // Generate unique access code: EM-XXXX-RAND (Backend only)
+            $count = \App\Models\Attendee::count() + 1;
+            $access_code = 'EM-' . str_pad($count, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(\Illuminate\Support\Str::random(4));
 
-        // Auto-login: set session if not already set or if it's a different ID
-        session(['member_access_id' => $access_code]);
+            $attendee = Attendee::create([
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'organization' => $request->organization,
+                'access_code' => $access_code,
+            ]);
+        } else {
+            // Update existing attendee info if provided
+            $attendee->update($request->only(['full_name', 'phone', 'organization']));
+        }
 
         // check duplicate registration for this specific event
         $duplicate = Registration::where('event_id', $event->id)
@@ -103,13 +118,21 @@ class PublicEventController extends Controller
             return back()->with('error', 'You are already registered for this event.');
         }
 
-        $ticket_id = strtoupper(Str::random(8));
+        $ticket_id = 'EmCa-' . strtoupper(Str::random(5)) . '-26';
 
-        Registration::create([
+        $registration = Registration::create([
             'event_id' => $event->id,
             'attendee_id' => $attendee->id,
             'ticket_id' => $ticket_id,
         ]);
+
+        // Send Notification to Admins and Organizer
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new NewAttendeeRegistration($attendee, $event));
+
+        if ($event->organizer && $event->organizer->role !== 'admin') {
+            $event->organizer->notify(new NewAttendeeRegistration($attendee, $event));
+        }
 
         return redirect()->route('events.public.ticket', $ticket_id)->with('success', 'Registration confirmed successfully!');
     }

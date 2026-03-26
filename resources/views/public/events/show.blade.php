@@ -57,73 +57,62 @@
             </div>
         </div>
 
-        <!-- Right: Member Confirmation -->
-        <div class="card" style="border-top: 4px solid var(--corporate-red); text-align: center; padding: 45px 30px; position: sticky; top: 100px;">
-            @if(session('member_access_id'))
-                <div style="width: 64px; height: 64px; background: #f0fdf4; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 20px; border: 2px solid #bbf7d0;">
-                    <i class="fa-solid fa-user-check"></i>
+        <!-- Right: Public Registration -->
+        <div class="card" style="border-top: 4px solid var(--corporate-red); text-align: left; padding: 35px 30px; position: sticky; top: 100px;">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="width: 64px; height: 64px; background: var(--accent-soft-red); color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 15px; border: 2px solid #fecaca;">
+                    <i class="fa-solid fa-user-plus"></i>
                 </div>
-                
-                <h3 style="margin-bottom: 15px; font-weight: 800; color: #1e293b;">ID VERIFIED</h3>
-                <p style="color: #64748b; margin-bottom: 35px; font-size: 0.95rem; line-height: 1.5;">
-                    Welcome back! You are logged in as: <br>
-                    <strong style="color: var(--corporate-red); font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; display: block; margin-top: 10px;">{{ session('member_access_id') }}</strong>
-                </p>
-                
-                @if(session('error'))
-                    <div style="background: #fef2f2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.85rem; font-weight: 600; border: 1px solid #fecaca;">
-                        {{ session('error') }}
-                    </div>
-                @endif
+                <h3 style="margin-bottom: 5px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Register Now</h3>
+                <p style="color: #64748b; font-size: 0.85rem; line-height: 1.4;">Fill in your details to secure your spot and get your ticket.</p>
+            </div>
 
-                <form action="{{ route('events.public.register', $event->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 20px; font-size: 1.1rem; letter-spacing: 0.5px; box-shadow: 0 10px 15px -3px rgba(148,0,0,0.3);">
-                        CONFIRM ATTENDANCE
-                    </button>
-                </form>
-
-                <div style="margin-top: 35px; padding-top: 25px; border-top: 1px solid #f1f5f9;">
-                    <form action="{{ route('member.logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='var(--corporate-red)'" onmouseout="this.style.color='#94a3b8'">
-                            Not you? Switch Member ID
-                        </button>
-                    </form>
+            @if(session('error'))
+                <div style="background: #fef2f2; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid #fecaca;">
+                    <i class="fa-solid fa-triangle-exclamation" style="margin-right: 5px;"></i> {{ session('error') }}
                 </div>
-            @else
-                <div style="width: 64px; height: 64px; background: var(--accent-soft-red); color: var(--corporate-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 20px; border: 2px solid #fecaca;">
-                    <i class="fa-solid fa-id-card"></i>
-                </div>
-                
-                <h3 style="margin-bottom: 15px; font-weight: 800; color: #1e293b;">REGISTER NOW</h3>
-                <p style="color: #64748b; margin-bottom: 35px; font-size: 0.95rem; line-height: 1.5;">
-                    Please enter your unique <strong>Member ID</strong> to confirm your attendance.
-                </p>
-
-                @if(session('error'))
-                    <div style="background: #fef2f2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.85rem; font-weight: 600; border: 1px solid #fecaca;">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                <form action="{{ route('events.public.register', $event->id) }}" method="POST">
-                    @csrf
-                    <div style="margin-bottom: 25px;">
-                        <input type="text" name="access_code" placeholder="ENTER ID (e.g. EmCa-...)" required 
-                            style="width: 100%; padding: 18px; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; font-family: monospace; font-weight: 800; font-size: 1.2rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
-                            onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none'">
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 20px; font-size: 1.1rem; letter-spacing: 0.5px; box-shadow: 0 10px 15px -3px rgba(148,0,0,0.3);">
-                        VERIFY & REGISTER
-                    </button>
-                    
-                    <p style="margin-top: 25px; font-size: 0.8rem; color: #94a3b8; font-weight: 500;">
-                        Don't have an ID? Contact the event organizer for assistance.
-                    </p>
-                </form>
             @endif
-        </div>
+
+            @if(session('success'))
+                <div style="background: #f0fdf4; color: #166534; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.8rem; font-weight: 600; border: 1px solid #bbf7d0;">
+                    <i class="fa-solid fa-circle-check" style="margin-right: 5px;"></i> {{ session('success') }}
+                </div>
+            @endif
+
+            <form action="{{ route('events.public.register', $event->id) }}" method="POST">
+                @csrf
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Full Name</label>
+                    <input type="text" name="full_name" placeholder="E.g. John Doe" required 
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; outline: none; transition: all 0.2s;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0';">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Email Address</label>
+                    <input type="email" name="email" placeholder="john@example.com" required 
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; outline: none; transition: all 0.2s;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0';">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Phone Number</label>
+                    <input type="text" name="phone" placeholder="+255..." required 
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; outline: none; transition: all 0.2s;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0';">
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Organization (Optional)</label>
+                    <input type="text" name="organization" placeholder="Comany or School" 
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; outline: none; transition: all 0.2s;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0';">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1rem; font-weight: 800; letter-spacing: 1px; box-shadow: 0 10px 15px -3px rgba(148,0,0,0.25);">
+                    GET MY TICKET <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                </button>
+            </form>
     </div>
 
     </div>

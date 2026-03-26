@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'System Settings - EmCa Technologies')
+@section('title', 'System Settings - EmCa TECHONOLOGY')
 
 @section('content')
 <div style="margin-bottom: 2rem;">
@@ -46,7 +46,7 @@
             @csrf
             <div class="form-group">
                 <label for="system_name" style="display: block; font-weight: bold; margin-bottom: 8px;">Platform Name</label>
-                <input type="text" name="system_name" id="system_name" class="form-control" value="{{ \App\Models\SystemSetting::get('system_name', 'EmCa Technologies') }}" required style="padding: 12px;">
+                <input type="text" name="system_name" id="system_name" class="form-control" value="{{ \App\Models\SystemSetting::get('system_name', 'EmCa TECHONOLOGY') }}" required style="padding: 12px;">
             </div>
             <div class="responsive-grid" style="gap: 1rem;">
                 <div class="form-group">

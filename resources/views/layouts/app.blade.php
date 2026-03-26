@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>@yield('title', \App\Models\SystemSetting::get('system_name', 'EmCa Technologies'))</title>
+    <title>@yield('title', \App\Models\SystemSetting::get('system_name', 'EmCa TECHONOLOGY'))</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=1.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -92,9 +92,14 @@
         <div class="nav-inner">
             <a href="{{ route('home') }}" style="text-decoration: none; display: flex; align-items: center; gap: 0.8rem;">
                 <div style="width: 44px; height: 44px; border-radius: 8px; background: white; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                    <img src="{{ asset('EmCa-Logo.png') }}" alt="EmCa" style="width: 100%; height: 100%; object-fit: contain;">
+                    @php $systemLogo = \App\Models\SystemSetting::get('system_logo'); @endphp
+                    @if($systemLogo)
+                        <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                    @else
+                        <img src="{{ asset('EmCa-Logo.png') }}" alt="EmCa" style="width: 100%; height: 100%; object-fit: contain;">
+                    @endif
                 </div>
-                <h2 class="site-title" style="margin: 0; font-size: 1.3rem; color: #1e293b; font-weight: 800; letter-spacing: -0.5px;">EmCa Technologies</h2>
+                <h2 class="site-title" style="margin: 0; font-size: 1.3rem; color: #1e293b; font-weight: 800; letter-spacing: -0.5px;">EmCa TECHONOLOGY</h2>
             </a>
 
             <div class="nav-links">
@@ -153,9 +158,13 @@
     <footer id="contact" style="text-align: center; padding: 60px 20px; background: #FFFFFF; border-top: 1px solid var(--corporate-red); color: #666666; font-family: 'Century Gothic', sans-serif;">
         <div style="margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
             <div style="width: 50px; height: 50px; border-radius: 8px; background: white; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                <img src="{{ asset('EmCa-Logo.png') }}" alt="EmCa" style="width: 100%; height: 100%; object-fit: contain;">
+                @if($systemLogo)
+                    <img src="{{ asset('storage/' . $systemLogo) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                @else
+                    <img src="{{ asset('EmCa-Logo.png') }}" alt="EmCa" style="width: 100%; height: 100%; object-fit: contain;">
+                @endif
             </div>
-            <h2 style="margin: 0; font-size: 1.8rem; color: #333333; font-weight: bold;">EmCa Technologies</h2>
+            <h2 style="margin: 0; font-size: 1.8rem; color: #333333; font-weight: bold;">EmCa TECHONOLOGY</h2>
         </div>
 
         <div style="margin-bottom: 2rem; display: flex; justify-content: center; gap: 2.5rem; color: var(--corporate-red); font-weight: 500;">
@@ -166,7 +175,7 @@
         </div>
 
         <div style="font-size: 0.95rem; color: #888;">
-            &copy; {{ date('Y') }} EmCa Technologies. Managed by EmCa TECHONOLOGY
+            &copy; {{ date('Y') }} EmCa TECHONOLOGY. Managed by EmCa TECHONOLOGY
         </div>
     </footer>
 </body>

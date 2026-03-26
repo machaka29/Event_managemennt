@@ -15,13 +15,11 @@ Route::post('/member/logout', [MemberGateController::class, 'logout'])->name('me
 Route::get('/', [PublicEventController::class, 'index'])->name('home');
 Route::get('/events/public/{id}', [PublicEventController::class, 'show'])->name('events.public.show');
 
-// Protected Public Routes
-Route::middleware('member.access')->group(function () {
-    Route::post('/events/public/{id}/register', [PublicEventController::class, 'register'])->name('events.public.register');
-    Route::get('/tickets/{ticket_id}', [PublicEventController::class, 'ticket'])->name('events.public.ticket');
-    Route::get('/tickets/{ticket_id}/download', [PublicEventController::class, 'downloadTicket'])->name('events.public.ticket.download');
-    Route::get('/verify/{ticket_id}', [PublicEventController::class, 'verifyTicket'])->name('events.public.verify');
-});
+// Public Registration & Ticket Routes
+Route::post('/events/public/{id}/register', [PublicEventController::class, 'register'])->name('events.public.register');
+Route::get('/tickets/{ticket_id}', [PublicEventController::class, 'ticket'])->name('events.public.ticket');
+Route::get('/tickets/{ticket_id}/download', [PublicEventController::class, 'downloadTicket'])->name('events.public.ticket.download');
+Route::get('/verify/{ticket_id}', [PublicEventController::class, 'verifyTicket'])->name('events.public.verify');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -37,6 +35,10 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'updateInfo'])->name('profile.info');
     Route::put('/profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
+    
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\AdminController::class, 'notifications'])->name('notifications.index');
+    Route::post('/notifications/mark-read', [\App\Http\Controllers\AdminController::class, 'markNotificationsRead'])->name('notifications.markRead');
     
     // Organizer Routes
     Route::middleware('role:organizer')->group(function () {

@@ -84,7 +84,7 @@
         <div class="footer">
             <p style="margin-bottom: 5px; font-weight: bold;">Important Information</p>
             <p style="margin: 0;">Please bring this ticket (digital or printed) to the venue. Present the QR code for check-in via the authorized mobile scanner. This ticket is unique to the attendee listed above.</p>
-            <p style="margin-top: 15px; font-size: 10px; opacity: 0.6;">&copy; {{ date('Y') }} EmCa Technologies. All rights reserved.</p>
+            <p style="margin-top: 15px; font-size: 10px; opacity: 0.6;">&copy; {{ date('Y') }} EmCa TECHONOLOGY. All rights reserved.</p>
         </div>
     </div>
 </body>
