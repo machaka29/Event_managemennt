@@ -82,9 +82,12 @@ class EventController extends Controller
             $validated['image_path'] = $request->file('image')->store('events', 'public');
         }
 
+        // Automate event publishing: Set status to approved by default
+        $validated['status'] = 'approved';
+
         auth()->user()->events()->create($validated);
 
-        return redirect()->route('dashboard')->with('success', 'Event created successfully!');
+        return redirect()->route('dashboard')->with('success', 'Event created and published successfully!');
     }
 
     public function show(\App\Models\Event $event)
