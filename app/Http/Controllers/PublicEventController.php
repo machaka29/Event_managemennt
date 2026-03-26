@@ -288,12 +288,12 @@ class PublicEventController extends Controller
 
         // Prevent attendance for past events
         if ($registration->event->date < now()->toDateString()) {
-            return back()->with('error', '❌ Tukio hili lilishapita (Event has ended). Tiketi hii imechuja wakati.');
+            return back()->with('error', '❌ This event has already ended. This ticket is expired.');
         }
 
         if ($request->action === 'check_in') {
             if ($registration->attended && $registration->status !== 'Checked-Out') {
-                return back()->with('error', 'Mshiriki huyu tayari amesajiliwa kuingia (Already checked in).');
+                return back()->with('error', 'This attendee is already checked in.');
             }
             $registration->update([
                 'status' => 'Attended',
@@ -301,23 +301,23 @@ class PublicEventController extends Controller
                 'checked_in_at' => now(),
                 'checked_out_at' => null, // Reset check-out if re-entering
             ]);
-            return back()->with('success', '✅ ' . $registration->attendee->full_name . ' ameingizwa kikamilifu! (Checked in at ' . now()->format('h:i:s A') . ')');
+            return back()->with('success', '✅ ' . $registration->attendee->full_name . ' checked in successfully at ' . now()->format('h:i:s A'));
         }
 
         if ($request->action === 'check_out') {
             if (!$registration->attended) {
-                return back()->with('error', 'Mshiriki huyu hajaingizwa bado. Tafadhali sajili kuingia kwanza (Not checked in yet).');
+                return back()->with('error', 'This attendee hasn\'t checked in yet. Please register entry first.');
             }
             if ($registration->status === 'Checked-Out') {
-                return back()->with('error', 'Mshiriki huyu tayari ametoka (Already checked out).');
+                return back()->with('error', 'This attendee is already checked out.');
             }
             $registration->update([
                 'status' => 'Checked-Out',
                 'checked_out_at' => now(),
             ]);
-            return back()->with('success', '🚪 ' . $registration->attendee->full_name . ' ametoka kikamilifu! (Checked out at ' . now()->format('h:i:s A') . ')');
+            return back()->with('success', '🚪 ' . $registration->attendee->full_name . ' checked out successfully at ' . now()->format('h:i:s A'));
         }
 
-        return back()->with('error', 'Kitendo kisichojulikana (Unknown action).');
+        return back()->with('error', 'Unknown action.');
     }
 }

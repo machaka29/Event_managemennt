@@ -75,8 +75,8 @@
             @if($isExpired)
             <div class="alert-box alert-error" style="margin-bottom: 25px; flex-direction: column; text-align: center; padding: 25px;">
                 <div style="font-size: 2.5rem; margin-bottom: 15px;">⚠️</div>
-                <div style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: #b91c1c;">TICKET EXPIRED / TUKIO LIMEISHA</div>
-                <p style="margin: 10px 0 0; font-size: 0.85rem; font-weight: 500; opacity: 0.9; line-height: 1.4;">Huwezi kurekodi mahudhurio kwa tukio ambalo tarehe yake ya kufanyika ilishapita.</p>
+                <div style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: #b91c1c;">TICKET EXPIRED / EVENT ENDED</div>
+                <p style="margin: 10px 0 0; font-size: 0.85rem; font-weight: 500; opacity: 0.9; line-height: 1.4;">You cannot record attendance for an event that has already ended.</p>
             </div>
             @endif
 
@@ -146,7 +146,7 @@
                 <div class="time-card">
                     <div class="time-icon in"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
                     <div>
-                        <div class="time-label">Time In (Muda wa Kuingia)</div>
+                        <div class="time-label">Time In</div>
                         <div class="time-value">{{ $registration->checked_in_at->format('h:i:s A') }}</div>
                         <div style="font-size: 0.75rem; color: #64748b;">{{ $registration->checked_in_at->format('D, M d Y') }}</div>
                     </div>
@@ -156,7 +156,7 @@
                 <div class="time-card out">
                     <div class="time-icon out"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
                     <div>
-                        <div class="time-label">Time Out (Muda wa Kutoka)</div>
+                        <div class="time-label">Time Out</div>
                         <div class="time-value">{{ $registration->checked_out_at->format('h:i:s A') }}</div>
                         <div style="font-size: 0.75rem; color: #64748b;">{{ $registration->checked_out_at->format('D, M d Y') }}</div>
                     </div>
@@ -178,21 +178,21 @@
                         <input type="hidden" name="action" value="check_in">
                         <button type="submit" class="action-btn btn-checkin">
                             <i class="fa-solid fa-arrow-right-to-bracket" style="font-size: 1.3rem;"></i>
-                            WEKA MAHUDHURIO - CHECK IN
+                            MARK ATTENDANCE - CHECK IN
                         </button>
                     </form>
                 @elseif($registration->attended && $registration->status !== 'Checked-Out')
                     {{-- Already checked in - show success and CHECK-OUT --}}
                     <button class="action-btn btn-disabled" disabled>
                         <i class="fa-solid fa-check-double"></i>
-                        ✅ AMEINGIZWA (CHECKED IN)
+                        ✅ ATTENDED (CHECKED IN)
                     </button>
                     <form action="{{ route('public.attendance.update', $registration->ticket_id) }}" method="POST">
                         @csrf
                         <input type="hidden" name="action" value="check_out">
                         <button type="submit" class="action-btn btn-checkout">
                             <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.3rem;"></i>
-                            WEKA KUTOKA - CHECK OUT
+                            MARK DEPARTURE - CHECK OUT
                         </button>
                     </form>
                 @endif
