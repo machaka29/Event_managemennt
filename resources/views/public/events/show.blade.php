@@ -86,6 +86,16 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div style="background: #fef2f2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.85rem; border: 1px solid #fecaca;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('events.public.register', $event->id) }}" method="POST">
                 @csrf
                 <div style="margin-bottom: 15px;">
