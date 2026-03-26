@@ -152,6 +152,12 @@ class PublicEventController extends Controller
             return back()->with('error', 'Registration for this event is currently closed.');
         }
 
+        // Prepend +255 to phone_number
+        if ($request->filled('phone_number')) {
+            $phoneNumber = ltrim($request->phone_number, '0'); // Strip leading zero if typed
+            $request->merge(['phone' => '+255' . $phoneNumber]);
+        }
+
         // New Stricter Validation
         $request->validate([
             'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
@@ -240,13 +246,23 @@ class PublicEventController extends Controller
         $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
         
         $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=" . urlencode(route('events.public.verify', ['ticket_id' => $registration->ticket_id])) . "&format=svg";
-        $qrCodeBase64 = base64_encode(file_get_contents($qrUrl));
+        
+        // Use @ to suppress errors if remote fetching fails, provide fallback if needed
+        $qrCodeContent = @file_get_contents($qrUrl);
+        $qrCodeBase64 = $qrCodeContent ? base64_encode($qrCodeContent) : '';
         
         $pdf = Pdf::loadView('public.events.ticket_pdf', compact('registration', 'qrCodeBase64'))
                   ->setPaper('a4')
-                  ->setOption(['isRemoteEnabled' => true]);
+                  ->setOption(['isRemoteEnabled' => true, 'defaultFont' => 'sans-serif']);
         
-        return $pdf->download('Ticket-' . $registration->ticket_id . '.pdf');
+        $fileName = 'Ticket-' . $registration->ticket_code . '.pdf';
+        
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"')
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     public function verifyTicket($ticket_id)

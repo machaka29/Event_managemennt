@@ -29,6 +29,10 @@ class EventController extends Controller
             ->where('attended', true)
             ->count();
             
+        $newAttendeesThisMonth = \App\Models\Registration::whereIn('event_id', $allEvents->pluck('id'))
+            ->where('created_at', '>=', $thisMonth)
+            ->count();
+            
         // Mockup specific stats
         $ticketsIssued = $totalAttendees;
         $eventViews = number_format($totalAttendees * 4.5 + 120, 0); // Simulated views
@@ -234,11 +238,9 @@ class EventController extends Controller
 
     public function attendeeUpdate(Request $request, \App\Models\Attendee $attendee)
     {
-        if ($request->filled('phone')) {
-            $phoneNumber = ltrim($request->phone, '0');
-            if (!str_starts_with($phoneNumber, '+255')) {
-                $request->merge(['phone' => '+255' . $phoneNumber]);
-            }
+        if ($request->filled('phone_number')) {
+            $phoneNumber = ltrim($request->phone_number, '0');
+            $request->merge(['phone' => '+255' . $phoneNumber]);
         }
 
         $request->validate([

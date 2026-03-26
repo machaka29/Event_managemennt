@@ -80,10 +80,13 @@
                 </div>
 
                 <div style="margin-bottom: 25px;">
-                    <label for="phone" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Phone Number (Optional)</label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone ?? '+255') }}" placeholder="+255xxxxxxxxx" 
-                        pattern="^\+255[0-9]{9}$" title="Phone number should be +255 followed by 9 digits"
-                        style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    <label for="phone_number" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Phone Number (Optional)</label>
+                    <div style="display: flex; align-items: stretch; border: 2px solid #eee; border-radius: 10px; overflow: hidden; transition: border-color 0.3s;" onfocusin="this.style.borderColor='var(--corporate-red)'" onfocusout="this.style.borderColor='#eee'">
+                        <span style="background: #f9f9f9; padding: 14px 20px; border-right: 2px solid #eee; color: #666; font-weight: 700; display: flex; align-items: center;">+255</span>
+                        <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number', substr($user->phone ?? '', 4)) }}" placeholder="712345678"
+                            maxlength="9" pattern="[0-9]{9}" title="Please enter exactly 9 digits"
+                            style="flex: 1; border: none; padding: 14px 20px; font-size: 1rem; outline: none; background: transparent;">
+                    </div>
                     @error('phone') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
 

@@ -208,7 +208,8 @@ class AdminController extends Controller
     public function organizerStore(Request $request)
     {
         if ($request->filled('phone_number')) {
-            $request->merge(['phone' => '+255' . $request->phone_number]);
+            $phoneNumber = ltrim($request->phone_number, '0');
+            $request->merge(['phone' => '+255' . $phoneNumber]);
         }
 
         $request->validate([
@@ -239,7 +240,8 @@ class AdminController extends Controller
     public function organizerUpdate(Request $request, User $organizer)
     {
         if ($request->filled('phone_number')) {
-            $request->merge(['phone' => '+255' . $request->phone_number]);
+            $phoneNumber = ltrim($request->phone_number, '0');
+            $request->merge(['phone' => '+255' . $phoneNumber]);
         }
 
         $request->validate([
@@ -278,11 +280,9 @@ class AdminController extends Controller
 
     public function attendeeUpdate(Request $request, Attendee $attendee)
     {
-        if ($request->filled('phone')) {
-            $phoneNumber = ltrim($request->phone, '0');
-            if (!str_starts_with($phoneNumber, '+255')) {
-                $request->merge(['phone' => '+255' . $phoneNumber]);
-            }
+        if ($request->filled('phone_number')) {
+            $phoneNumber = ltrim($request->phone_number, '0');
+            $request->merge(['phone' => '+255' . $phoneNumber]);
         }
 
         $request->validate([
@@ -295,6 +295,12 @@ class AdminController extends Controller
         $attendee->update($request->only(['full_name', 'email', 'phone', 'organization']));
 
         return redirect()->route('admin.attendees.list')->with('success', 'Member updated successfully.');
+    }
+
+    public function eventShow(Event $event)
+    {
+        $event->load(['registrations.attendee', 'organizer']);
+        return view('admin.events.show', compact('event'));
     }
 
     public function attendeeDestroy(Attendee $attendee)

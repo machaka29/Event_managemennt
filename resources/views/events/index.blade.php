@@ -24,15 +24,14 @@
 <style>
     @media (max-width: 768px) {
         .page-header { padding: 15px !important; }
-        .page-header h1 { font-size: 1.4rem !important; }
+        .page-header h1 { font-size: 1.25rem !important; }
+        .page-header p { font-size: 0.85rem !important; }
         .header-actions { text-align: left !important; width: 100%; }
-        .header-actions .btn { width: 100% !important; }
+        .header-actions .btn { width: 100% !important; min-width: 100% !important; }
         
-        .col-status { width: 40px !important; padding: 10px 2px !important; }
-        .col-stats { width: 45px !important; padding: 10px 2px !important; }
-        .status-badge { padding: 5px !important; width: 30px; height: 30px; justify-content: center; }
+        .col-stats { width: 60px !important; padding: 10px 5px !important; }
         .hide-mobile { display: none !important; }
-        .stat-value { font-size: 0.9rem !important; }
+        .stat-value { font-size: 0.95rem !important; }
         .stat-label { font-size: 0.55rem !important; }
     }
 </style>

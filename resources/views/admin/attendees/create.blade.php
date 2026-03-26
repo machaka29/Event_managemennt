@@ -37,10 +37,13 @@
 
         <div class="responsive-grid" style="margin-bottom: 30px; gap: 20px;">
             <div class="form-group">
-                <label for="phone" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.8rem;">Phone Number</label>
-                <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone') }}" placeholder="e.g. +255 712 345 678"
-                    style="width: 100%; padding: 15px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
+                <label for="phone_number" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.8rem;">Phone Number</label>
+                <div style="display: flex; align-items: stretch; border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #f8fafc; transition: all 0.2s;" onfocusin="this.style.borderColor='var(--corporate-red)'; this.style.background='white';" onfocusout="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
+                    <span style="background: #e2e8f0; padding: 15px 18px; color: #64748b; font-weight: 800; display: flex; align-items: center; border-right: 2px solid #e2e8f0;">+255</span>
+                    <input type="tel" name="phone_number" id="phone_number" class="form-control" required value="{{ old('phone_number') }}" placeholder="712345678"
+                        maxlength="9" pattern="[0-9]{9}" title="Please enter exactly 9 digits"
+                        style="flex: 1; border: none; padding: 15px 18px; font-size: 1rem; outline: none; background: transparent;">
+                </div>
                 @error('phone') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 5px; font-weight: 600;">{{ $message }}</p> @enderror
             </div>
 

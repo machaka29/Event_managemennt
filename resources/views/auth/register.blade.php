@@ -25,9 +25,13 @@
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone') }}" placeholder="+255xxxxxxxxx" required
-                    pattern="^\+255[0-9]{9}$" title="Phone number should be +255 followed by 9 digits">
+                <label for="phone_number">Phone Number</label>
+                <div style="display: flex; align-items: stretch; border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
+                    <span style="background: #f5f5f5; padding: 0.5rem 0.75rem; border-right: 1px solid #ddd; color: #666; font-weight: 700; display: flex; align-items: center;">+255</span>
+                    <input type="tel" name="phone_number" id="phone_number" class="form-control" value="{{ old('phone_number') }}" required placeholder="712345678"
+                        maxlength="9" pattern="[0-9]{9}" title="Please enter exactly 9 digits"
+                        style="flex: 1; border: none !important;">
+                </div>
                 @error('phone') <p class="text-error">{{ $message }}</p> @enderror
             </div>
 

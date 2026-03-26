@@ -66,6 +66,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         
         Route::get('/admin/events', [\App\Http\Controllers\AdminController::class, 'events'])->name('admin.events.index');
         Route::get('/admin/events/pending', [\App\Http\Controllers\AdminController::class, 'pendingEvents'])->name('admin.events.pending');
+        Route::get('/admin/events/{event}', [\App\Http\Controllers\AdminController::class, 'eventShow'])->name('admin.events.show');
         Route::get('/admin/events/{event}/edit', [\App\Http\Controllers\AdminController::class, 'eventEdit'])->name('admin.events.edit');
         Route::put('/admin/events/{event}', [\App\Http\Controllers\AdminController::class, 'eventUpdate'])->name('admin.events.update');
         Route::delete('/admin/events/{event}', [\App\Http\Controllers\AdminController::class, 'eventDestroy'])->name('admin.events.destroy');

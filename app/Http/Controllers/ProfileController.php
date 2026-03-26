@@ -19,6 +19,11 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
+        if ($request->filled('phone_number')) {
+            $phoneNumber = ltrim($request->phone_number, '0');
+            $request->merge(['phone' => '+255' . $phoneNumber]);
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],

@@ -48,7 +48,8 @@
                 <div style="display: flex; align-items: stretch; border: 2px solid #eee; border-radius: 10px; overflow: hidden; transition: border-color 0.3s; box-sizing: border-box;" onfocusin="this.style.borderColor='var(--corporate-red)'" onfocusout="this.style.borderColor='#eee'">
                     <span style="background: #f9f9f9; padding: 14px 20px; border-right: 2px solid #eee; color: #555; font-weight: bold; display: flex; align-items: center;">+255</span>
                     <input type="tel" name="phone_number" id="phone_number" required value="{{ old('phone_number') }}" placeholder="712345678" 
-                        maxlength="9" pattern="[0-9]{9}" title="Please enter exactly 9 digits">
+                        maxlength="9" pattern="[0-9]{9}" title="Please enter exactly 9 digits"
+                        style="flex: 1; border: none; padding: 14px 20px; font-size: 1rem; outline: none;">
                 </div>
                 @error('phone') <p class="text-error" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ $message }}</p> @enderror
             </div>

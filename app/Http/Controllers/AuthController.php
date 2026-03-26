@@ -46,6 +46,11 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        if ($request->filled('phone_number')) {
+            $phoneNumber = ltrim($request->phone_number, '0');
+            $request->merge(['phone' => '+255' . $phoneNumber]);
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],

@@ -3,6 +3,25 @@
 @section('title', $event->title . ' - EventPro')
 
 @section('content')
+<style>
+    .manage-event-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        align-items: flex-start;
+    }
+    @media (max-width: 992px) {
+        .manage-event-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .header-actions {
+            width: 100%;
+            justify-content: flex-start !important;
+            margin-top: 15px;
+        }
+    }
+</style>
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
         <div style="flex: 1; min-width: 250px;">
@@ -13,7 +32,7 @@
                 <i class="fa-solid fa-location-dot" style="color: var(--corporate-red); margin-right: 5px;"></i> {{ $event->location }}
             </p>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; min-width: 200px; justify-content: flex-end;">
+        <div class="header-actions" style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; min-width: 200px; justify-content: flex-end;">
             <a href="{{ route('events.edit', $event) }}" class="btn btn-outline" style="flex: 1; text-align: center; min-width: 120px;">Edit Event</a>
             <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?')" style="flex: 1; min-width: 120px;">
                 @csrf
@@ -23,7 +42,7 @@
         </div>
     </div>
 
-    <div class="responsive-grid" style="grid-template-columns: 2fr 1fr; align-items: flex-start; gap: 2rem;">
+    <div class="manage-event-container">
         <!-- Left: Details -->
         <div style="display: flex; flex-direction: column; gap: 2rem;">
             <div class="card" style="max-width: 100%;">
@@ -66,11 +85,25 @@
                                         </td>
                                         <td style="padding: 1rem;"><code style="background: #f4f4f4; padding: 3px 6px; border-radius: 4px;">{{ $reg->ticket_id }}</code></td>
                                         <td style="padding: 1rem;">
-                                            <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;
-                                                background: {{ $reg->status == 'Attended' ? '#e6f4ea' : ($reg->status == 'Absent' ? '#fce8e6' : '#f1f3f4') }};
-                                                color: {{ $reg->status == 'Attended' ? '#1e8e3e' : ($reg->status == 'Absent' ? '#d93025' : '#5f6368') }};">
-                                                {{ $reg->status }}
-                                            </span>
+                                            @if($reg->status === 'Checked-Out')
+                                                <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; background: #f1f3f4; color: #5f6368; display: inline-flex; align-items: center; gap: 4px;">
+                                                    <i class="fa-solid fa-door-closed"></i> Checked Out
+                                                </span>
+                                                @if($reg->checked_out_at)
+                                                    <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 4px; font-weight: 700;">{{ $reg->checked_out_at->format('h:i A') }}</div>
+                                                @endif
+                                            @elseif($reg->attended)
+                                                <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; background: #e6f4ea; color: #1e8e3e; display: inline-flex; align-items: center; gap: 4px;">
+                                                    <i class="fa-solid fa-check-double"></i> Checked In
+                                                </span>
+                                                @if($reg->checked_in_at)
+                                                    <div style="font-size: 0.65rem; color: #1e8e3e; margin-top: 4px; font-weight: 700;">{{ $reg->checked_in_at->format('h:i A') }}</div>
+                                                @endif
+                                            @elseif($reg->status == 'Absent')
+                                                <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; background: #fce8e6; color: #d93025;">Absent</span>
+                                            @else
+                                                <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; background: #f1f3f4; color: #5f6368;">Pending</span>
+                                            @endif
                                         </td>
                                         <td style="padding: 1rem; text-align: right;">
                                             <form action="{{ route('registrations.attendance', $reg) }}" method="POST" style="display: inline;">

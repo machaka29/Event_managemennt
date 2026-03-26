@@ -1,220 +1,445 @@
 @extends('layouts.app')
 
-@section('title', 'Find & Register for Amazing Events - EmCa Techonologies')
+@section('title', 'Discover & Register for Amazing Events - EventReg')
 
 @section('content')
-<!-- HERO SECTION -->
-<div style="background: var(--hero-gradient); padding: 60px 0; border-bottom: 4px solid var(--corporate-red); position: relative;">
-    <div class="container" style="text-align: center;">
-        <h1 style="color: white; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -1px; line-height: 1.1; text-transform: uppercase; margin-bottom: 1rem;">
-            Event Attendance <br><span style="color: rgba(255,255,255,0.75);">Management Portal</span>
+<style>
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes tickBounce {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .animate-on-scroll {
+        opacity: 0; transform: translateY(25px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+    .stagger-1 { transition-delay: 0.08s; }
+    .stagger-2 { transition-delay: 0.16s; }
+    .stagger-3 { transition-delay: 0.24s; }
+    .stagger-4 { transition-delay: 0.32s; }
+    .stagger-5 { transition-delay: 0.40s; }
+    .stagger-6 { transition-delay: 0.48s; }
+
+    /* ═══ HERO ═══ */
+    .hero {
+        background: linear-gradient(160deg, rgba(8,0,0,0.75), rgba(50,0,0,0.6)),
+                    url('{{ asset('images/landing/hero_bg.png') }}');
+        background-size: cover;
+        background-position: center;
+        padding: 100px 0 80px;
+        color: white;
+        text-align: center;
+        position: relative;
+    }
+    .hero::after {
+        content: '';
+        position: absolute;
+        bottom: -1px; left: 0; right: 0;
+        height: 60px;
+        background: linear-gradient(to top, #FFF5F5, transparent);
+    }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-tag {
+        display: inline-block;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 6px 20px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        margin-bottom: 22px;
+        animation: fadeInUp 0.7s ease-out;
+    }
+    .hero h1 {
+        font-size: clamp(1.9rem, 5vw, 3.2rem);
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 18px;
+        animation: fadeInUp 0.7s ease-out 0.1s both;
+        letter-spacing: -1px;
+    }
+    .hero h1 .highlight {
+        background: linear-gradient(135deg, #FF8C00, #FFB347, #FF6B00);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .hero p {
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.85);
+        max-width: 650px;
+        margin: 0 auto 35px;
+        line-height: 1.7;
+        animation: fadeInUp 0.7s ease-out 0.2s both;
+    }
+
+    /* ═══ SEARCH BAR ═══ */
+    .search-bar {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 10px;
+        border-radius: 50px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        box-shadow: 0 15px 35px rgba(148,0,0,0.08);
+        animation: fadeInUp 0.7s ease-out 0.3s both;
+        position: relative;
+        z-index: 2;
+    }
+    .s-field { position: relative; }
+    .s-field i {
+        position: absolute; left: 14px; top: 50%;
+        transform: translateY(-50%); font-size: 0.85rem;
+    }
+    .s-field input {
+        width: 100%; border: none;
+        padding: 13px 12px 13px 40px;
+        outline: none; font-size: 0.9rem;
+        color: #1e293b; font-family: inherit;
+        background: #f8fafc; border-radius: 9px;
+    }
+    .s-field input:focus { background: #f1f5f9; }
+    .s-field input::placeholder { color: #94a3b8; }
+    .s-btn {
+        padding: 0 28px; border-radius: 9px;
+        font-weight: 800; font-size: 0.82rem;
+        border: none; cursor: pointer;
+        background: #940000; color: white;
+        font-family: inherit; text-transform: uppercase;
+        transition: all 0.3s; white-space: nowrap;
+    }
+    .s-btn:hover {
+        background: #B30000; transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(148,0,0,0.35);
+    }
+
+
+
+    /* ═══ SECTION REUSABLES ═══ */
+    .section-head {
+        text-align: center; margin-bottom: 40px;
+    }
+    .section-head .badge {
+        display: inline-block; background: #FFF5F5;
+        color: #940000; padding: 6px 18px; border-radius: 50px;
+        font-weight: 800; font-size: 0.72rem; margin-bottom: 12px;
+        border: 1px solid rgba(148,0,0,0.06);
+    }
+    .section-head h2 {
+        font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+        font-weight: 900; color: #1e293b;
+        text-transform: uppercase; margin-bottom: 0;
+    }
+    .section-head .line {
+        width: 45px; height: 4px; background: #940000;
+        margin: 14px auto 0; border-radius: 10px;
+    }
+
+    /* ═══ EVENT CARDS ═══ */
+    .ev-section { padding: 70px 0; background: #fff; }
+    .ev-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+    .ev-card {
+        background: white; border-radius: 14px;
+        overflow: hidden; border: 1px solid #e2e8f0;
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .ev-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(148,0,0,0.1);
+    }
+    .ev-img {
+        height: 190px; background-size: cover;
+        background-position: center; position: relative;
+    }
+    .ev-tag {
+        position: absolute; top: 12px; left: 12px;
+        padding: 4px 12px; border-radius: 5px;
+        font-weight: 800; font-size: 0.68rem;
+        color: white; text-transform: uppercase; z-index: 1;
+    }
+    .ev-tag.hot { background: #e74c3c; }
+    .ev-tag.trend { background: #940000; }
+    .ev-tag.new { background: #3498db; }
+    .ev-spots {
+        position: absolute; top: 12px; right: 12px;
+        background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+        color: white; padding: 4px 10px; border-radius: 5px;
+        font-size: 0.68rem; font-weight: 700;
+    }
+    .ev-body { padding: 20px; }
+    .ev-body h3 {
+        font-size: 1.05rem; font-weight: 800;
+        color: #1e293b; margin-bottom: 12px;
+    }
+    .ev-meta {
+        display: grid; gap: 6px;
+        margin-bottom: 16px; color: #64748b; font-size: 0.82rem;
+    }
+    .ev-meta span { display: flex; align-items: center; gap: 7px; }
+    .ev-meta i { width: 14px; color: #940000; font-size: 0.78rem; }
+    .ev-strip {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 14px; background: #f8fafc;
+        border-radius: 8px; margin-bottom: 14px;
+    }
+    .ev-strip .filling {
+        font-size: 0.76rem; font-weight: 700; color: #e67e22;
+    }
+    .ev-strip .free {
+        font-size: 0.73rem; font-weight: 800; color: #16a34a;
+        background: #f0fdf4; padding: 3px 10px; border-radius: 16px;
+        border: 1px solid #bbf7d0;
+    }
+    .ev-btn {
+        display: block; width: 100%; padding: 12px;
+        border: none; border-radius: 8px;
+        font-weight: 800; font-size: 0.82rem;
+        cursor: pointer; text-align: center; text-decoration: none;
+        text-transform: uppercase; font-family: inherit;
+        background: #940000; color: white;
+        transition: all 0.3s;
+        box-shadow: 0 3px 12px rgba(148,0,0,0.15);
+    }
+    .ev-btn:hover {
+        background: #B30000; transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(148,0,0,0.25);
+    }
+
+    /* ═══ WHY US ═══ */
+    .why-section { padding: 70px 0; background: #f8fafc; }
+    .why-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    .why-card {
+        text-align: center; padding: 32px 22px;
+        border: 1px solid #e2e8f0; background: white;
+        border-radius: 14px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .why-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 30px rgba(148,0,0,0.06);
+    }
+    .why-icon {
+        width: 60px; height: 60px;
+        background: #fdf2f2; color: #940000; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 16px; font-size: 1.4rem;
+        transition: all 0.3s;
+    }
+    .why-card:hover .why-icon {
+        background: #940000; color: white; transform: scale(1.08);
+    }
+    .why-card h3 {
+        font-size: 0.85rem; font-weight: 800; color: #1e293b;
+        margin-bottom: 10px; text-transform: uppercase;
+    }
+    .why-card p {
+        color: #64748b; font-size: 0.82rem;
+        line-height: 1.6; margin: 0;
+    }
+
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 1024px) {
+        .ev-grid { grid-template-columns: repeat(2, 1fr); }
+        .why-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .hero { padding: 80px 0 65px; }
+        .hero h1 { font-size: 1.6rem; }
+        .hero p { font-size: 0.92rem; margin-bottom: 25px; }
+        .search-bar {
+            grid-template-columns: 1fr; padding: 8px;
+        }
+        .s-btn { width: 100%; height: 44px; }
+        .hero-badges { flex-direction: column; gap: 6px; }
+        .hero-badges .dot { display: none; }
+        .stats-row { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .stat-num { font-size: 1.4rem; }
+        .ev-grid, .why-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+        .testi-grid { grid-template-columns: 1fr; }
+        .section-head h2 { font-size: 1.2rem; }
+        .ev-section, .why-section, .testi-section, .email-section { padding: 50px 0; }
+        .email-form { flex-direction: column; }
+        .email-form button { padding: 12px; border-radius: 8px; }
+    }
+</style>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+    <div class="container hero-content">
+        <div class="hero-tag">Event Registration Platform</div>
+        <h1>
+            <span class="highlight">Discover & Register for<br>
+            Amazing Events Near You</span>
         </h1>
-        <p style="color: rgba(255,255,255,0.9); margin-bottom: 2.5rem; max-width: 650px; margin-left: auto; margin-right: auto; font-size: 1.1rem; font-weight: 500;">
-            Secure and reliable verification for all global events.
-        </p>
-        
-        <!-- Search Form - Compact -->
-        <div style="max-width: 500px; margin: 0 auto; background: white; padding: 5px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
-            <form id="searchForm" action="{{ route('home') }}" method="GET" style="display: flex; width: 100%; align-items: center;" onsubmit="return false;">
-                <input type="text" id="searchInput" name="search" placeholder="Search for events..." value="{{ request('search') }}" 
-                    style="flex: 1; border: none; padding: 12px 20px; outline: none; font-size: 1rem; background: transparent; color: #1e293b; font-family: inherit;">
-                
-                <button type="button" id="searchBtn" class="btn btn-primary" style="height: 44px; padding: 0 25px; border-radius: 40px;">
-                    <i class="fa-solid fa-search"></i>
-                </button>
-            </form>
-        </div>
+        <p>Join 10,000+ attendees who found their next unforgettable experience. Browse events, register in seconds — no account needed!</p>
+
+        <form action="{{ route('home') }}#events-list" method="GET" class="search-bar">
+            <div class="s-field" style="border-right: none;">
+                <i class="fa-solid fa-search" style="color: #940000; font-size: 1.1rem;"></i>
+                <input type="text" name="search" placeholder="Search events, organizers, location..." value="{{ request('search') }}" style="font-size: 0.95rem;">
+            </div>
+            <button type="submit" class="s-btn" style="padding: 0 35px;"><i class="fa-solid fa-magnifying-glass"></i>&nbsp; SEARCH</button>
+        </form>
+
+
     </div>
 </div>
 
-<div class="container" style="padding: var(--section-gap) var(--container-padding);">
-    
-    <!-- UPCOMING EVENTS SECTION -->
-    <div id="events-list" style="text-align: center;">
-        <div style="margin-bottom: 3.5rem;">
-            <h2 id="searchTitle" style="font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #1e293b;">
-                {{ request('search') ? 'Search Results' : 'Upcoming Events' }}
+
+
+<!-- ═══════════ FEATURED EVENTS ═══════════ -->
+<div id="events-list" class="ev-section">
+    <div class="container">
+        <div class="section-head animate-on-scroll">
+            <h2 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fa-regular fa-calendar-check" style="color: #940000;"></i> Upcoming Events
             </h2>
-            <p id="searchSubtitle" style="color: #64748b; margin-top: 8px;">{{ request('search') ? 'Found for "' . request('search') . '"' : 'Stay updated with scheduled events.' }}</p>
-            <div style="width: 40px; height: 4px; background: var(--corporate-red); margin: 15px auto 0; border-radius: 2px;"></div>
+            <div class="line"></div>
         </div>
 
-        <div class="event-grid" id="eventGrid">
-            @forelse($events as $event)
-                <div class="card" style="padding: 0; overflow: hidden; text-align: left;">
-                    <!-- Event Image -->
-                    <div style="height: 200px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                         @if($event->image_path)
-                            <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}" style="width: 100%; height: 100%; object-fit: cover;">
-                        @else
-                           <i class="fa-solid {{ $event->category->icon ?? 'fa-calendar-day' }}" style="font-size: 3.5rem; color: #cbd5e1;"></i>
-                        @endif
-                        <div style="position: absolute; top: 15px; right: 15px; background: var(--corporate-red); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                            {{ $event->category->name ?? 'Event' }}
-                        </div>
-                    </div>
-
-                    <div style="padding: 25px; flex: 1; display: flex; flex-direction: column;">
-                        <h3 style="font-size: 1.15rem; color: #1e293b; margin-bottom: 1rem; font-weight: 800; line-height: 1.3;">
-                            {{ $event->title }}
-                        </h3>
-                        
-                        <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 2rem; display: grid; gap: 10px;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <i class="fa-solid fa-calendar" style="color: var(--corporate-red); width: 14px;"></i>
-                                {{ \Carbon\Carbon::parse($event->date)->format('D, M d, Y') }}
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <i class="fa-solid fa-location-dot" style="color: var(--corporate-red); width: 14px;"></i>
-                                {{ $event->location }}
-                            </div>
-                        </div>
-
-                        <a href="{{ route('events.public.show', $event->id) }}" class="btn btn-outline" style="width: 100%; margin-top: auto;">
-                            View Details
-                        </a>
-                    </div>
+        <div class="ev-grid">
+            @forelse($events as $index => $event)
+            <div class="ev-card animate-on-scroll stagger-{{ ($index % 3) + 1 }}">
+                <div class="ev-img" style="background-image: url('{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('images/placeholder-event.png') }}'); background-color: #f1f5f9;">
+                    <span class="ev-tag {{ $index == 0 ? 'hot' : ($index == 1 ? 'trend' : 'new') }}">
+                        @if($index == 0) 🔥 Featured @elseif($index == 1) 🎉 Trending @else 💼 New @endif
+                    </span>
+                    <span class="ev-spots"><i class="fa-solid fa-users"></i> {{ max(0, $event->capacity - $event->registrations()->count()) }} left</span>
                 </div>
+                <div class="ev-body">
+                    <h3>{{ \Illuminate\Support\Str::limit($event->title, 40) }}</h3>
+                    <div class="ev-meta">
+                        <span><i class="fa-solid fa-calendar-days"></i> {{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</span>
+                        <span><i class="fa-solid fa-location-dot"></i> {{ \Illuminate\Support\Str::limit($event->location, 25) }}</span>
+                    </div>
+                    <div class="ev-strip">
+                        @php
+                            $spotsLeft = $event->capacity - $event->registrations()->count();
+                        @endphp
+                        @if($spotsLeft <= 0)
+                            <span class="filling" style="color: #e74c3c;"><i class="fa-solid fa-ban"></i> Fully Booked</span>
+                        @elseif($spotsLeft <= 10)
+                            <span class="filling"><i class="fa-solid fa-fire"></i> Filling fast!</span>
+                        @else
+                            <span class="filling" style="color: #2ecc71;"><i class="fa-solid fa-check-circle"></i> Available</span>
+                        @endif
+                        <span class="free">✓ Free Registration</span>
+                    </div>
+                    @if($spotsLeft > 0)
+                        <a href="{{ route('events.public.show', $event->id) }}" class="ev-btn">REGISTER NOW</a>
+                    @else
+                        <button class="ev-btn" style="background: #94a3b8; cursor: not-allowed;" disabled>SOLD OUT</button>
+                    @endif
+                </div>
+            </div>
             @empty
-                <div style="grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: #94a3b8;">
-                    <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                    <p>No results found matching your criteria.</p>
-                    <a href="{{ route('home') }}" style="color: var(--corporate-red); font-weight: bold; margin-top: 10px; display: inline-block;">Browse All Events</a>
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b;">
+                    <i class="fa-regular fa-calendar-xmark" style="font-size: 3rem; margin-bottom: 15px; color: #cbd5e1;"></i>
+                    <h4>No upcoming events found at this time.</h4>
                 </div>
             @endforelse
         </div>
-
-        </div>
-
-        <div id="loadMoreContainer" style="margin-top: 50px; display: {{ ($events instanceof \Illuminate\Pagination\LengthAwarePaginator && $events->hasMorePages()) ? 'block' : 'none' }};">
-            <button id="loadMoreBtn" data-url="{{ $events instanceof \Illuminate\Pagination\LengthAwarePaginator ? $events->nextPageUrl() : '' }}" class="btn btn-primary" style="padding-left: 40px; padding-right: 40px;">
-                Load More Events &nbsp; <i class="fa-solid fa-chevron-right"></i>
-            </button>
-        </div>
     </div>
+</div>
 
-    <!-- AJAX Search Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const searchBtn = document.getElementById('searchBtn');
-            const eventGrid = document.getElementById('eventGrid');
-            const loadMoreContainer = document.getElementById('loadMoreContainer');
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
-            const searchTitle = document.getElementById('searchTitle');
-            const searchSubtitle = document.getElementById('searchSubtitle');
-            
-            let searchTimeout = null;
-            let currentQuery = searchInput.value;
-
-            function fetchEvents(query, url = null, append = false) {
-                const targetUrl = url || `/api/events/search?search=${encodeURIComponent(query)}`;
-                
-                if (!append) {
-                    eventGrid.style.opacity = '0.5';
-                } else {
-                    const originalText = loadMoreBtn.innerHTML;
-                    loadMoreBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
-                    loadMoreBtn.disabled = true;
-                }
-
-                fetch(targetUrl, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (append) {
-                        eventGrid.innerHTML += data.html;
-                    } else {
-                        eventGrid.innerHTML = data.html || `
-                            <div style="grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: #94a3b8;">
-                                <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                <p>No results found matching your criteria.</p>
-                            </div>`;
-                        
-                        if (query.trim() !== '') {
-                            searchTitle.innerText = 'Search Results';
-                            searchSubtitle.innerText = 'Found for "' + query + '"';
-                        } else {
-                            searchTitle.innerText = 'Upcoming Events';
-                            searchSubtitle.innerText = 'Stay updated with scheduled events.';
-                        }
-                    }
-                    
-                    eventGrid.style.opacity = '1';
-
-                    if (data.hasMorePages) {
-                        loadMoreContainer.style.display = 'block';
-                        loadMoreBtn.setAttribute('data-url', data.nextPageUrl + '&search=' + encodeURIComponent(query));
-                    } else {
-                        loadMoreContainer.style.display = 'none';
-                    }
-
-                    if (append) {
-                        loadMoreBtn.innerHTML = 'Load More Events &nbsp; <i class="fa-solid fa-chevron-right"></i>';
-                        loadMoreBtn.disabled = false;
-                    }
-                })
-                .catch(err => {
-                    console.error('Failed to load events', err);
-                    eventGrid.style.opacity = '1';
-                    if (append) {
-                        loadMoreBtn.innerHTML = 'Load More Events &nbsp; <i class="fa-solid fa-chevron-right"></i>';
-                        loadMoreBtn.disabled = false;
-                    }
-                });
-            }
-
-            searchInput.addEventListener('keyup', function(e) {
-                clearTimeout(searchTimeout);
-                currentQuery = e.target.value;
-                searchTimeout = setTimeout(() => {
-                    fetchEvents(currentQuery);
-                }, 400); // 400ms delay for auto-search
-            });
-
-            searchBtn.addEventListener('click', function() {
-                fetchEvents(searchInput.value);
-            });
-
-            if (loadMoreBtn) {
-                loadMoreBtn.addEventListener('click', function() {
-                    const nextUrl = this.getAttribute('data-url');
-                    fetchEvents(currentQuery, nextUrl, true);
-                });
-            }
-        });
-    </script>
-
-    <!-- HOW IT WORKS SECTION -->
-    <div style="padding: var(--section-gap) 0 40px; text-align: center; border-top: 1px solid #e2e8f0; margin-top: var(--section-gap);">
-        <div style="margin-bottom: 4rem;">
-            <h2 style="font-weight: 800; text-transform: uppercase; color: #1e293b;">How It Works</h2>
-            <div style="width: 40px; height: 4px; background: var(--corporate-red); margin: 15px auto 0; border-radius: 2px;"></div>
+<!-- ═══════════ WHY CHOOSE US ═══════════ -->
+<div class="why-section">
+    <div class="container">
+        <div class="section-head animate-on-scroll">
+            <h2>Why Attendees Choose Us</h2>
+            <div class="line"></div>
         </div>
-
-        <div class="stats-grid">
-            <div class="card" style="padding: 35px 25px; border: 1px solid #e2e8f0;">
-                <div style="font-size: 2.2rem; font-weight: 900; color: var(--corporate-red); margin-bottom: 0.5rem; opacity: 0.1;">01</div>
-                <h3 style="font-size: 0.9rem; color: #1e293b; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase;">Discover</h3>
-                <p style="color: #64748b; font-size: 0.85rem; line-height: 1.6;">Browse through our curated list of upcoming events and select the ones you love.</p>
+        <div class="why-grid">
+            <div class="why-card animate-on-scroll stagger-1">
+                <div class="why-icon"><i class="fa-solid fa-user-slash"></i></div>
+                <h3>No Account Needed</h3>
+                <p>Register in seconds — no sign-up or verification required.</p>
             </div>
-            <div class="card" style="padding: 35px 25px; border: 1px solid #e2e8f0;">
-                <div style="font-size: 2.2rem; font-weight: 900; color: var(--corporate-red); margin-bottom: 0.5rem; opacity: 0.1;">02</div>
-                <h3 style="font-size: 0.9rem; color: #1e293b; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase;">Register</h3>
-                <p style="color: #64748b; font-size: 0.85rem; line-height: 1.6;">Quickly sign up on the event page by providing your basic contact information.</p>
+            <div class="why-card animate-on-scroll stagger-2">
+                <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Secure & Reliable</h3>
+                <p>Your data is encrypted and handled with top security standards.</p>
             </div>
-            <div class="card" style="padding: 35px 25px; border: 1px solid #e2e8f0;">
-                <div style="font-size: 2.2rem; font-weight: 900; color: var(--corporate-red); margin-bottom: 0.5rem; opacity: 0.1;">03</div>
-                <h3 style="font-size: 0.9rem; color: #1e293b; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase;">Receive Ticket</h3>
-                <p style="color: #64748b; font-size: 0.85rem; line-height: 1.6;">Instantly grab your digital ticket with a unique QR code after confirming.</p>
+            <div class="why-card animate-on-scroll stagger-3">
+                <div class="why-icon"><i class="fa-solid fa-qrcode"></i></div>
+                <h3>Instant QR Tickets</h3>
+                <p>Get your QR ticket instantly via SMS and Email after registration.</p>
             </div>
-            <div class="card" style="padding: 35px 25px; border: 1px solid #e2e8f0;">
-                <div style="font-size: 2.2rem; font-weight: 900; color: var(--corporate-red); margin-bottom: 0.5rem; opacity: 0.1;">04</div>
-                <h3 style="font-size: 0.9rem; color: #1e293b; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase;">Check In</h3>
-                <p style="color: #64748b; font-size: 0.85rem; line-height: 1.6;">Show your digital ticket QR code at the event venue for fast and easy entry.</p>
+            <div class="why-card animate-on-scroll stagger-4">
+                <div class="why-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Lightning Fast</h3>
+                <p>Complete registration in under 30 seconds — the fastest experience.</p>
+            </div>
+            <div class="why-card animate-on-scroll stagger-5">
+                <div class="why-icon"><i class="fa-solid fa-bell"></i></div>
+                <h3>Event Reminders</h3>
+                <p>Automatic SMS and email reminders so you never miss an event.</p>
+            </div>
+            <div class="why-card animate-on-scroll stagger-6">
+                <div class="why-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>Organizer Tools</h3>
+                <p>Powerful dashboard to manage events, attendance, and broadcasts.</p>
             </div>
         </div>
     </div>
 </div>
+
+
+
+<!-- ═══════════ SCRIPTS ═══════════ -->
+<script>
+(function() {
+    // Scroll reveal
+    var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.animate-on-scroll').forEach(function(el) { io.observe(el); });
+
+    // Counting numbers
+    var done = false;
+    var po = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (e.isIntersecting && !done) {
+                done = true;
+                document.querySelectorAll('.stat-num[data-count]').forEach(function(el) {
+                    var target = parseInt(el.getAttribute('data-count'));
+                    var suffix = el.getAttribute('data-suffix') || '+';
+                    var cur = 0, inc = target / 45;
+                    var t = setInterval(function() {
+                        cur += inc;
+                        if (cur >= target) { cur = target; clearInterval(t); }
+                        el.textContent = Math.floor(cur).toLocaleString() + suffix;
+                    }, 40);
+                });
+            }
+        });
+    }, { threshold: 0.25 });
+    var bar = document.querySelector('.stats-bar');
+    if (bar) po.observe(bar);
+})();
+</script>
 @endsection

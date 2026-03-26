@@ -115,11 +115,15 @@
                 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 5px;">Phone Number *</label>
-                    <input type="tel" name="phone" placeholder="+255712345678" required 
-                        pattern="^\+255[0-9]{9}$" title="Phone number should be +255 followed by 9 digits"
-                        style="width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; outline: none; transition: 0.2s;"
-                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
-                    <p style="font-size: 0.7rem; color: #64748b; margin-top: 5px;">Use format: +255XXXXXXXXX</p>
+                    <div style="display: flex; align-items: center; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: white; transition: 0.2s;" class="phone-input-group">
+                        <span style="background: #f8fafc; padding: 12px 15px; border-right: 1px solid #e2e8f0; font-size: 1rem; color: #64748b; font-weight: 700; user-select: none;">+255</span>
+                        <input type="tel" name="phone_number" placeholder="712345678" required 
+                            pattern="^[0-9]{9}$" maxlength="9" title="Please enter exactly 9 digits (e.g. 712XXXXXX)"
+                            style="flex: 1; padding: 12px 15px; border: none; font-size: 1rem; outline: none;"
+                            onfocus="this.parentElement.style.borderColor='var(--corporate-red)'; this.parentElement.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" 
+                            onblur="this.parentElement.style.borderColor='#e2e8f0'; this.parentElement.style.boxShadow='none'">
+                    </div>
+                    <p style="font-size: 0.7rem; color: #64748b; margin-top: 5px;">Enter your 9-digit mobile number (Anza na 7 au 6...)</p>
                 </div>
                 
                 <div style="margin-bottom: 25px;">
