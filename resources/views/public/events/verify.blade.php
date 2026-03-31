@@ -4,207 +4,270 @@
 
 @section('content')
 <style>
-    .scanner-container { padding: 2rem 1rem; display: flex; justify-content: center; }
-    .scanner-card { width: 100%; max-width: 520px; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.12); overflow: hidden; }
-    .scanner-header { background: var(--corporate-red); color: white; padding: 20px 25px; text-align: center; }
-    .scanner-header h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
-    .scanner-body { padding: 25px; }
-    .info-section { background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
-    .info-section h3 { color: var(--corporate-red); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 12px; font-weight: 800; }
-    .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0; align-items: center; }
-    .info-row:last-child { border-bottom: none; }
-    .info-label { font-size: 0.8rem; color: #64748b; font-weight: 600; }
-    .info-value { font-size: 0.9rem; color: #1e293b; font-weight: 700; text-align: right; }
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;800&family=Outfit:wght@400;600;800;900&display=swap');
+
+    .scanner-page-wrapper { 
+        min-height: 100vh; 
+        background: #0f172a; 
+        font-family: 'Outfit', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .futuristic-scanner-card {
+        width: 100%;
+        max-width: 480px;
+        background: #1e293b;
+        border-radius: 32px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 40px 100px -20px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .scanner-status-header {
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Status Themes */
+    .theme-valid { background: linear-gradient(180deg, rgba(16, 185, 129, 0.2) 0%, transparent 100%); }
+    .theme-invalid { background: linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, transparent 100%); }
+    .theme-warning { background: linear-gradient(180deg, rgba(245, 158, 11, 0.2) 0%, transparent 100%); }
+
+    .scanner-ring {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ring-valid { background: rgba(16, 185, 129, 0.1); border: 4px solid #10b981; color: #10b981; box-shadow: 0 0 40px rgba(16, 185, 129, 0.3); }
+    .ring-invalid { background: rgba(239, 68, 68, 0.1); border: 4px solid #ef4444; color: #ef4444; box-shadow: 0 0 40px rgba(239, 68, 68, 0.3); }
+    .ring-pending { background: rgba(245, 158, 11, 0.1); border: 4px solid #f59e0b; color: #f59e0b; box-shadow: 0 0 40px rgba(245, 158, 11, 0.3); }
+
+    .status-text { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: white; text-transform: uppercase; margin-bottom: 5px; }
+    .status-sub { font-size: 0.85rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+
+    .scanner-content { padding: 0 30px 40px; }
+
+    .glass-info-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 24px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .info-label-micro { font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; display: block; }
+    .info-value-large { font-size: 1.25rem; font-weight: 800; color: white; display: block; margin-bottom: 12px; }
+    .info-grid-scanner { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid rgba(255,255,255,0.05); pt-15; margin-top: 15px; }
+
+    .action-container-scanner { position: relative; }
+
+    .btn-scanner-action {
+        width: 100%;
+        padding: 22px;
+        border-radius: 20px;
+        border: none;
+        font-size: 1.1rem;
+        font-weight: 900;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-green { background: #10b981; color: white; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4); }
+    .btn-green:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(16, 185, 129, 0.5); }
     
-    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-    .status-pending { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
-    .status-in { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
-    .status-out { background: #e2e8f0; color: #475569; border: 1px solid #94a3b8; }
-    .status-expired { background: #fee2e2; color: #b91c1c; border: 1px solid #f87171; }
-    
-    .time-card { background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0; border-radius: 12px; padding: 15px 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 15px; }
-    .time-card.out { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-color: #cbd5e1; }
-    .time-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-    .time-icon.in { background: #10b981; color: white; }
-    .time-icon.out { background: #64748b; color: white; }
-    .time-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-    .time-value { font-size: 1rem; color: #1e293b; font-weight: 800; }
-    
-    .action-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-    .btn-checkin { background: linear-gradient(135deg, #059669, #10b981); color: white; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3); }
-    .btn-checkin:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4); }
-    .btn-checkout { background: linear-gradient(135deg, #334155, #475569); color: white; box-shadow: 0 8px 25px rgba(51, 65, 85, 0.3); }
-    .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(51, 65, 85, 0.4); }
-    .btn-disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
-    .btn-disabled:hover { transform: none; box-shadow: none; }
-    
-    .alert-box { padding: 14px 20px; border-radius: 10px; margin-bottom: 20px; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
-    .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
-    .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-    
-    @media (max-width: 600px) {
-        .scanner-container { padding: 1rem 0.5rem; }
-        .scanner-body { padding: 15px; }
-        .action-btn { font-size: 1rem; padding: 16px; }
+    .btn-slate { background: #334155; color: white; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-slate:hover { background: #1e293b; border-color: rgba(255,255,255,0.2); }
+
+    .btn-locked { background: #0f172a; color: #475569; pointer-events: none; opacity: 0.6; }
+
+    .pin-input-field {
+        background: rgba(0,0,0,0.2);
+        border: 2px solid #334155;
+        border-radius: 16px;
+        padding: 20px;
+        width: 100%;
+        color: white;
+        font-size: 1.5rem;
+        text-align: center;
+        letter-spacing: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        margin: 15px 0;
+        transition: 0.3s;
+    }
+    .pin-input-field:focus { border-color: #10b981; background: rgba(0,0,0,0.4); outline: none; box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+
+    .alert-micro { padding: 12px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .alert-micro-success { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+    .alert-micro-error { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    .nav-top-scanner { position: absolute; top: 0; left: 0; right: 0; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+    .back-nav-scanner { color: #64748b; text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+    .back-nav-scanner:hover { color: white; }
+
+    /* Scan line animation */
+    .scan-line { position: absolute; height: 2px; width: 100%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: scanning 3s linear infinite; opacity: 0; }
+    .active-scanning .scan-line { opacity: 0.4; }
+    @keyframes scanning { 0% { top: 0%; } 100% { top: 100%; } }
+
+    @media (max-width: 480px) {
+        .scanner-page-wrapper { padding: 0; }
+        .futuristic-scanner-card { border-radius: 0; height: 100vh; }
     }
 </style>
 
-<div class="scanner-container">
-    <div class="scanner-card">
-        {{-- Header --}}
-        <div class="scanner-header">
-            <div style="font-size: 2rem; margin-bottom: 8px;">🎫</div>
-            <h2>Ticket Verification</h2>
-            <p style="margin: 5px 0 0; font-size: 0.8rem; opacity: 0.85;">Scanner / Attendance System</p>
+<div class="scanner-page-wrapper">
+    <div class="futuristic-scanner-card {{ $isExpired ? 'theme-invalid' : ($registration->attended ? 'theme-valid' : 'theme-warning') }}">
+        <div class="scan-line"></div>
+        
+        <div class="nav-top-scanner">
+            <a href="{{ route('home') }}" class="back-nav-scanner">
+                <i class="fa-solid fa-house"></i>
+            </a>
+            @if(session('gate_pass_' . $registration->event->id) === true)
+                <a href="{{ route('events.public.verify', ['ticket_id' => $registration->ticket_id, 'reset' => 1]) }}" class="back-nav-scanner" style="color: #ef4444;">
+                    <i class="fa-solid fa-lock-open"></i> LOCK
+                </a>
+            @endif
         </div>
 
-        <div class="scanner-body">
+        <div class="scanner-status-header">
+            @if($isExpired)
+                <div class="scanner-ring ring-invalid">
+                    <i class="fa-solid fa-calendar-xmark fa-2x"></i>
+                </div>
+                <div class="status-text">Expired</div>
+                <div class="status-sub">Access Terminated</div>
+            @elseif($registration->status === 'Checked-Out')
+                <div class="scanner-ring ring-invalid" style="border-color: #cbd5e1; color: #cbd5e1; box-shadow: none;">
+                    <i class="fa-solid fa-door-open fa-2x"></i>
+                </div>
+                <div class="status-text">Checked Out</div>
+                <div class="status-sub">Departure Recorded</div>
+            @elseif($registration->attended)
+                <div class="scanner-ring ring-valid">
+                    <i class="fa-solid fa-check-double fa-2x"></i>
+                </div>
+                <div class="status-text">Active Entry</div>
+                <div class="status-sub">Attendance Confirmed</div>
+            @else
+                <div class="scanner-ring ring-pending">
+                    <i class="fa-solid fa-clock fa-2x"></i>
+                </div>
+                <div class="status-text">Valid Ticket</div>
+                <div class="status-sub">Awaiting Entry</div>
+            @endif
+        </div>
+
+        <div class="scanner-content">
             {{-- Alerts --}}
             @if(session('success'))
-                <div class="alert-box alert-success">
-                    {{ session('success') }}
+                <div class="alert-micro alert-micro-success">
+                    <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
                 </div>
             @endif
             @if(session('error'))
-                <div class="alert-box alert-error">
-                    ⚠️ {{ session('error') }}
+                <div class="alert-micro alert-micro-error">
+                    <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
                 </div>
             @endif
 
-            {{-- Expiration Warning --}}
-            @if($isExpired)
-            <div class="alert-box alert-error" style="margin-bottom: 25px; flex-direction: column; text-align: center; padding: 25px;">
-                <div style="font-size: 2.5rem; margin-bottom: 15px;">⚠️</div>
-                <div style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; color: #b91c1c;">TICKET EXPIRED / EVENT ENDED</div>
-                <p style="margin: 10px 0 0; font-size: 0.85rem; font-weight: 500; opacity: 0.9; line-height: 1.4;">You cannot record attendance for an event that has already ended.</p>
+            <div class="glass-info-card">
+                <span class="info-label-micro">Primary Guest</span>
+                <span class="info-value-large">{{ $registration->attendee->full_name }}</span>
+                
+                <div class="info-grid-scanner">
+                    <div>
+                        <span class="info-label-micro">Ticket Reference</span>
+                        <span style="color: #10b981; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 0.9rem;">#{{ $registration->ticket_id }}</span>
+                    </div>
+                    <div>
+                        <span class="info-label-micro">Contact Info</span>
+                        <span style="color: white; font-weight: 700; font-size: 0.85rem;">{{ $registration->attendee->phone }}</span>
+                    </div>
+                </div>
             </div>
-            @endif
 
-            {{-- Ticket Status --}}
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="width: 70px; height: 70px; background: var(--corporate-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 12px; box-shadow: 0 8px 20px rgba(148,0,0,0.2);">
-                    ✓
-                </div>
-                <h3 style="color: var(--corporate-red); margin: 0 0 5px; font-size: 1.1rem;">Valid Ticket</h3>
-                <div>
-                    @if($isExpired)
-                        <span class="status-badge status-expired"><i class="fa-solid fa-calendar-xmark"></i> Event Ended</span>
-                    @elseif($registration->status === 'Checked-Out')
-                        <span class="status-badge status-out"><i class="fa-solid fa-door-closed"></i> Checked Out</span>
-                    @elseif($registration->attended)
-                        <span class="status-badge status-in"><i class="fa-solid fa-check-double"></i> Checked In</span>
-                    @else
-                        <span class="status-badge status-pending"><i class="fa-solid fa-clock"></i> Pending Entry</span>
+            <div class="glass-info-card" style="border-style: dashed;">
+                <span class="info-label-micro">Experience Title</span>
+                <span style="color: white; font-weight: 700; font-size: 1rem; display: block;">{{ $registration->event->title }}</span>
+                <span style="color: #64748b; font-size: 0.8rem; display: block; margin-top: 5px;">
+                    <i class="fa-solid fa-location-dot"></i> {{ $registration->event->location }}
+                </span>
+            </div>
+
+            @php
+                $sessionKey = 'gate_pass_' . $registration->event->id;
+                $isAuthorized = session($sessionKey) === true;
+            @endphp
+
+            @if(!$isExpired)
+                <form action="{{ route('public.attendance.update', $registration->ticket_id) }}" method="POST" class="action-container-scanner">
+                    @csrf
+                    
+                    @if(!$isAuthorized)
+                        <div style="margin-bottom: 25px;">
+                            <span class="info-label-micro" style="text-align: center; display: block; margin-bottom: 0;">AUTHORIZATION PIN REQUIRED</span>
+                            <input type="password" name="gate_password" class="pin-input-field" placeholder="••••" required maxlength="4">
+                            <p style="color: #475569; font-size: 0.7rem; text-align: center; font-weight: 700;">Enter the 4-digit security code for this event</p>
+                        </div>
                     @endif
-                </div>
-            </div>
 
-            {{-- Attendee Info --}}
-            <div class="info-section">
-                <h3><i class="fa-solid fa-user"></i> Attendee Details</h3>
-                <div class="info-row">
-                    <span class="info-label">Full Name</span>
-                    <span class="info-value">{{ $registration->attendee->full_name }}</span>
+                    @if(!$registration->attended || $registration->status === 'Checked-Out')
+                        <input type="hidden" name="action" value="check_in">
+                        <button type="submit" class="btn-scanner-action btn-green">
+                            <i class="fa-solid fa-bolt"></i> RECORD ENTRY
+                        </button>
+                    @elseif($registration->attended && $registration->status !== 'Checked-Out')
+                        <input type="hidden" name="action" value="check_out">
+                        <button type="submit" class="btn-scanner-action btn-slate">
+                            <i class="fa-solid fa-door-open"></i> RECORD EXIT
+                        </button>
+                    @endif
+                </form>
+            @else
+                <div class="btn-scanner-action btn-locked">
+                    <i class="fa-solid fa-lock"></i> SYSTEM LOCKED
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Email</span>
-                    <span class="info-value" style="font-size: 0.8rem;">{{ $registration->attendee->email }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Phone</span>
-                    <span class="info-value">{{ $registration->attendee->phone }}</span>
-                </div>
-                @if($registration->attendee->organization)
-                <div class="info-row">
-                    <span class="info-label">Organization</span>
-                    <span class="info-value">{{ $registration->attendee->organization }}</span>
-                </div>
-                @endif
-            </div>
-
-            {{-- Event Info --}}
-            <div class="info-section">
-                <h3><i class="fa-solid fa-calendar-day"></i> Event Info</h3>
-                <div class="info-row">
-                    <span class="info-label">Event</span>
-                    <span class="info-value">{{ $registration->event->title }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Ticket ID</span>
-                    <span class="info-value" style="font-family: monospace; color: var(--corporate-red);">{{ $registration->ticket_id }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Location</span>
-                    <span class="info-value">{{ $registration->event->location }}</span>
-                </div>
-            </div>
-
-            {{-- Timestamps --}}
-            @if($registration->checked_in_at || $registration->checked_out_at)
-            <div style="margin-bottom: 20px;">
-                @if($registration->checked_in_at)
-                <div class="time-card">
-                    <div class="time-icon in"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
-                    <div>
-                        <div class="time-label">Time In</div>
-                        <div class="time-value">{{ $registration->checked_in_at->format('h:i:s A') }}</div>
-                        <div style="font-size: 0.75rem; color: #64748b;">{{ $registration->checked_in_at->format('D, M d Y') }}</div>
-                    </div>
-                </div>
-                @endif
-                @if($registration->checked_out_at)
-                <div class="time-card out">
-                    <div class="time-icon out"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
-                    <div>
-                        <div class="time-label">Time Out</div>
-                        <div class="time-value">{{ $registration->checked_out_at->format('h:i:s A') }}</div>
-                        <div style="font-size: 0.75rem; color: #64748b;">{{ $registration->checked_out_at->format('D, M d Y') }}</div>
-                    </div>
-                </div>
-                @endif
-            </div>
             @endif
 
-            {{-- Action Buttons (Public - No Login Required) --}}
-            <div style="margin-top: 10px;">
-                @if($isExpired)
-                    <div class="action-btn btn-disabled">
-                        <i class="fa-solid fa-lock"></i> VERIFICATION DISABLED
-                    </div>
-                @elseif(!$registration->attended || $registration->status === 'Checked-Out')
-                    {{-- Show CHECK-IN button --}}
-                    <form action="{{ route('public.attendance.update', $registration->ticket_id) }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="action" value="check_in">
-                        <button type="submit" class="action-btn btn-checkin">
-                            <i class="fa-solid fa-arrow-right-to-bracket" style="font-size: 1.3rem;"></i>
-                            MARK ATTENDANCE - CHECK IN
-                        </button>
-                    </form>
-                @elseif($registration->attended && $registration->status !== 'Checked-Out')
-                    {{-- Already checked in - show success and CHECK-OUT --}}
-                    <button class="action-btn btn-disabled" disabled>
-                        <i class="fa-solid fa-check-double"></i>
-                        ✅ ATTENDED (CHECKED IN)
-                    </button>
-                    <form action="{{ route('public.attendance.update', $registration->ticket_id) }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="action" value="check_out">
-                        <button type="submit" class="action-btn btn-checkout">
-                            <i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 1.3rem;"></i>
-                            MARK DEPARTURE - CHECK OUT
-                        </button>
-                    </form>
-                @endif
-            </div>
-
-            {{-- Footer --}}
-            <div style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
-                <p style="font-size: 0.75rem; color: #94a3b8; margin: 0;">
-                    <i class="fa-solid fa-shield-halved"></i> Secure Attendance System &bull; {{ config('app.name') }}
-                </p>
+            <div style="text-align: center; margin-top: 30px;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #475569; letter-spacing: 2px;">
+                    QUANTUM VERIFICATION SYSTEM &bull; v2.4
+                </span>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-focus PIN if not authorized
+        const pinInput = document.querySelector('.pin-input-field');
+        if(pinInput) pinInput.focus();
+
+        // Add scanning class if checking in
+        @if(!$registration->attended && !$isExpired)
+            document.querySelector('.futuristic-scanner-card').classList.add('active-scanning');
+        @endif
+    });
+</script>
 @endsection

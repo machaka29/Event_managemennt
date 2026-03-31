@@ -21,7 +21,7 @@
         <div class="responsive-grid" style="margin-bottom: 40px;">
             <div class="form-group">
                 <label for="name" style="display: block; font-weight: bold; margin-bottom: 8px; color: #444;">Full Name</label>
-                <input type="text" name="name" id="name" required value="{{ old('name', $organizer->name) }}" placeholder="e.g. John Doe"
+                <input type="text" name="name" id="name" required value="{{ old('name', $organizer->name) }}" placeholder=""
                     pattern="^[a-zA-Z\s.-]+$" title="Name should only contain letters, spaces, dots or hyphens"
                     style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; box-sizing: border-box;"
                     onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
@@ -57,11 +57,13 @@
 
             <div class="form-group">
                 <label for="password" style="display: block; font-weight: bold; margin-bottom: 8px; color: #444;">Change Password (Optional)</label>
-                <div style="position: relative;">
+                <div class="password-container">
                     <input type="password" name="password" id="password" placeholder="Leave blank to keep current"
-                        style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; box-sizing: border-box;"
+                        style="width: 100%; padding: 14px 45px 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; transition: 0.3s; box-sizing: border-box;"
                         onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
-                    <i class="fa-solid fa-lock" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #ccc;"></i>
+                    <span class="password-toggle" onclick="togglePassword('password', 'toggleEditPassIcon')">
+                        <i class="fa-solid fa-eye" id="toggleEditPassIcon"></i>
+                    </span>
                 </div>
                 @error('password') <p class="text-error" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ $message }}</p> @enderror
             </div>

@@ -9,6 +9,19 @@
 @section('title', 'Organizer Dashboard - EmCa Techonologies')
 
 @section('content')
+<style>
+    @media (max-width: 768px) {
+        .hide-mobile { display: none !important; }
+        .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+        .stats-grid .card { padding: 15px !important; }
+        .stats-grid .card div { font-size: 1.5rem !important; }
+    }
+    @keyframes pulse {
+        0% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(0.95); opacity: 0.8; }
+    }
+</style>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 20px;">
         <div style="display: flex; align-items: center; gap: 1.5rem;">
             @if(auth()->user()->profile_image)
@@ -73,23 +86,23 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: var(--corporate-red); color: white;">
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Event Name</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Date</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Location</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Attendance</th>
-                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800;">Status</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; text-align: left;">Event Name</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; text-align: left;" class="hide-mobile">Date</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; text-align: left;" class="hide-mobile">Location</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; text-align: center;">Reg</th>
+                            <th style="padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; text-align: center;">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($upcomingEvents as $event)
                             <tr style="border-bottom: 1px solid #f1f5f9;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
                                 <td style="padding: 18px 20px; font-weight: 700; color: #1e293b;">{{ $event->title }}</td>
-                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
-                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->location }}</td>
-                                <td style="padding: 18px 20px; color: #475569; font-size: 0.9rem;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
-                                <td style="padding: 18px 20px;">
-                                    <span style="color: #166534; font-weight: 800; font-size: 0.75rem; background: #f0fdf4; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
-                                        <i class="fa-solid fa-clock"></i> Upcoming
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.85rem;" class="hide-mobile">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.85rem;" class="hide-mobile">{{ $event->location }}</td>
+                                <td style="padding: 18px 20px; color: #475569; font-size: 0.85rem; text-align: center;">{{ $event->registrations_count }}/{{ $event->capacity }}</td>
+                                <td style="padding: 18px 20px; text-align: center;">
+                                    <span style="color: #059669; font-weight: 900; font-size: 0.65rem; background: #ecfdf5; border: 1.5px solid #d1fae5; padding: 4px 12px; border-radius: 30px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.05); white-space: nowrap;">
+                                        <span style="width: 6px; height: 6px; background: #059669; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> ACTIVE
                                     </span>
                                 </td>
                             </tr>

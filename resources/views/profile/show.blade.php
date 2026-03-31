@@ -23,7 +23,6 @@
         .profile-summary-card { padding: 30px !important; }
     }
 </style>
-</div>
 
 @if (session('status'))
     <div style="background: #FFF5F5; border-left: 5px solid var(--corporate-red); color: var(--corporate-red); padding: 15px 25px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; display: flex; align-items: center; gap: 12px;">
@@ -51,6 +50,9 @@
         <p style="color: #666; margin: 10px 0 0; font-size: 0.95rem;">{{ $user->email }}</p>
         @if($user->phone)
             <p style="color: #888; margin: 5px 0 0; font-size: 0.95rem;">{{ $user->phone }}</p>
+        @endif
+        @if($user->organization)
+            <p style="color: #333; margin: 10px 0 0; font-size: 0.95rem; font-weight: 700;"><i class="fa-solid fa-briefcase" style="color: var(--corporate-red); margin-right: 5px;"></i> {{ $user->organization }}</p>
         @endif
     </div>
 
@@ -90,6 +92,14 @@
                     @error('phone') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
 
+                <div style="margin-bottom: 25px;">
+                    <label for="organization" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Organization Name</label>
+                    <input type="text" name="organization" id="organization" value="{{ old('organization', $user->organization) }}" 
+                        placeholder="e.g. Acme Corp"
+                        style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    @error('organization') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
+                </div>
+
                 <div style="margin-bottom: 30px;">
                     <label for="profile_image" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Profile Picture</label>
                     <div style="border: 2px dashed #ccc; border-radius: 10px; padding: 20px; text-align: center; background: #fafafa;">
@@ -112,19 +122,34 @@
 
                 <div style="margin-bottom: 25px;">
                     <label for="current_password" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Current Password</label>
-                    <input type="password" name="current_password" id="current_password" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    <div class="password-container">
+                        <input type="password" name="current_password" id="current_password" required style="width: 100%; padding: 14px 45px 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                        <span class="password-toggle" onclick="togglePassword('current_password', 'toggleCurrentIcon')">
+                            <i class="fa-solid fa-eye" id="toggleCurrentIcon"></i>
+                        </span>
+                    </div>
                     @error('current_password') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
 
                 <div style="margin-bottom: 25px;">
                     <label for="password" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">New Password</label>
-                    <input type="password" name="password" id="password" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    <div class="password-container">
+                        <input type="password" name="password" id="password" required style="width: 100%; padding: 14px 45px 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                        <span class="password-toggle" onclick="togglePassword('password', 'toggleNewIcon')">
+                            <i class="fa-solid fa-eye" id="toggleNewIcon"></i>
+                        </span>
+                    </div>
                     @error('password') <p style="color: var(--corporate-red); margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">{{ $message }}</p> @enderror
                 </div>
 
                 <div style="margin-bottom: 30px;">
                     <label for="password_confirmation" style="display: block; font-weight: 700; color: #333; margin-bottom: 8px;">Confirm New Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" required style="width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                    <div class="password-container">
+                        <input type="password" name="password_confirmation" id="password_confirmation" required style="width: 100%; padding: 14px 45px 14px 20px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; font-family: inherit; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--corporate-red)'" onblur="this.style.borderColor='#eee'">
+                        <span class="password-toggle" onclick="togglePassword('password_confirmation', 'toggleConfirmIcon')">
+                            <i class="fa-solid fa-eye" id="toggleConfirmIcon"></i>
+                        </span>
+                    </div>
                 </div>
 
                 <button type="submit" style="background: var(--corporate-red); color: white; border: none; padding: 14px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(148,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Update Password</button>

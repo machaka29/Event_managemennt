@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Register New Member - EmCa TECHONOLOGY')
+@section('title', 'Register New Member - EmCa Techonologies')
 
 @section('content')
 <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--corporate-red); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
@@ -20,7 +20,7 @@
         <div class="responsive-grid" style="margin-bottom: 30px; gap: 20px;">
             <div class="form-group">
                 <label for="full_name" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.8rem;">Full Name</label>
-                <input type="text" name="full_name" id="full_name" class="form-control" required value="{{ old('full_name') }}" placeholder="e.g. John Doe"
+                <input type="text" name="full_name" id="full_name" class="form-control" required value="{{ old('full_name') }}" placeholder=""
                     style="width: 100%; padding: 15px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc;"
                     onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
                 @error('full_name') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 5px; font-weight: 600;">{{ $message }}</p> @enderror

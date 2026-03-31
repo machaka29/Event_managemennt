@@ -98,7 +98,7 @@
 
 @push('scripts')
 <script>
-    document.getElementById('tableSearch').addEventListener('keyup', function() {
+    document.getElementById('tableSearch').addEventListener('input', function() {
         let searchTerm = this.value.toLowerCase();
         let table = document.getElementById('mainTable');
         let rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');

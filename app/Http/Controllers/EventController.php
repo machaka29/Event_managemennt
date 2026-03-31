@@ -61,6 +61,52 @@ class EventController extends Controller
         ));
     }
 
+    public function search(Request $request)
+    {
+        $query = trim($request->input('query'));
+        $user = auth()->user();
+        
+        if (!$query) {
+            return redirect()->route('dashboard');
+        }
+
+        $lowQuery = strtolower($query);
+        $myEventIds = $user->events()->pluck('id');
+
+        // Events Search (Scoped to Organizer)
+        if (in_array($lowQuery, ['event', 'events'])) {
+            $events = $user->events()->with(['registrations.attendee'])->latest()->get();
+        } else {
+            $events = $user->events()->with(['registrations.attendee'])
+                ->where(function($q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%")
+                      ->orWhere('description', 'like', "%{$query}%")
+                      ->orWhere('location', 'like', "%{$query}%");
+                })
+                ->latest()
+                ->get();
+        }
+
+        // Attendees Search (Scoped to Organizer's Events)
+        if (in_array($lowQuery, ['attendee', 'attendees', 'member', 'members'])) {
+            $attendeeIds = \App\Models\Registration::whereIn('event_id', $myEventIds)->pluck('attendee_id')->unique();
+            $attendees = \App\Models\Attendee::whereIn('id', $attendeeIds)->latest()->get();
+        } else {
+            $attendeeIds = \App\Models\Registration::whereIn('event_id', $myEventIds)->pluck('attendee_id')->unique();
+            $attendees = \App\Models\Attendee::whereIn('id', $attendeeIds)
+                ->where(function($q) use ($query) {
+                    $q->where('full_name', 'like', "%{$query}%")
+                      ->orWhere('email', 'like', "%{$query}%")
+                      ->orWhere('phone', 'like', "%{$query}%")
+                      ->orWhere('organization', 'like', "%{$query}%")
+                      ->orWhere('access_code', 'like', "%{$query}%");
+                })
+                ->latest()
+                ->get();
+        }
+
+        return view('organizer.search', compact('events', 'attendees', 'query'));
+    }
     public function create()
     {
         return view('events.create');
@@ -80,6 +126,7 @@ class EventController extends Controller
             'image' => 'nullable|image|max:2048',
             'reg_start_date' => 'required|date|before_or_equal:date',
             'reg_end_date' => 'required|date|after_or_equal:reg_start_date|before_or_equal:date',
+            'gate_password' => 'required|string|min:4',
         ]);
 
         if ($request->hasFile('image')) {
@@ -119,6 +166,7 @@ class EventController extends Controller
             'image' => 'nullable|image|max:2048',
             'reg_start_date' => 'required|date|before_or_equal:date',
             'reg_end_date' => 'required|date|after_or_equal:reg_start_date|before_or_equal:date',
+            'gate_password' => 'required|string|min:4',
         ]);
 
         if ($request->hasFile('image')) {

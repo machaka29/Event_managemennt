@@ -8,6 +8,7 @@ class Event extends Model
 {
     protected $fillable = [
         'title',
+        'slug',
         'description',
         'date',
         'time',
@@ -20,7 +21,8 @@ class Event extends Model
         'status',
         'category_id',
         'venue',
-        'target_audience'
+        'target_audience',
+        'gate_password'
     ];
 
     public function category()
@@ -36,5 +38,23 @@ class Event extends Model
     public function registrations()
     {
         return $this->hasMany(Registration::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($event) {
+            if (empty($event->slug)) {
+                $slug = \Illuminate\Support\Str::slug($event->title);
+                $originalSlug = $slug;
+                $count = 1;
+                while (static::where('slug', $slug)->where('id', '!=', $event->id)->exists()) {
+                    $slug = $originalSlug . '-' . $count;
+                    $count++;
+                }
+                $event->slug = $slug;
+            }
+        });
     }
 }

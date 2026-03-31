@@ -4,35 +4,99 @@
 
 @section('content')
 <!-- SECTION: PREMIUM HEADER -->
-<div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);" class="page-header">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-        <div style="flex: 1; min-width: 250px;">
-            <h1 style="font-size: 1.8rem; color: #333; margin: 0; font-weight: 800; letter-spacing: -0.5px; text-transform: none;">
-                All Events
-            </h1>
-            <div style="width: 50px; height: 4px; background: var(--corporate-red); margin-top: 10px; border-radius: 2px;"></div>
-            <p style="font-size: 1rem; color: #666; margin-top: 12px; font-weight: 500;">Manage all your event listings and organize attendees.</p>
+<div class="dashboard-header-premium animate-up">
+    <div class="header-main-row">
+        <div class="header-text">
+            <h1 class="page-title">Event Operations Hub</h1>
+            <p class="page-subtitle">Strategize, monitor, and manage your full portfolio of events.</p>
         </div>
-        <div style="flex: 1; min-width: 200px; text-align: right;" class="header-actions">
-            <a href="{{ route('events.create') }}" class="btn btn-primary" style="width: auto; min-width: 200px;">
-                <i class="fa-solid fa-plus-circle"></i> CREATE NEW EVENT
+        <div class="header-actions">
+            <a href="{{ route('events.create') }}" class="btn-create-premium">
+                <i class="fa-solid fa-plus"></i> CREATE EVENT
             </a>
+        </div>
+    </div>
+    
+    <div class="header-stats-row mt-4">
+        <div class="h-stat-card">
+            <div class="h-stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="h-stat-data">
+                <div class="h-stat-num">{{ $events->total() }}</div>
+                <div class="h-stat-label">Total Events</div>
+            </div>
+        </div>
+        <div class="h-stat-card">
+            <div class="h-stat-icon" style="color: #16a34a; background: #f0fdf4;"><i class="fa-solid fa-users"></i></div>
+            <div class="h-stat-data">
+                <div class="h-stat-num">{{ $events->sum('registrations_count') }}</div>
+                <div class="h-stat-label">Total Registrations</div>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
+    .dashboard-header-premium { background: white; border-bottom: 4px solid var(--corporate-red); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .header-main-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .page-title { font-size: 2rem; font-weight: 900; color: #0f172a; margin: 0; letter-spacing: -0.025em; }
+    .page-subtitle { color: #64748b; font-size: 1rem; margin-top: 8px; font-weight: 500; }
+    
+    .btn-create-premium { background: var(--corporate-red); color: white; border-radius: 12px; padding: 14px 28px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(148,0,0,0.25); }
+    .btn-create-premium:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(148,0,0,0.3); color: white; }
+
+    .header-stats-row { display: flex; gap: 24px; flex-wrap: wrap; }
+    .h-stat-card { display: flex; align-items: center; gap: 16px; background: #f8fafc; padding: 12px 20px; border-radius: 12px; border: 1px solid #f1f5f9; min-width: 220px; }
+    .h-stat-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--accent-soft-red); color: var(--corporate-red); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .h-stat-num { font-size: 1.25rem; font-weight: 900; color: #0f172a; }
+    .h-stat-label { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .premium-table-card { background: white; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); overflow: hidden; }
+    .table-header-strip { padding: 20px 24px; border-bottom: 1px solid #f1f5f9; background: #fafbfc; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    
+    .search-input-wrapper { position: relative; width: 300px; }
+    .search-input-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+    .search-input-wrapper input { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 15px 10px 42px; font-size: 0.9rem; outline: none; transition: 0.2s; }
+    .search-input-wrapper input:focus { border-color: var(--corporate-red); box-shadow: 0 0 0 4px var(--accent-soft-red); }
+
+    .premium-table { width: 100%; border-collapse: collapse; }
+    .premium-table th { padding: 18px 24px; background: var(--corporate-red); text-align: left; font-size: 0.75rem; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: none; }
+    .premium-table td { padding: 20px 24px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; transition: 0.2s; }
+    .premium-table tr:hover td { background-color: #fcfcfc; }
+
+    .event-info-cell h3 { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; }
+    .event-meta-info { display: flex; align-items: center; gap: 15px; font-size: 0.85rem; color: #64748b; }
+    .event-meta-info span { display: flex; align-items: center; gap: 6px; }
+    .event-meta-info i { color: #cbd5e1; }
+
+    .status-pill { padding: 6px 14px; border-radius: 30px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid transparent; }
+    .status-pill.active { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+    .status-pill.pending { background: #fefce8; color: #a16207; border-color: #fef08a; }
+
+    .reg-counter { text-align: center; }
+    .count-main { font-size: 1.25rem; font-weight: 900; color: #0f172a; display: block; }
+    .count-sub { font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
+
+    .table-action-btns { display: flex; gap: 8px; justify-content: flex-end; }
+    .action-btn-circle { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; color: #64748b; text-decoration: none; transition: 0.2s; background: white; }
+    .action-btn-circle:hover { border-color: var(--corporate-red); color: var(--corporate-red); transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .btn-delete:hover { border-color: #ef4444; color: #ef4444; background: #fef2f2; }
+
+    .animate-up { animation: fadeInUp 0.5s ease-out both; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse {
+        0% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
     @media (max-width: 768px) {
-        .page-header { padding: 15px !important; }
-        .page-header h1 { font-size: 1.25rem !important; }
-        .page-header p { font-size: 0.85rem !important; }
-        .header-actions { text-align: left !important; width: 100%; }
-        .header-actions .btn { width: 100% !important; min-width: 100% !important; }
-        
-        .col-stats { width: 60px !important; padding: 10px 5px !important; }
-        .hide-mobile { display: none !important; }
-        .stat-value { font-size: 0.95rem !important; }
-        .stat-label { font-size: 0.55rem !important; }
+        .dashboard-header-premium { padding: 1.25rem; }
+        .page-title { font-size: 1.5rem; }
+        .header-stats-row { gap: 12px; }
+        .h-stat-card { min-width: 100%; }
+        .search-input-wrapper { width: 100%; order: 2; }
+        .premium-table th:nth-child(3), .premium-table td:nth-child(3),
+        .premium-table th:nth-child(4), .premium-table td:nth-child(4) { display: none; }
     }
 </style>
 
@@ -43,70 +107,68 @@
 @endif
 
 <!-- SECTION: EVENTS LISTING -->
-<div style="background: white; border: 1px solid #eee; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; width: 100%;">
-    <div style="padding: 20px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; flex-wrap: wrap; gap: 10px;">
-        <h2 style="margin: 0; font-size: 1.15rem; color: #333; font-weight: 700;">Active & Past Events</h2>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="position: relative;">
-                <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem;"></i>
-                <input type="text" id="tableSearch" placeholder="Search events..." style="padding: 8px 15px 8px 35px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8rem; outline: none; width: 250px; transition: all 0.2s;" onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 3px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-            </div>
-            <div style="font-size: 0.85rem; color: #888; font-weight: 600;">Total: {{ $events->total() }}</div>
+<div class="premium-table-card animate-up" style="animation-delay: 0.2s;">
+    <div class="table-header-strip">
+        <h2 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #0f172a;">Active & Past Experiences</h2>
+        <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="tableSearch" placeholder="Filter by event name or location...">
         </div>
     </div>
     
     <div class="table-responsive">
-        <table style="width: 100%; border-collapse: collapse;">
+        <table class="premium-table">
             <thead>
-                <tr style="background: var(--corporate-red); color: white;">
-                    <th style="padding: 15px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Event Details</th>
-                    <th style="padding: 15px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;" class="col-status">Status</th>
-                    <th style="padding: 15px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;" class="col-stats">Reg.</th>
-                    <th style="padding: 15px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;" class="col-stats">Cap.</th>
-                    <th style="padding: 15px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;" class="col-action">Action</th>
+                <tr>
+                    <th>Event Blueprint</th>
+                    <th>Status</th>
+                    <th style="text-align: center;">Engagement</th>
+                    <th style="text-align: center;">Capacity</th>
+                    <th style="text-align: right;">Operations</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($events as $event)
-                    <tr style="border-bottom: 1px solid #f1f1f1; transition: all 0.2s;" onmouseover="this.style.background='#fdfdfd'" onmouseout="this.style.background='white'">
-                        <td style="padding: 20px 25px;">
-                            <div style="font-weight: 700; color: #1a1a1a; font-size: 1.1rem; margin-bottom: 5px;">{{ $event->title }}</div>
-                            <div style="color: #666; font-size: 0.85rem; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                <span><i class="fa-solid fa-calendar-day" style="width: 16px; color: #999;"></i> {{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</span>
-                                <span><i class="fa-solid fa-location-dot" style="width: 16px; color: #999;"></i> {{ $event->location }}</span>
+                    <tr>
+                        <td class="event-info-cell">
+                            <h3>{{ $event->title }}</h3>
+                            <div class="event-meta-info">
+                                <span><i class="fa-regular fa-calendar"></i> {{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</span>
+                                <span><i class="fa-regular fa-clock"></i> {{ \Carbon\Carbon::parse($event->time)->format('h:i A') }}</span>
+                                <span><i class="fa-solid fa-location-dot"></i> {{ \Illuminate\Support\Str::limit($event->location, 30) }}</span>
                             </div>
                         </td>
-                        <td style="padding: 20px 25px; text-align: center;" class="col-status">
+                        <td>
                             @if($event->status === 'approved')
-                                <span style="background: var(--accent-soft-red); color: var(--corporate-red); padding: 5px 12px; border-radius: 30px; font-weight: 700; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--corporate-red);" class="status-badge">
-                                    <i class="fa-solid fa-circle-check"></i> <span class="hide-mobile">ACTIVE</span>
+                                <span class="status-pill active" style="font-weight: 900; background: #ecfdf5; color: #059669; border: 1.5px solid #d1fae5; border-radius: 30px; padding: 6px 14px; gap: 8px; display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.05);">
+                                    <span style="width: 6px; height: 6px; background: #059669; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> ACTIVE
                                 </span>
                             @else
-                                <span style="background: #fafafa; color: #666; padding: 5px 12px; border-radius: 30px; font-weight: 700; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #eee;" class="status-badge">
-                                    <i class="fa-solid fa-clock"></i> <span class="hide-mobile">PENDING</span>
+                                <span class="status-pill pending">
+                                    <i class="fa-solid fa-clock"></i> PENDING
                                 </span>
                             @endif
                         </td>
-                        <td style="padding: 20px 25px; text-align: center;" class="col-stats">
-                            <div style="font-size: 1.2rem; font-weight: 800; color: #333;" class="stat-value">{{ $event->registrations_count }}</div>
-                            <div style="font-size: 0.65rem; color: #999; margin-top: 4px; text-transform: uppercase; font-weight: bold;" class="stat-label">Reg</div>
+                        <td class="reg-counter">
+                            <span class="count-main">{{ $event->registrations_count }}</span>
+                            <span class="count-sub">Registered</span>
                         </td>
-                        <td style="padding: 20px 25px; text-align: center;" class="col-stats">
-                            <div style="font-size: 1.2rem; font-weight: 800; color: #666;" class="stat-value">{{ $event->capacity }}</div>
-                            <div style="font-size: 0.65rem; color: #999; margin-top: 4px; text-transform: uppercase; font-weight: bold;" class="stat-label">Cap</div>
+                        <td class="reg-counter">
+                            <span class="count-main">{{ $event->capacity }}</span>
+                            <span class="count-sub">Total Slots</span>
                         </td>
-                        <td style="padding: 20px 25px; text-align: right;">
-                            <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                                <a href="{{ route('events.show', $event->id) }}" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: var(--corporate-red); border-radius: 8px; text-decoration: none; border: 1px solid #eee; transition: all 0.3s;" title="View Detail">
-                                    <i class="fa-solid fa-eye" style="font-size: 0.9rem;"></i>
+                        <td>
+                            <div class="table-action-btns">
+                                <a href="{{ route('events.show', $event->id) }}" class="action-btn-circle" title="View Attendees" style="background: var(--accent-soft-red); color: var(--corporate-red); border-color: var(--corporate-red);">
+                                    <i class="fa-solid fa-eye"></i>
                                 </a>
-                                <a href="{{ route('events.edit', $event->id) }}" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: #333; border-radius: 8px; text-decoration: none; border: 1px solid #eee; transition: all 0.3s;" title="Edit Event">
-                                    <i class="fa-solid fa-pencil" style="font-size: 0.9rem;"></i>
+                                <a href="{{ route('events.edit', $event->id) }}" class="action-btn-circle" title="Edit Event" style="background: #f8fafc;">
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Wait! Are you sure you want to delete this event? This action cannot be undone.');">
+                                <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('WARNING: You are about to delete an entire event. This will revoke all registration access. Proceed?');">
                                     @csrf @method('DELETE')
-                                    <button type="submit" style="width: 36px; height: 36px; border: none; background: #FFF5F5; color: var(--corporate-red); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" title="Delete">
-                                        <i class="fa-solid fa-trash-can" style="font-size: 0.9rem;"></i>
+                                    <button type="submit" class="action-btn-circle btn-delete" title="Delete">
+                                        <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
                             </div>
@@ -114,15 +176,23 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" style="padding: 80px; text-align: center; color: #bbb;">
-                            <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;"><i class="fa-solid fa-calendar-minus"></i></div>
-                            <div style="font-size: 1.1rem; font-weight: 600;">No events found in your account.</div>
+                        <td colspan="5" style="padding: 100px 20px; text-align: center;">
+                            <div style="font-size: 3.5rem; color: #f1f5f9; margin-bottom: 20px;"><i class="fa-solid fa-calendar-xmark"></i></div>
+                            <h4 style="color: #64748b; font-weight: 700;">No Event History Found</h4>
+                            <p style="color: #94a3b8; font-size: 0.9rem;">Start by creating your first experience today.</p>
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+    
+    @if($events->hasPages())
+        <div style="padding: 20px 24px; border-top: 1px solid #f1f5f9; background: #fafbfc;">
+            {{ $events->links() }}
+        </div>
+    @endif
+</div>
     
     @if($events->hasPages())
         <div style="padding: 25px 35px; border-top: 1px solid #eee; background: #fafafa;">
@@ -139,9 +209,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('tableSearch');
     if (searchInput) {
-        searchInput.addEventListener('keyup', function() {
+        searchInput.addEventListener('input', function() {
             const filter = this.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr');
+            const rows = document.querySelectorAll('tbody tr:not(.empty-row)');
             
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();

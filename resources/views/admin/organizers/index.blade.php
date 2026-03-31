@@ -37,11 +37,11 @@
         <table style="width: 100%; border-collapse: collapse; min-width: 700px;">
             <thead>
                 <tr style="background: var(--corporate-red); color: white;">
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Name</th>
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Email</th>
-                    <th style="padding: 12px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Events</th>
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Joined</th>
-                    <th style="padding: 12px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Actions</th>
+                    <th style="padding: 15px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Name</th>
+                    <th style="padding: 15px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Email</th>
+                    <th style="padding: 15px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Events</th>
+                    <th style="padding: 15px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Joined</th>
+                    <th style="padding: 15px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,7 +56,7 @@
                         <td style="padding: 14px 25px; text-align: right;">
                             <div style="display: flex; justify-content: flex-end; gap: 8px;">
                                 <a href="{{ route('admin.organizers.edit', $org->id) }}" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: #475569; border-radius: 8px; text-decoration: none; border: 1px solid #eee; transition: all 0.3s;" title="Edit Organizer" onmouseover="this.style.background='#f1f5f9'; this.style.color='var(--corporate-red)'; this.style.borderColor='var(--corporate-red)';" onmouseout="this.style.background='#f9f9f9'; this.style.color='#475569'; this.style.borderColor='#eee';">
-                                    <i class="fa-solid fa-pencil" style="font-size: 0.85rem;"></i>
+                                    <i class="fa-solid fa-pen-to-square" style="font-size: 0.85rem;"></i>
                                 </a>
                                 <form action="{{ route('admin.organizers.destroy', $org->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove this organizer?');">
                                     @csrf @method('DELETE')
@@ -82,9 +82,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('tableSearch');
     if (searchInput) {
-        searchInput.addEventListener('keyup', function() {
+        searchInput.addEventListener('input', function() {
             const filter = this.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr');
+            const rows = document.querySelectorAll('tbody tr:not(.empty-row)');
             
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();

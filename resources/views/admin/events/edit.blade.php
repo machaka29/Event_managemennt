@@ -81,7 +81,34 @@
                 <input type="date" name="reg_end_date" id="reg_end_date" class="form-control" value="{{ old('reg_end_date', $event->reg_end_date) }}" required>
                 @error('reg_end_date') <p class="text-error">{{ $message }}</p> @enderror
             </div>
+            <div class="form-group" style="padding: 20px; background: #fff5f5; border-radius: 8px; border: 1px solid #f9dcdc;">
+                <label for="gate_password" style="color: var(--corporate-red); font-weight: 800; font-size: 0.85rem; text-transform: uppercase;">Gate Security Password</label>
+                <div style="position: relative; margin-top: 10px;">
+                    <input type="password" name="gate_password" id="gate_password" class="form-control" value="{{ old('gate_password', $event->gate_password) }}" required placeholder="PIN or Password for gate security">
+                    <button type="button" onclick="toggleGatePassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #666;">
+                        <i class="fa-solid fa-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+                <p style="margin-top: 8px; font-size: 0.75rem; color: #64748b; font-weight: 600;">
+                    <i class="fa-solid fa-shield-halved"></i> Walinzi mlangoni watatumia nenosiri hili ili kuruhusu Check-In/Out.
+                </p>
+                @error('gate_password') <p class="text-error">{{ $message }}</p> @enderror
+            </div>
         </div>
+
+        <script>
+            function toggleGatePassword() {
+                const passInput = document.getElementById('gate_password');
+                const toggleIcon = document.getElementById('toggleIcon');
+                if (passInput.type === 'password') {
+                    passInput.type = 'text';
+                    toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    passInput.type = 'password';
+                    toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            }
+        </script>
 
         <div style="border-top: 1px solid #eee; padding-top: 30px; display: flex; justify-content: flex-end; gap: 15px;">
             <a href="{{ route('admin.events.index') }}" class="btn" style="background: #f5f5f5; color: #666; border: none; padding: 12px 30px; border-radius: 6px; font-weight: bold; text-decoration: none;">CANCEL</a>

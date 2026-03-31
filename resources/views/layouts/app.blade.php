@@ -85,6 +85,30 @@
             .mobile-menu-toggle { display: flex; }
             .site-title { font-size: 1.1rem !important; }
         }
+
+        /* Password Toggle Styles */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 5px;
+        }
+        .password-toggle:hover {
+            color: var(--corporate-red);
+        }
     </style>
 </head>
 <body>
@@ -139,6 +163,20 @@
             const menu = document.getElementById('mobileMenu');
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
+
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
     </script>
 
     <main>
@@ -175,7 +213,7 @@
                 </div>
             </div>
             <div style="border-top: 1px solid #f1f5f9; padding-top: 30px; text-align: center;">
-                <p style="color: #94a3b8; font-size: 0.85rem;">&copy; {{ date('Y') }} Event Registration System. All rights reserved. Powered by <span style="color: var(--corporate-red); font-weight: 700;">EmCa Technologies</span></p>
+                <p style="color: #94a3b8; font-size: 0.85rem;">&copy; {{ date('Y') }} Event Registration System. All rights reserved. Powered by <span style="color: var(--corporate-red); font-weight: 700;">EmCa Techonologies</span></p>
             </div>
         </div>
     </footer>

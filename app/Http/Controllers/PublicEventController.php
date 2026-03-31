@@ -86,7 +86,7 @@ class PublicEventController extends Controller
             $icon = $event->category->icon ?? 'fa-calendar-day';
             $categoryName = $event->category->name ?? 'Event';
             $date = \Carbon\Carbon::parse($event->date)->format('D, M d, Y');
-            $detailUrl = route('events.public.show', $event->id);
+            $detailUrl = route('events.public.show', $event->slug);
             
             $imageHtml = $imageUrl 
                 ? '<img src="'.$imageUrl.'" alt="'.htmlspecialchars($event->title).'" style="width: 100%; height: 100%; object-fit: cover;">'
@@ -131,15 +131,15 @@ class PublicEventController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $event = Event::findOrFail($id);
+        $event = Event::where('slug', $slug)->firstOrFail();
         return view('public.events.show', compact('event'));
     }
 
-    public function register(Request $request, $id)
+    public function register(Request $request, $slug)
     {
-        $event = Event::findOrFail($id);
+        $event = Event::where('slug', $slug)->firstOrFail();
 
         // check capacity
         if ($event->registrations()->count() >= $event->capacity) {
@@ -163,7 +163,7 @@ class PublicEventController extends Controller
             'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|email|max:255',
             'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
-            'organization' => 'nullable|string|max:255',
+            'organization' => ['nullable', 'string', 'max:255', 'regex:/[a-zA-Z]/'],
         ]);
 
         // Standardize Attendee (find by email OR phone)
@@ -190,12 +190,13 @@ class PublicEventController extends Controller
 
         // check duplicate registration for this specific event (Strict: both attendee identity and inputs)
         $duplicate = Registration::where('event_id', $event->id)
-            ->where(function($q) use ($attendee, $request) {
-                $q->where('attendee_id', $attendee->id);
+            ->whereHas('attendee', function($q) use ($request) {
+                $q->where('email', $request->email)
+                  ->orWhere('phone', $request->phone);
             })->exists();
 
         if ($duplicate) {
-            return back()->with('error', 'You (or this phone/email) are already registered for this event.');
+            return back()->with('error', 'Samahani, taarifa hizi (Email au Namba ya Simu) tayari zimeshatumika kujisajili kwenye tukio hili.');
         }
 
         $ticket_id = 'EmCa-' . strtoupper(Str::random(5)) . '-26';
@@ -251,23 +252,40 @@ class PublicEventController extends Controller
         $qrCodeContent = @file_get_contents($qrUrl);
         $qrCodeBase64 = $qrCodeContent ? base64_encode($qrCodeContent) : '';
         
-        $pdf = Pdf::loadView('public.events.ticket_pdf', compact('registration', 'qrCodeBase64'))
+        // Logo Base64 for PDF
+        $logoPath = public_path('EmCa-Logo.png');
+        $logoBase64 = '';
+        if (file_exists($logoPath)) {
+            $logoData = file_get_contents($logoPath);
+            $logoBase64 = base64_encode($logoData);
+        }
+        
+        $pdf = Pdf::loadView('public.events.ticket_pdf', compact('registration', 'qrCodeBase64', 'logoBase64'))
                   ->setPaper('a4')
                   ->setOption(['isRemoteEnabled' => true, 'defaultFont' => 'sans-serif']);
         
-        $fileName = 'Ticket-' . $registration->ticket_code . '.pdf';
+        $fileName = 'Ticket-' . $registration->ticket_id . '.pdf';
         
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"')
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->header('Pragma', 'no-cache')
-            ->header('Expires', '0');
+            ->header('Expires', '0')
+            ->header('X-Content-Type-Options', 'nosniff')
+            ->header('Content-Security-Policy', "default-src 'self'");
     }
 
-    public function verifyTicket($ticket_id)
+    public function verifyTicket(Request $request, $ticket_id)
     {
         $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
+        
+        // Let organizers or guards explicitly lock the scanner (forget the PIN)
+        if ($request->has('reset')) {
+            session()->forget('gate_pass_' . $registration->event->id);
+            return redirect()->route('events.public.verify', $ticket_id)->with('success', '🔒 Scanner session locked. PIN is now required.');
+        }
+
         $isExpired = $registration->event->date < (now()->toDateString());
         
         // Support JSON response for scanner apps or direct data access
@@ -295,12 +313,22 @@ class PublicEventController extends Controller
         return view('public.events.verify', compact('registration', 'isExpired'));
     }
 
-    /**
-     * Public attendance marking (for guards/scanners - no login required)
-     */
     public function markPublicAttendance(Request $request, $ticket_id)
     {
         $registration = Registration::with(['attendee', 'event'])->where('ticket_id', $ticket_id)->firstOrFail();
+        $event = $registration->event;
+
+        // Security Check: Use Event-Specific Gate Password
+        $sessionKey = 'gate_pass_' . $event->id;
+        $isAuthorized = session($sessionKey) === true;
+
+        if (!$isAuthorized) {
+            if ($request->gate_password === $event->gate_password) {
+                session([$sessionKey => true]);
+            } else {
+                return back()->with('error', '❌ Nenosiri la Gate si Sahihi (Incorrect Password).');
+            }
+        }
 
         // Prevent attendance for past events
         if ($registration->event->date < now()->toDateString()) {

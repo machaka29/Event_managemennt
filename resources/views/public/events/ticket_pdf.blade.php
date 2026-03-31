@@ -2,89 +2,324 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket - {{ $registration->attendee->access_code }}</title>
+    <title>Ticket - {{ $registration->ticket_id }}</title>
     <style>
-        body { font-family: 'Helvetica', 'Arial', sans-serif; color: #333; margin: 0; padding: 0; }
-        .ticket-container { width: 100%; max-width: 650px; margin: 10px auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; }
-        .header { background: #940000; color: #fff; padding: 25px; text-align: center; }
-        .header h1 { margin: 0; font-size: 28px; letter-spacing: 2px; }
-        .header p { margin: 5px 0 0; opacity: 0.9; font-size: 14px; }
-        .body { padding: 40px; position: relative; border-bottom: 2px dashed #eee; margin-bottom: 0; }
-        .event-section { margin-bottom: 35px; width: 65%; }
-        .label { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
-        .value { font-size: 16px; font-weight: bold; color: #111; margin-bottom: 15px; }
-        .event-title { font-size: 22px; font-weight: bold; color: #000; margin-bottom: 15px; border-left: 4px solid #940000; padding-left: 15px; }
+        /* General page setup */
+        @page {
+            margin: 0;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #1a1a1a;
+            font-size: 14px;
+            line-height: 1.4;
+        }
         
-        .qr-section { position: absolute; top: 40px; right: 40px; text-align: center; width: 140px; }
-        .qr-code { width: 130px; height: 130px; border: 1px solid #eee; padding: 5px; background: #fff; }
-        .scan-msg { font-size: 10px; margin-top: 8px; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+        /* Container and Card */
+        .page-container {
+            padding: 2cm;
+            background-color: #f5f5f5;
+            min-height: 29.7cm; /* A4 height approx */
+        }
+        .ticket-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            border: 1px solid #e1e1e1;
+            border-top: 10px solid #940000;
+            padding: 40px;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .logo-area {
+            float: left;
+            width: 50%;
+        }
+        .logo {
+            height: 35px;
+            margin-bottom: 5px;
+        }
+        .system-tag {
+            font-size: 10px;
+            color: #999;
+            font-weight: bold;
+            display: block;
+        }
+        .ticket-title {
+            float: right;
+            width: 50%;
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            color: #000;
+            margin-top: 5px;
+        }
+
+        /* Grid for details and QR */
+        .details-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .details-col {
+            width: 65%;
+            vertical-align: top;
+        }
+        .qr-col {
+            width: 35%;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        /* Detail rows inside the left column */
+        .section-label {
+            font-size: 10px;
+            color: #940000;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .info-row {
+            margin-bottom: 15px;
+        }
+        .label {
+            font-size: 12px;
+            color: #666;
+            font-weight: normal;
+            width: 80px;
+            display: inline-block;
+        }
+        .value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111;
+        }
+        .event-main-title {
+            font-size: 20px;
+            color: #000;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* QR Code Box */
+        .qr-box {
+            border: 1px solid #f0f0f0;
+            padding: 10px;
+            display: inline-block;
+            background: #fff;
+            margin-bottom: 5px;
+        }
+        .qr-img {
+            width: 150px;
+            height: 150px;
+        }
+        .qr-helper {
+            font-size: 10px;
+            color: #999;
+            font-weight: bold;
+        }
+
+        /* Attendee Info Block */
+        .info-block {
+            border: 1px solid #eee;
+            margin-bottom: 25px;
+        }
+        .block-header {
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            font-size: 11px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            text-transform: uppercase;
+        }
+        .block-body {
+            padding: 15px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-td {
+            width: 50%;
+            padding: 5px 0;
+            vertical-align: top;
+        }
+        .info-label-inline {
+            font-size: 11px;
+            color: #888;
+            margin-right: 5px;
+        }
+        .info-value-inline {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* Important block (Yellow background) */
+        .warning-box {
+            background-color: #fffcef;
+            border: 1px solid #ffeb8c;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+        .warning-text {
+            font-size: 12px;
+            color: #856404;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 2px dashed #eee;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        /* Ticket ID display */
+        .ticket-id-display {
+            font-family: 'Courier', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: #940000;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
         
-        .attendee-info { display: table; width: 100%; margin-top: 20px; }
-        .info-col { display: table-cell; width: 50%; vertical-align: top; }
-        
-        .ticket-id-section { margin-top: 50px; text-align: center; padding-top: 30px; }
-        .ticket-id { font-size: 32px; letter-spacing: 6px; color: #940000; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
-        
-        .footer { background: #fff9f9; padding: 20px; text-align: center; font-size: 12px; color: #777; border-top: 1px solid #eee; }
-        .watermark { position: absolute; bottom: 10px; right: 10px; font-size: 10px; color: #eee; font-weight: bold; }
+        .clear { clear: both; }
     </style>
 </head>
 <body>
-    <div class="ticket-container">
-        <div class="header">
-            <h1>EVENT TICKET</h1>
-            <p>Official Confirmation of Registration</p>
-        </div>
-        
-        <div class="body">
-            <div class="event-section">
-                <div class="label">Event Name</div>
-                <div class="event-title">{{ $registration->event->title }}</div>
-                
-                <div class="attendee-info">
-                    <div class="info-col">
-                        <div class="label">Date & Time</div>
-                        <div class="value">
-                            {{ \Carbon\Carbon::parse($registration->event->date)->format('D, M d, Y') }}<br>
-                            {{ \Carbon\Carbon::parse($registration->event->time)->format('h:i A') }}
-                        </div>
-                    </div>
-                    <div class="info-col">
-                        <div class="label">Location</div>
-                        <div class="value">{{ $registration->event->location }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="qr-section">
-                <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" class="qr-code">
-                <div class="scan-msg">Verify Authenticity</div>
-            </div>
-
-            <div class="attendee-info" style="margin-top: 40px; background: #fcfcfc; padding: 20px; border-radius: 5px;">
-                <div class="info-col">
-                    <div class="label">Attendee Name</div>
-                    <div class="value" style="font-size: 18px;">{{ $registration->attendee->full_name }}</div>
-                </div>
-                <div class="info-col">
-                    <div class="label">Member ID / Access ID</div>
-                    <div class="value" style="font-family: monospace;">{{ $registration->attendee->access_code }}</div>
-                </div>
-            </div>
-
-            <div class="ticket-id-section">
-                <div class="label">Serial Number / Ticket ID</div>
-                <div class="ticket-id">{{ $registration->attendee->access_code }}</div>
-            </div>
+    <div class="page-container">
+        <div class="ticket-card">
             
-            <div class="watermark">EMCA TICKETING SYSTEM</div>
-        </div>
+            <div class="header">
+                <div class="logo-area">
+                    @if($logoBase64)
+                        <img src="data:image/png;base64,{{ $logoBase64 }}" class="logo">
+                    @endif
+                    <span class="system-tag">EVENTS REGISTRATION</span>
+                </div>
+                <div class="ticket-title">CONFIRMATION TICKET</div>
+                <div class="clear"></div>
+            </div>
 
-        <div class="footer">
-            <p style="margin-bottom: 5px; font-weight: bold;">Important Information</p>
-            <p style="margin: 0;">Please bring this ticket (digital or printed) to the venue. Present the QR code for check-in via the authorized mobile scanner. This ticket is unique to the attendee listed above.</p>
-            <p style="margin-top: 15px; font-size: 10px; opacity: 0.6;">&copy; {{ date('Y') }} EmCa Techonologies. All rights reserved.</p>
+            <table class="details-grid">
+                <tr>
+                    <td class="details-col">
+                        <span class="section-label">EVENT DETAILS</span>
+                        <div class="info-row">
+                            <span class="event-main-title">{{ $registration->event->title }}</span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="label">Date:</span>
+                            <span class="value">{{ \Carbon\Carbon::parse($registration->event->date)->format('F d, Y') }}</span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="label">Time:</span>
+                            <span class="value">{{ \Carbon\Carbon::parse($registration->event->time)->format('h:i A') }}</span>
+                        </div>
+                        
+                        <div class="info-row" style="margin-bottom: 25px;">
+                            <span class="label">Location:</span>
+                            <span class="value">
+                                {{ $registration->event->location }}<br>
+                                @if($registration->event->venue)
+                                <span style="font-size: 11px; color: #777; font-weight: normal;">{{ $registration->event->venue }}</span>
+                                @endif
+                            </span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="label">Ticket ID:</span>
+                            <div class="ticket-id-display">{{ $registration->ticket_id }}</div>
+                        </div>
+                    </td>
+                    <td class="qr-col">
+                        <div class="qr-box">
+                            <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" class="qr-img">
+                        </div>
+                        <div class="qr-helper">SCAN TO VERIFY ATTENDANCE</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="info-block">
+                <div class="block-header">ATTENDEE INFORMATION</div>
+                <div class="block-body">
+                    <table class="info-table">
+                        <tr>
+                            <td class="info-td">
+                                <span class="info-label-inline">Name:</span>
+                                <span class="info-value-inline">{{ $registration->attendee->full_name }}</span>
+                            </td>
+                            <td class="info-td">
+                                <span class="info-label-inline">Phone:</span>
+                                <span class="info-value-inline">{{ $registration->attendee->phone }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="info-td">
+                                <span class="info-label-inline">Organization:</span>
+                                <span class="info-text-inline">{{ $registration->attendee->organization ?? 'N/A' }}</span>
+                            </td>
+                            <td class="info-td">
+                                <span class="info-label-inline">Email:</span>
+                                <span class="info-value-inline">{{ $registration->attendee->email }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="info-block" style="background-color: #fafbfc;">
+                <div class="block-body" style="padding: 10px 15px;">
+                    <table class="info-table">
+                        <tr>
+                            <td style="width: 33%">
+                                <span class="info-label-inline">Ticket Type:</span><br>
+                                <span class="info-value-inline">Standard Access</span>
+                            </td>
+                            <td style="width: 33%; border-left: 1px solid #eee; padding-left: 15px;">
+                                <span class="info-label-inline">Registration Date:</span><br>
+                                <span class="info-value-inline">{{ $registration->created_at->format('M d, Y') }}</span>
+                            </td>
+                            <td style="width: 33%; border-left: 1px solid #eee; padding-left: 15px;">
+                                <span class="info-label-inline">Registration No:</span><br>
+                                <span class="info-value-inline" style="font-family: Courier;">{{ str_pad($registration->id, 5, '0', STR_PAD_LEFT) }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="width: 30px; vertical-align: top; color: #d97706; font-size: 20px;">!</td>
+                        <td class="warning-text">
+                            <strong>IMPORTANT:</strong> Please bring this ticket (digital or printed) for entry. The QR code will be scanned at the door for verification. Treat this ticket like cash.
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="footer">
+                &copy; {{ date('Y') }} EmCa Techonologies. This ticket is generated automatically upon valid registration.
+            </div>
+
         </div>
     </div>
 </body>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login - EmCa TECHONOLOGY')
+@section('title', 'Login - EmCa Techonologies')
 
 @section('content')
 <div class="auth-container" style="background: #fafafa; padding: 40px 15px;">
@@ -30,8 +30,11 @@
 
                 <div class="form-group" style="margin-bottom: 2rem;">
                     <label for="password">Security Password</label>
-                    <div style="position: relative;">
-                        <input type="password" name="password" id="password" class="form-control" required style="height: 44px; padding-left: 15px;" placeholder="••••••••">
+                    <div class="password-container">
+                        <input type="password" name="password" id="password" class="form-control" required style="height: 44px; padding: 0 45px 0 15px;" placeholder="••••••••">
+                        <span class="password-toggle" onclick="togglePassword('password', 'togglePasswordIcon')">
+                            <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
+                        </span>
                     </div>
                     @error('password')
                         <p style="color: #dc2626; font-size: 0.75rem; font-weight: 700; margin-top: 4px;">{{ $message }}</p>

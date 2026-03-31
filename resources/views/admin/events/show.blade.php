@@ -33,6 +33,9 @@
             </p>
         </div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="{{ route('events.public.show', $event->slug) }}" target="_blank" class="btn btn-outline" style="border: 2px solid #e2e8f0; color: #475569; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.3s; background: white;" onmouseover="this.style.borderColor='var(--corporate-red)'; this.style.color='var(--corporate-red)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.color='#475569';">
+                <i class="fa-solid fa-eye"></i> VIEW PUBLIC
+            </a>
             <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-outline" style="border: 2px solid #e2e8f0; color: #475569; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.3s; background: white;" onmouseover="this.style.borderColor='var(--corporate-red)'; this.style.color='var(--corporate-red)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.color='#475569';">
                 <i class="fa-solid fa-pencil"></i> EDIT EVENT
             </a>
@@ -85,33 +88,14 @@
                         </thead>
                         <tbody>
                             @foreach($event->registrations as $reg)
-                                <tr style="border-bottom: 1px solid #f8f9fa;">
-                                    <td style="padding: 15px 30px;">
-                                        <div style="font-weight: 700; color: #1e293b; font-size: 0.9rem;">{{ $reg->attendee->full_name }}</div>
-                                        <div style="font-size: 0.75rem; color: #94a3b8;">{{ $reg->attendee->email }}</div>
-                                    </td>
-                                    <td style="padding: 15px 30px;">
-                                        <code style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; color: var(--corporate-red); font-weight: bold; font-size: 0.85rem;">{{ $reg->ticket_id }}</code>
-                                    </td>
+                                <tr style="border-bottom: 1px solid #f1f1f1;">
+                                    <td style="padding: 15px 30px; font-weight: 700; color: #1e293b; font-size: 0.9rem;">{{ $reg->attendee->full_name }}</td>
+                                    <td style="padding: 15px 30px; font-size: 0.85rem; font-family: monospace; color: var(--corporate-red);">{{ $reg->ticket_id }}</td>
                                     <td style="padding: 15px 30px; text-align: center;">
-                                        @if($reg->status === 'Checked-Out')
-                                            <span style="background: #e2e8f0; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
-                                                <i class="fa-solid fa-door-closed"></i> Checked Out
-                                            </span>
-                                            @if($reg->checked_out_at)
-                                                <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 4px; font-weight: 700;">{{ $reg->checked_out_at->format('h:i A') }}</div>
-                                            @endif
-                                        @elseif($reg->attended)
-                                            <span style="background: #ecfdf5; color: #059669; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
-                                                <i class="fa-solid fa-check-double"></i> Checked In
-                                            </span>
-                                            @if($reg->checked_in_at)
-                                                <div style="font-size: 0.65rem; color: #059669; margin-top: 4px; font-weight: 700;">{{ $reg->checked_in_at->format('h:i A') }}</div>
-                                            @endif
+                                        @if($reg->attended)
+                                            <span style="color: #059669; font-weight: 800; background: #ECFDF5; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase;">Checked In</span>
                                         @else
-                                            <span style="background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
-                                                <i class="fa-solid fa-clock"></i> Pending
-                                            </span>
+                                            <span style="color: #64748b; font-weight: 800; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase;">Pending</span>
                                         @endif
                                     </td>
                                     <td style="padding: 15px 30px; text-align: right;">
@@ -149,22 +133,52 @@
         <div class="card" style="padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; background: #fdfdfd;">
             <h4 style="margin: 0 0 15px; font-size: 0.85rem; color: #1e293b; font-weight: 800; text-transform: uppercase;">Registration Link</h4>
             <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-                <input type="text" id="publicLink" value="{{ route('events.public.show', $event->id) }}" readonly 
+                <input type="text" id="publicLink" value="{{ route('events.public.show', $event->slug) }}" readonly 
                     style="flex: 1; padding: 10px 15px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; background: #fff; cursor: default;">
-                <button onclick="copyToClipboard()" style="padding: 10px 15px; background: #1e293b; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                <button onclick="copyToClipboard()" id="copyBtn" style="padding: 10px 15px; background: #1e293b; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Copy Link">
                     <i class="fa-solid fa-copy"></i>
                 </button>
+                <a href="https://wa.me/?text={{ urlencode('Register for ' . $event->title . ': ' . route('events.public.show', $event->slug)) }}" 
+                   target="_blank"
+                   style="padding: 10px 15px; background: #25D366; color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s;" 
+                   title="Share on WhatsApp">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i>
+                </a>
             </div>
             <p style="margin: 0; font-size: 0.75rem; color: #94a3b8; font-weight: 600;">Share this link publicly for automated member self-registration.</p>
         </div>
 
         <script>
             function copyToClipboard() {
-                var copyText = document.getElementById("publicLink");
-                copyText.select();
-                copyText.setSelectionRange(0, 99999);
-                navigator.clipboard.writeText(copyText.value);
-                alert("Public link copied to clipboard!");
+                const copyText = document.getElementById("publicLink");
+                const btn = document.getElementById("copyBtn");
+                const originalHtml = btn.innerHTML;
+                
+                // Modern approach
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(copyText.value).then(() => {
+                        showSuccess();
+                    });
+                } else {
+                    // Fallback
+                    copyText.select();
+                    copyText.setSelectionRange(0, 99999);
+                    try {
+                        document.execCommand('copy');
+                        showSuccess();
+                    } catch (err) {
+                        console.error('Fallback copy failed', err);
+                    }
+                }
+
+                function showSuccess() {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    btn.style.background = '#059669';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.style.background = '#1e293b';
+                    }, 2000);
+                }
             }
         </script>
     </div>

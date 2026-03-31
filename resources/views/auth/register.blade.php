@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register - EventPro')
+@section('title', 'Register - EmCa Techonologies')
 
 @section('content')
 <div class="auth-container" style="flex-direction: column; gap: 2rem; padding: 2rem 0;">
@@ -43,13 +43,23 @@
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" class="form-control" required>
+                <div class="password-container">
+                    <input type="password" name="password" id="password" class="form-control" required style="padding-right: 45px;">
+                    <span class="password-toggle" onclick="togglePassword('password', 'togglePasswordIcon')">
+                        <i class="fa-solid fa-eye" id="togglePasswordIcon"></i>
+                    </span>
+                </div>
                 @error('password') <p class="text-error">{{ $message }}</p> @enderror
             </div>
 
             <div class="form-group">
                 <label for="password_confirmation">Confirm Password</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+                <div class="password-container">
+                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required style="padding-right: 45px;">
+                    <span class="password-toggle" onclick="togglePassword('password_confirmation', 'toggleConfirmIcon')">
+                        <i class="fa-solid fa-eye" id="toggleConfirmIcon"></i>
+                    </span>
+                </div>
             </div>
 
             <div style="margin-top: 2rem;">

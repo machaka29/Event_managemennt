@@ -28,7 +28,7 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'phone' => ['nullable', 'string', 'regex:/^\+255[0-9]{9}$/'],
-            'organization' => ['nullable', 'string', 'max:255'],
+            'organization' => ['nullable', 'string', 'max:255', 'regex:/[a-zA-Z]/'],
             'profile_image' => ['nullable', 'image', 'max:1024'], // 1MB max
         ]);
 

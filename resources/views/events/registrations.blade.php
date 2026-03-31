@@ -39,54 +39,72 @@
     </div>
 </div>
 <div class="table-responsive" style="overflow-x: auto;">
-    <table id="mainTable" style="width: 100%; border-collapse: collapse; min-width: 800px;">
+    <table id="mainTable" style="width: 100%; border-collapse: collapse; min-width: 900px;">
         <thead>
             <tr style="background: var(--corporate-red); color: white;">
-                <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Attendee</th>
-                <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Email</th>
-                <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Event</th>
-                <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Reg. Date</th>
-                <th style="padding: 12px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Status & Time</th>
-                <th style="padding: 12px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Ticket</th>
+                <th style="padding: 12px 20px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px;">Attendee</th>
+                <th style="padding: 12px 15px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px;" class="hide-mobile">Email / Phone</th>
+                <th style="padding: 12px 15px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px;" class="col-event">Event</th>
+                <th style="padding: 12px 15px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px;">Status</th>
+                <th style="padding: 12px 15px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px;">Check-In</th>
+                <th style="padding: 12px 15px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px;">Check-Out</th>
+                <th style="padding: 12px 15px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px;">Ticket</th>
             </tr>
         </thead>
         <tbody>
             @forelse($registrations as $reg)
-                <tr style="border-bottom: 1px solid #f1f1f1; transition: all 0.2s;" onmouseover="this.style.background='#fdfdfd'" onmouseout="this.style.background='white'">
-                    <td style="padding: 14px 25px; font-weight: 700; color: #1e293b; font-size: 0.9rem;">{{ $reg->attendee->full_name }}</td>
-                    <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;">{{ $reg->attendee->email }}</td>
-                    <td style="padding: 14px 25px; color: #475569; font-weight: 600; font-size: 0.85rem;">{{ Str::limit($reg->event->title, 30) }}</td>
-                    <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;">{{ $reg->created_at->format('M d, Y') }}</td>
-                    <td style="padding: 14px 25px; text-align: center;">
+                <tr style="border-bottom: 1px solid #f1f5f9; transition: all 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                    <td style="padding: 12px 20px;">
+                        <div style="font-weight: 700; color: #1e293b; font-size: 0.85rem;">{{ $reg->attendee->full_name }}</div>
+                        <div style="font-size: 0.65rem; color: #94a3b8; font-family: monospace;">{{ $reg->ticket_id }}</div>
+                    </td>
+                    <td style="padding: 12px 15px;" class="hide-mobile">
+                        <div style="color: #64748b; font-size: 0.8rem;">{{ $reg->attendee->email }}</div>
+                        <div style="color: #94a3b8; font-size: 0.7rem; margin-top: 2px;">{{ $reg->attendee->phone }}</div>
+                    </td>
+                    <td style="padding: 12px 15px;" class="col-event">
+                        <div style="color: #475569; font-weight: 600; font-size: 0.8rem;">{{ Str::limit($reg->event->title, 25) }}</div>
+                    </td>
+                    <td style="padding: 12px 15px; text-align: center;">
                         @if($reg->status === 'Checked-Out')
-                            <span style="color: #475569; font-weight: 800; background: #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
-                                <i class="fa-solid fa-door-closed"></i> Checked Out
+                            <span style="color: #475569; font-weight: 800; background: #e2e8f0; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-door-closed"></i> Out
                             </span>
-                            @if($reg->checked_out_at)
-                            <div style="font-size: 0.65rem; color: #64748b; margin-top: 4px; font-weight: 700;">{{ $reg->checked_out_at->format('h:i A') }}</div>
-                            @endif
                         @elseif($reg->attended)
-                            <span style="color: #059669; font-weight: 800; background: #ECFDF5; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
-                                <i class="fa-solid fa-check-double"></i> Checked In
+                            <span style="color: #059669; font-weight: 800; background: #ECFDF5; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-check-double"></i> In
                             </span>
-                            @if($reg->checked_in_at)
-                            <div style="font-size: 0.65rem; color: #059669; margin-top: 4px; font-weight: 700;">{{ $reg->checked_in_at->format('h:i A') }}</div>
-                            @endif
                         @else
-                            <span style="color: #64748b; font-weight: 800; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                            <span style="color: #64748b; font-weight: 800; background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
                                 <i class="fa-solid fa-clock"></i> Pending
                             </span>
                         @endif
                     </td>
-                    <td style="padding: 14px 25px; text-align: right;">
-                        <a href="{{ route('events.public.ticket', $reg->ticket_id) }}" target="_blank" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #FFF5F5; color: var(--corporate-red); border-radius: 8px; text-decoration: none; border: 1px solid rgba(148,0,0,0.15); transition: all 0.3s; margin-left: auto;" title="View Ticket" onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';" onmouseout="this.style.background='#FFF5F5'; this.style.color='var(--corporate-red)';">
-                            <i class="fa-solid fa-ticket" style="font-size: 0.85rem;"></i>
+                    <td style="padding: 12px 15px; text-align: center;">
+                        @if($reg->checked_in_at)
+                            <div style="font-size: 0.8rem; font-weight: 700; color: #059669;">{{ $reg->checked_in_at->format('h:i A') }}</div>
+                            <div style="font-size: 0.6rem; color: #94a3b8; margin-top: 2px;">{{ $reg->checked_in_at->format('M d') }}</div>
+                        @else
+                            <span style="color: #cbd5e1; font-size: 0.75rem;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding: 12px 15px; text-align: center;">
+                        @if($reg->checked_out_at)
+                            <div style="font-size: 0.8rem; font-weight: 700; color: #475569;">{{ $reg->checked_out_at->format('h:i A') }}</div>
+                            <div style="font-size: 0.6rem; color: #94a3b8; margin-top: 2px;">{{ $reg->checked_out_at->format('M d') }}</div>
+                        @else
+                            <span style="color: #cbd5e1; font-size: 0.75rem;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding: 12px 15px; text-align: right;">
+                        <a href="{{ route('events.public.ticket', $reg->ticket_id) }}" target="_blank" style="width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: #FFF5F5; color: var(--corporate-red); border-radius: 8px; text-decoration: none; border: 1px solid rgba(148,0,0,0.15); transition: all 0.3s; margin-left: auto;" title="View Ticket" onmouseover="this.style.background='var(--corporate-red)'; this.style.color='white';" onmouseout="this.style.background='#FFF5F5'; this.style.color='var(--corporate-red)';">
+                            <i class="fa-solid fa-ticket" style="font-size: 0.8rem;"></i>
                         </a>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="padding: 50px; text-align: center; color: #94A3B8;">
+                    <td colspan="7" style="padding: 50px; text-align: center; color: #94A3B8;">
                         <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; display: block;"></i>
                         No registrations found.
                     </td>
@@ -94,6 +112,7 @@
             @endforelse
         </tbody>
     </table>
+</div>
 </div>
     <div style="padding: 20px;">
         {{ $registrations->links() }}
@@ -103,7 +122,7 @@
 
 @push('scripts')
 <script>
-    document.getElementById('tableSearch').addEventListener('keyup', function() {
+    document.getElementById('tableSearch').addEventListener('input', function() {
         let searchTerm = this.value.toLowerCase();
         let table = document.getElementById('mainTable');
         let rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');

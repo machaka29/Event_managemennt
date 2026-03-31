@@ -12,6 +12,11 @@
         .col-stats { width: 60px !important; }
         .hide-mobile { display: none !important; }
     }
+    @keyframes pulse {
+        0% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(0.95); opacity: 0.8; }
+    }
 </style>
 <div style="background: white; padding: 20px 25px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);" class="page-header">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
@@ -41,11 +46,12 @@
         <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
             <thead>
                 <tr style="background: var(--corporate-red); color: white;">
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Event Details</th>
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;" class="hide-mobile">Organizer</th>
-                    <th style="padding: 12px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;" class="hide-mobile">Location</th>
-                    <th style="padding: 12px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;" class="col-stats">Reg</th>
-                    <th style="padding: 12px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Actions</th>
+                    <th style="padding: 15px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Event Details</th>
+                    <th style="padding: 15px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;" class="hide-mobile">Organizer</th>
+                    <th style="padding: 15px 25px; text-align: left; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;" class="hide-mobile">Location</th>
+                    <th style="padding: 15px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Status</th>
+                    <th style="padding: 15px 25px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;" class="col-stats">Reg</th>
+                    <th style="padding: 15px 25px; text-align: right; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,6 +68,17 @@
                         <td style="padding: 14px 25px; color: #64748b; font-size: 0.85rem;" class="hide-mobile">
                             <i class="fa-solid fa-location-dot" style="color: #cbd5e1; margin-right: 4px;"></i>{{ $event->location }}
                         </td>
+                        <td style="padding: 14px 25px; text-align: center;">
+                            @if($event->status === 'approved')
+                                <span style="color: #059669; font-weight: 900; font-size: 0.65rem; background: #ecfdf5; border: 1.5px solid #d1fae5; padding: 4px 12px; border-radius: 30px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.05); white-space: nowrap;">
+                                    <span style="width: 6px; height: 6px; background: #059669; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> ACTIVE
+                                </span>
+                            @else
+                                <span style="color: #92400e; font-weight: 900; font-size: 0.65rem; background: #fffbeb; border: 1.5px solid #fef3c7; padding: 4px 12px; border-radius: 30px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-clock"></i> PENDING
+                                </span>
+                            @endif
+                        </td>
                         <td style="padding: 14px 25px; text-align: center;" class="col-stats">
                             <div style="font-size: 1rem; font-weight: 800; color: #1e293b;">{{ $event->registrations()->count() }}</div>
                             <div style="font-size: 0.55rem; color: #94a3b8; margin-top: 2px; text-transform: uppercase; font-weight: 700;">of {{ $event->capacity }}</div>
@@ -69,10 +86,10 @@
                         <td style="padding: 14px 25px; text-align: right;">
                             <div style="display: flex; justify-content: flex-end; gap: 8px;">
                                 <a href="{{ route('admin.events.show', $event->id) }}" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: var(--corporate-red); border-radius: 8px; text-decoration: none; border: 1px solid #eee; transition: all 0.3s;" title="Manage Event" onmouseover="this.style.background='var(--accent-soft-red)'; this.style.borderColor='var(--corporate-red)';" onmouseout="this.style.background='#f9f9f9'; this.style.borderColor='#eee';">
-                                    <i class="fa-solid fa-chart-line" style="font-size: 0.85rem;"></i>
+                                    <i class="fa-solid fa-eye" style="font-size: 0.85rem;"></i>
                                 </a>
                                 <a href="{{ route('admin.events.edit', $event->id) }}" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; color: #475569; border-radius: 8px; text-decoration: none; border: 1px solid #eee; transition: all 0.3s;" title="Edit Event" onmouseover="this.style.background='#f1f5f9'; this.style.color='var(--corporate-red)'; this.style.borderColor='var(--corporate-red)';" onmouseout="this.style.background='#f9f9f9'; this.style.color='#475569'; this.style.borderColor='#eee';">
-                                    <i class="fa-solid fa-pencil" style="font-size: 0.85rem;"></i>
+                                    <i class="fa-solid fa-pen-to-square" style="font-size: 0.85rem;"></i>
                                 </a>
                                 <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this event?');">
                                     @csrf @method('DELETE')
@@ -98,9 +115,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('tableSearch');
     if (searchInput) {
-        searchInput.addEventListener('keyup', function() {
+        searchInput.addEventListener('input', function() {
             const filter = this.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr');
+            const rows = document.querySelectorAll('tbody tr:not(.empty-row)');
             
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();

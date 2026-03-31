@@ -7,25 +7,27 @@ use Illuminate\Support\Facades\Route;
 // Public Event Routes
 Route::get('/', [PublicEventController::class, 'index'])->name('home');
 Route::get('/api/events/search', [PublicEventController::class, 'searchAjax'])->name('events.search.ajax');
-Route::get('/events/public/{id}', [PublicEventController::class, 'show'])->name('events.public.show');
+Route::get('/events/public/{slug}', [PublicEventController::class, 'show'])->name('events.public.show');
 
 // Public Registration & Ticket Routes
-Route::post('/events/public/{id}/register', [PublicEventController::class, 'register'])->name('events.public.register');
+Route::post('/events/public/{slug}/register', [PublicEventController::class, 'register'])->name('events.public.register');
 Route::get('/tickets/{ticket_id}', [PublicEventController::class, 'ticket'])->name('events.public.ticket');
 Route::get('/tickets/{ticket_id}/download', [PublicEventController::class, 'downloadTicket'])->name('events.public.ticket.download');
+
+// Ticket Verification (Public but protected by Gate Password)
 Route::get('/verify/{ticket_id}', [PublicEventController::class, 'verifyTicket'])->name('events.public.verify');
 Route::post('/verify/{ticket_id}/attendance', [PublicEventController::class, 'markPublicAttendance'])->name('public.attendance.update');
+
+// These routes moved to auth group below for security
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    // Registration disabled for public
 });
 
 Route::middleware(['auth', 'prevent-back-history'])->group(function () {
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
     // Profile Routes
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'updateInfo'])->name('profile.info');
@@ -38,6 +40,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     // Organizer Routes
     Route::middleware('role:organizer')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\EventController::class, 'index'])->name('dashboard');
+        Route::get('/organizer/search', [\App\Http\Controllers\EventController::class, 'search'])->name('organizer.search');
         Route::get('/organizer/events', [\App\Http\Controllers\EventController::class, 'allEvents'])->name('organizer.events.index');
         Route::get('/organizer/registrations', [\App\Http\Controllers\EventController::class, 'allRegistrations'])->name('organizer.registrations.index');
         Route::get('/organizer/attendees', [\App\Http\Controllers\EventController::class, 'attendeesIndex'])->name('organizer.attendees.index');
@@ -56,6 +59,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::middleware('role:admin')->group(function () {
         Route::get('/admin', function() { return redirect()->route('admin.dashboard'); });
         Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/admin/search', [\App\Http\Controllers\AdminController::class, 'search'])->name('admin.search');
         
         Route::get('/admin/organizers', [\App\Http\Controllers\AdminController::class, 'organizers'])->name('admin.organizers.index');
         Route::get('/admin/organizers/create', [\App\Http\Controllers\AdminController::class, 'organizerCreate'])->name('admin.organizers.create');

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Discover & Register for Amazing Events - EventReg')
+@section('title', 'Discover & Register for Amazing Events - EmCa Techonologies')
 
 @section('content')
 <style>
@@ -33,10 +33,9 @@
 
     /* ═══ HERO ═══ */
     .hero {
-        background: linear-gradient(160deg, rgba(8,0,0,0.75), rgba(50,0,0,0.6)),
-                    url('{{ asset('images/landing/hero_bg.png') }}');
-        background-size: cover;
-        background-position: center;
+        background: linear-gradient(135deg, #7a0000 0%, var(--corporate-red) 50%, #b30000 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
         padding: 100px 0 80px;
         color: white;
         text-align: center;
@@ -271,9 +270,10 @@
         .hero h1 { font-size: 1.6rem; }
         .hero p { font-size: 0.92rem; margin-bottom: 25px; }
         .search-bar {
-            grid-template-columns: 1fr; padding: 8px;
+            grid-template-columns: 1fr; padding: 10px; border-radius: 16px; gap: 8px;
         }
-        .s-btn { width: 100%; height: 44px; }
+        .s-field input { border-radius: 8px; padding: 14px 12px 14px 40px; }
+        .s-btn { width: 100%; height: 48px; border-radius: 8px; }
         .hero-badges { flex-direction: column; gap: 6px; }
         .hero-badges .dot { display: none; }
         .stats-row { grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -292,8 +292,7 @@
     <div class="container hero-content">
         <div class="hero-tag">Event Registration Platform</div>
         <h1>
-            <span class="highlight">Discover & Register for<br>
-            Amazing Events Near You</span>
+            <span class="highlight">Discover & Register for Amazing Events Near You</span>
         </h1>
         <p>Join 10,000+ attendees who found their next unforgettable experience. Browse events, register in seconds — no account needed!</p>
 
@@ -350,7 +349,7 @@
                         <span class="free">✓ Free Registration</span>
                     </div>
                     @if($spotsLeft > 0)
-                        <a href="{{ route('events.public.show', $event->id) }}" class="ev-btn">REGISTER NOW</a>
+                        <a href="{{ route('events.public.show', $event->slug) }}" class="ev-btn">REGISTER NOW</a>
                     @else
                         <button class="ev-btn" style="background: #94a3b8; cursor: not-allowed;" disabled>SOLD OUT</button>
                     @endif
@@ -366,47 +365,36 @@
     </div>
 </div>
 
-<!-- ═══════════ WHY CHOOSE US ═══════════ -->
-<div class="why-section">
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<div class="how-it-works" style="padding: 70px 0; background: white;">
     <div class="container">
         <div class="section-head animate-on-scroll">
-            <h2>Why Attendees Choose Us</h2>
+            <h2>How It Works</h2>
             <div class="line"></div>
         </div>
-        <div class="why-grid">
-            <div class="why-card animate-on-scroll stagger-1">
-                <div class="why-icon"><i class="fa-solid fa-user-slash"></i></div>
-                <h3>No Account Needed</h3>
-                <p>Register in seconds — no sign-up or verification required.</p>
+        <div class="why-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 40px;">
+            <div class="why-card animate-on-scroll stagger-1" style="border: none; background: #fafafa;">
+                <div style="font-size: 3rem; font-weight: 900; color: rgba(148,0,0,0.1); position: absolute; top: 10px; right: 20px;">01</div>
+                <div class="why-icon" style="background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <h3 style="font-size: 1rem;">Find Your Event</h3>
+                <p>Browse and pick the event you want to attend.</p>
             </div>
-            <div class="why-card animate-on-scroll stagger-2">
-                <div class="why-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <h3>Secure & Reliable</h3>
-                <p>Your data is encrypted and handled with top security standards.</p>
+            <div class="why-card animate-on-scroll stagger-2" style="border: none; background: #fafafa;">
+                <div style="font-size: 3rem; font-weight: 900; color: rgba(148,0,0,0.1); position: absolute; top: 10px; right: 20px;">02</div>
+                <div class="why-icon" style="background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);"><i class="fa-solid fa-user-pen"></i></div>
+                <h3 style="font-size: 1rem;">Quick Registration</h3>
+                <p>Register in seconds. No account or password needed.</p>
             </div>
-            <div class="why-card animate-on-scroll stagger-3">
-                <div class="why-icon"><i class="fa-solid fa-qrcode"></i></div>
-                <h3>Instant QR Tickets</h3>
-                <p>Get your QR ticket instantly via SMS and Email after registration.</p>
-            </div>
-            <div class="why-card animate-on-scroll stagger-4">
-                <div class="why-icon"><i class="fa-solid fa-bolt"></i></div>
-                <h3>Lightning Fast</h3>
-                <p>Complete registration in under 30 seconds — the fastest experience.</p>
-            </div>
-            <div class="why-card animate-on-scroll stagger-5">
-                <div class="why-icon"><i class="fa-solid fa-bell"></i></div>
-                <h3>Event Reminders</h3>
-                <p>Automatic SMS and email reminders so you never miss an event.</p>
-            </div>
-            <div class="why-card animate-on-scroll stagger-6">
-                <div class="why-icon"><i class="fa-solid fa-chart-line"></i></div>
-                <h3>Organizer Tools</h3>
-                <p>Powerful dashboard to manage events, attendance, and broadcasts.</p>
+            <div class="why-card animate-on-scroll stagger-3" style="border: none; background: #fafafa;">
+                <div style="font-size: 3rem; font-weight: 900; color: rgba(148,0,0,0.1); position: absolute; top: 10px; right: 20px;">03</div>
+                <div class="why-icon" style="background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);"><i class="fa-solid fa-paper-plane"></i></div>
+                <h3 style="font-size: 1rem;">Get Your QR Ticket</h3>
+                <p>Receive your ticket on your phone instantly.</p>
             </div>
         </div>
     </div>
 </div>
+
 
 
 

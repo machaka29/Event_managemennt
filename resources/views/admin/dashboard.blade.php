@@ -1,8 +1,15 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard - EventReg')
+@section('title', 'Admin Dashboard - EmCa Techonologies')
 
 @section('content')
+<style>
+    @keyframes pulse {
+        0% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(0.95); opacity: 0.8; }
+    }
+</style>
     <!-- Dashboard Header - COMPACT -->
     <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--corporate-red); padding-bottom: 12px; flex-wrap: wrap; gap: 15px;" class="dashboard-header">
         <div style="display: flex; align-items: center; gap: 1rem;">
@@ -43,14 +50,6 @@
             <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 5px;">{{ $ongoingEventsCount }} Today</div>
         </div>
 
-        <!-- Total Registrations -->
-        <div class="card" style="padding: 18px; border-left: 4px solid var(--corporate-red);">
-            <div style="color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; display: flex; justify-content: space-between;">
-                Members <i class="fa-solid fa-users" style="color: var(--corporate-red); opacity: 0.5;"></i>
-            </div>
-            <div style="font-size: 1.75rem; font-weight: 900; color: #1e293b;">{{ number_format($totalRegistrations) }}</div>
-            <div style="font-size: 0.7rem; color: #059669; margin-top: 5px; font-weight: 700;">+{{ $registrationsThisMonth }} this month</div>
-        </div>
 
         <!-- Total Organizers -->
         <div class="card" style="padding: 18px; border-left: 4px solid var(--corporate-red);">
@@ -114,12 +113,14 @@
                                 <td style="padding: 15px 10px; font-weight: 600; color: #1e293b;">{{ $event->title }}</td>
                                 <td style="padding: 15px 10px; font-size: 0.85rem; color: #64748b;">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</td>
                                 <td style="padding: 15px 10px;">
-                                    @if(\Carbon\Carbon::parse($event->date)->isToday())
-                                        <span style="color: #059669; font-size: 0.75rem; font-weight: bold; background: #ecfdf5; padding: 4px 10px; border-radius: 20px;">Ongoing</span>
-                                    @elseif(\Carbon\Carbon::parse($event->date)->isFuture())
-                                        <span style="color: var(--corporate-red); font-size: 0.75rem; font-weight: bold; background: var(--accent-soft-red); padding: 4px 10px; border-radius: 20px;">Upcoming</span>
+                                    @if(\Carbon\Carbon::parse($event->date)->isFuture() || \Carbon\Carbon::parse($event->date)->isToday())
+                                        <span style="color: #059669; font-weight: 900; font-size: 0.65rem; background: #ecfdf5; border: 1.5px solid #d1fae5; padding: 4px 12px; border-radius: 30px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.05); white-space: nowrap;">
+                                            <span style="width: 6px; height: 6px; background: #059669; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> ACTIVE
+                                        </span>
                                     @else
-                                        <span style="color: #64748b; font-size: 0.75rem; background: #f1f5f9; padding: 4px 10px; border-radius: 20px;">Past</span>
+                                        <span style="color: #64748b; font-size: 0.75rem; font-weight: 800; background: #f1f5f9; padding: 5px 12px; border-radius: 20px; text-transform: uppercase;">
+                                            <i class="fa-solid fa-check-double"></i> Past
+                                        </span>
                                     @endif
                                 </td>
                             </tr>
@@ -163,7 +164,7 @@
             </div>
             <div>
                 <h3 style="margin: 0; color: #1e293b; font-size: 1.1rem; font-weight: 800; text-transform: uppercase;">{{ \App\Models\SystemSetting::get('system_name', 'EmCa Techonologies') }}</h3>
-                <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">Global Branding & Identity</p>
+                <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">EmCa Techonologies</p>
             </div>
         </div>
         <a href="{{ route('admin.settings.index') }}" class="btn btn-outline" style="min-width: 200px; gap: 8px;">

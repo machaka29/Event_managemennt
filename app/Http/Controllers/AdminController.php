@@ -7,17 +7,24 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\Registration;
 use App\Models\Attendee;
+use App\Services\NextSmsService;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    protected $smsService;
+
+    public function __construct(NextSmsService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
     public function dashboard()
     {
         // 1. Statistics Cards
         $totalEvents = Event::count();
         $upcomingEventsCount = Event::where('date', '>', now())->count();
-        $totalRegistrations = Registration::count();
-        $registrationsThisMonth = Registration::where('created_at', '>=', now()->startOfMonth())->count();
+        $totalRegistrations = Attendee::count();
+        $registrationsThisMonth = Attendee::where('created_at', '>=', now()->startOfMonth())->count();
         $activeEventsCount = Event::where('status', 'approved')->where('date', '>=', now()->toDateString())->count();
         $ongoingEventsCount = Event::where('status', 'approved')->where('date', '=', now()->toDateString())->count();
         $totalAttendance = Registration::where('attended', true)->count();
@@ -63,6 +70,58 @@ class AdminController extends Controller
             'totalAttendance', 'ongoingAttendance',
             'recentEvents', 'recentRegistrations', 'registrationsByWeek', 'systemStats'
         ));
+    }
+
+    public function search(Request $request)
+    {
+        $query = trim($request->input('query'));
+        
+        if (!$query) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $lowQuery = strtolower($query);
+
+        // Events Search
+        if (in_array($lowQuery, ['event', 'events'])) {
+            $events = Event::with(['organizer', 'registrations.attendee'])->latest()->get();
+        } else {
+            $events = Event::with(['organizer', 'registrations.attendee'])
+                ->where('title', 'like', "%{$query}%")
+                ->orWhere('description', 'like', "%{$query}%")
+                ->orWhere('location', 'like', "%{$query}%")
+                ->latest()
+                ->get();
+        }
+
+        // Organizers Search
+        if (in_array($lowQuery, ['organizer', 'organizers'])) {
+            $organizers = User::where('role', 'organizer')->latest()->get();
+        } else {
+            $organizers = User::where('role', 'organizer')
+                ->where(function($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                      ->orWhere('email', 'like', "%{$query}%")
+                      ->orWhere('organization', 'like', "%{$query}%");
+                })
+                ->latest()
+                ->get();
+        }
+
+        // Attendees Search
+        if (in_array($lowQuery, ['attendee', 'attendees', 'member', 'members'])) {
+            $attendees = Attendee::latest()->get();
+        } else {
+            $attendees = Attendee::where('full_name', 'like', "%{$query}%")
+                ->orWhere('email', 'like', "%{$query}%")
+                ->orWhere('phone', 'like', "%{$query}%")
+                ->orWhere('organization', 'like', "%{$query}%")
+                ->orWhere('access_code', 'like', "%{$query}%")
+                ->latest()
+                ->get();
+        }
+
+        return view('admin.search', compact('events', 'organizers', 'attendees', 'query'));
     }
 
     public function organizers()
@@ -116,6 +175,7 @@ class AdminController extends Controller
             'category_id' => 'required|exists:categories,id',
             'reg_start_date' => 'required|date',
             'reg_end_date' => 'required|date',
+            'gate_password' => 'required|string|min:4',
         ]);
 
         $event->update($validated);
@@ -216,7 +276,7 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
-            'organization' => 'required|string|max:255',
+            'organization' => ['required', 'string', 'max:255', 'regex:/[a-zA-Z]/'],
             'password' => 'required|string|min:8',
         ]);
 
@@ -229,7 +289,15 @@ class AdminController extends Controller
             'role' => 'organizer',
         ]);
 
-        return redirect()->route('admin.organizers.index')->with('success', 'Organizer account created successfully.');
+        // Send SMS Notification
+        try {
+            $message = "Hello {$request->name}, your Organizer account has been created. Email: {$request->email}, Password: {$request->password}. Login at: " . url('/login');
+            $this->smsService->sendSms($request->phone, $message);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send organizer SMS: " . $e->getMessage());
+        }
+
+        return redirect()->route('admin.organizers.index')->with('success', 'Organizer account created successfully and credentials sent via SMS.');
     }
 
     public function organizerEdit(User $organizer)
@@ -248,7 +316,7 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|string|email|max:255|unique:users,email,' . $organizer->id,
             'phone' => ['required', 'string', 'regex:/^\+255[0-9]{9}$/'],
-            'organization' => 'required|string|max:255',
+            'organization' => ['required', 'string', 'max:255', 'regex:/[a-zA-Z]/'],
         ]);
 
         $organizer->update([
@@ -289,7 +357,7 @@ class AdminController extends Controller
             'full_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s.-]+$/'],
             'email' => 'required|email|max:255|unique:attendees,email,' . $attendee->id,
             'phone' => ['nullable', 'string', 'regex:/^\+255[0-9]{9}$/'],
-            'organization' => 'nullable|string|max:255',
+            'organization' => ['nullable', 'string', 'max:255', 'regex:/[a-zA-Z]/'],
         ]);
 
         $attendee->update($request->only(['full_name', 'email', 'phone', 'organization']));
@@ -307,5 +375,18 @@ class AdminController extends Controller
     {
         $attendee->delete();
         return redirect()->route('admin.attendees.list')->with('success', 'Member deleted successfully.');
+    }
+
+    public function markNotificationsRead()
+    {
+        if (auth()->check()) {
+            if (auth()->user()->role === 'admin') {
+                Registration::where('is_read', false)->update(['is_read' => true]);
+            } else {
+                $myEventIds = auth()->user()->events()->pluck('id');
+                Registration::whereIn('event_id', $myEventIds)->where('is_read', false)->update(['is_read' => true]);
+            }
+        }
+        return response()->json(['success' => true]);
     }
 }

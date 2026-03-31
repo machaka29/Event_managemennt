@@ -1,6 +1,6 @@
 @extends('layouts.organizer')
 
-@section('title', 'Create Event - EventPro')
+@section('title', 'Create Event - EmCa Techonologies')
 
 @section('content')
 <div class="container" style="padding: 2rem 0;">
@@ -20,18 +20,6 @@
                 @error('title') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
             </div>
 
-            <div style="margin-bottom: 35px;">
-                <label for="category_id" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Event Category</label>
-                <select name="category_id" id="category_id" required
-                    style="width: 100%; padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: #f8fafc; color: #1e293b;"
-                    onfocus="this.style.borderColor='var(--corporate-red)'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none'">
-                    <option value="" disabled selected>Select a category...</option>
-                    @foreach(\App\Models\Category::all() as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                    @endforeach
-                </select>
-                @error('category_id') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
-            </div>
 
             <div style="margin-bottom: 35px;">
                 <label for="description" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Detailed Description</label>
@@ -112,17 +100,47 @@
                 </div>
             </div>
 
-            <div style="margin-bottom: 45px;">
-                <label for="image" style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem;">Event Cover Photo</label>
-                <div style="border: 2px dashed #cbd5e1; border-radius: 15px; padding: 40px 20px; text-align: center; transition: all 0.2s; background: #f8fafc; cursor: pointer;" 
-                     onmouseover="this.style.borderColor='var(--corporate-red)'; this.style.background='white'" 
-                     onmouseout="this.style.borderColor='#cbd5e1'; this.style.background='#f8fafc'">
-                    <i class="fa-solid fa-image" style="font-size: 3rem; color: #94a3b8; margin-bottom: 20px; display: block;"></i>
-                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px; font-weight: 600;">Drop your event banner here or click to browse</p>
-                    <input type="file" name="image" id="image" style="max-width: 100%; font-size: 0.85rem; color: #64748b;">
+            <div style="margin-bottom: 35px;">
+                <label style="display: block; font-weight: 800; margin-bottom: 10px; color: #1e293b; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Event Banner / Image (Optional)</label>
+                <div style="position: relative; width: 100%; padding: 25px 20px; border: 2px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; text-align: center; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--corporate-red)'; this.style.backgroundColor='#FFF5F5';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.backgroundColor='#f8fafc';">
+                    <input type="file" name="image" id="image" accept="image/*" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;" onchange="document.getElementById('file-name-create').textContent = this.files[0] ? this.files[0].name : 'Browse files or drag and drop';">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--corporate-red); margin-bottom: 15px; opacity: 0.7;"></i>
+                    <p style="margin: 0; color: #1e293b; font-weight: 800; font-size: 1rem;">Upload Event Image</p>
+                    <p id="file-name-create" style="margin: 5px 0 0; color: #64748b; font-size: 0.85rem; font-weight: 500;">Browse files (JPG, PNG) or drag and drop</p>
                 </div>
                 @error('image') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
             </div>
+
+            <div style="margin-bottom: 45px; background: #fff5f5; padding: 25px; border-radius: 12px; border: 1px solid #f9dcdc;">
+                <label for="gate_password" style="display: block; font-weight: 800; margin-bottom: 10px; color: var(--corporate-red); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Gate Security Password</label>
+                <div class="password-container" style="position: relative;">
+                    <input type="password" name="gate_password" id="gate_password" required placeholder="Assign a password for gate security"
+                        style="width: 100%; padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.2s; background: white; color: #1e293b;"
+                        onfocus="this.style.borderColor='var(--corporate-red)'; this.style.boxShadow='0 0 0 4px rgba(148,0,0,0.1)';" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                    <button type="button" class="togglePassword" onclick="toggleGatePassword()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b;">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.8rem; color: #64748b; font-weight: 600;">
+                    <i class="fa-solid fa-shield-halved" style="color: var(--corporate-red); margin-right: 5px;"></i> 
+                    Walinzi mlangoni watatumia nenosiri hili (PIN) ili kuruhusu Check-In/Out.
+                </p>
+                @error('gate_password') <p style="color: #991b1b; font-size: 0.85rem; margin-top: 8px; font-weight: 600;">{{ $message }}</p> @enderror
+            </div>
+
+            <script>
+                function toggleGatePassword() {
+                    const passInput = document.getElementById('gate_password');
+                    const toggleBtn = document.querySelector('.togglePassword i');
+                    if (passInput.type === 'password') {
+                        passInput.type = 'text';
+                        toggleBtn.classList.replace('fa-eye', 'fa-eye-slash');
+                    } else {
+                        passInput.type = 'password';
+                        toggleBtn.classList.replace('fa-eye-slash', 'fa-eye');
+                    }
+                }
+            </script>
 
             <div style="border-top: 1px solid #f1f5f9; padding-top: 35px; display: flex; justify-content: flex-end; gap: 15px; flex-wrap: wrap;">
                 <a href="{{ route('dashboard') }}" class="btn btn-outline" style="min-width: 160px; text-align: center;">DISCARD CHANGES</a>
