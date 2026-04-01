@@ -152,7 +152,6 @@
                                         <i class="fa-solid fa-users"></i>
                                         <span>{{ max(0, $event->capacity - $event->registrations()->count()) }} Spots Remaining</span>
                                     </div>
-                                    <div class="price-tag">FREE</div>
                                 </div>
 
                                 <button type="submit" class="btn-register-premium">
@@ -492,8 +491,4 @@
     .registration-card-body { padding: 1.5rem; }
 }
 </style>
-@endsection
-
-    </div>
-</div>
 @endsection

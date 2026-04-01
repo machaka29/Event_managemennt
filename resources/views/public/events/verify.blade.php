@@ -225,9 +225,9 @@
                     
                     @if(!$isAuthorized)
                         <div style="margin-bottom: 25px;">
-                            <span class="info-label-micro" style="text-align: center; display: block; margin-bottom: 0;">AUTHORIZATION PIN REQUIRED</span>
-                            <input type="password" name="gate_password" class="pin-input-field" placeholder="••••" required maxlength="4">
-                            <p style="color: #475569; font-size: 0.7rem; text-align: center; font-weight: 700;">Enter the 4-digit security code for this event</p>
+                            <span class="info-label-micro" style="text-align: center; display: block; margin-bottom: 0;">AUTHORIZATION CODE REQUIRED</span>
+                            <input type="password" name="gate_password" class="pin-input-field" placeholder="PIN / CODE" required maxlength="20" style="letter-spacing: 4px;">
+                            <p style="color: #475569; font-size: 0.7rem; text-align: center; font-weight: 700;">Enter the security code for this event</p>
                         </div>
                     @endif
 
